@@ -8,18 +8,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import { get_all_encheres } from '../../../libs/redux/actions/enchere.action'
 
 const Historiques = ({ navigation }) => {
-    const [visible, setVisible] = useState(false)
-    const [vip, setVip] = useState(false)
-    const [allEncheres, setAllEncheres] = useState([])
-    const [data, setData] = useState(null)
-    const [refreshing, setRefreshing] = useState(false)
-
-    const isVIP = true
 
     const { encheres, loading } = useSelector(state => state?.enchere)
     const { host } = useSelector(state => state?.user)
     const { themes } = useSelector(state => state?.setting)
     const dispatch = useDispatch()
+
+    const [visible, setVisible] = useState(false)
+    const [vip, setVip] = useState(host?.vip === true ? true : false)
+    const [allEncheres, setAllEncheres] = useState([])
+    const [data, setData] = useState(null)
+    const [refreshing, setRefreshing] = useState(false)
+
 
     //recuperer les encheres selon qu'il soit vip ou pas
     useEffect(() => {

@@ -1,5 +1,5 @@
 import axios from "axios"
-import { _create_enchere, _delete_enchere, _dislike_enchere, _edit_enchere, _error_enchere, _filtre_enchere, _get_all_encheres, _get_enchere, _like_enchere, _loading_enchere, _participate_in_enchere, _upload_enchere_file, _vider_filtre_enchere, _vider_new_enchere, api } from "../constants/constants"
+import { _create_enchere, _delete_enchere, _dislike_enchere, _edit_enchere, _error_enchere, _filtre_enchere, _get_all_encheres, _get_all_encheres_without_loading, _get_enchere, _like_enchere, _loading_enchere, _participate_in_enchere, _upload_enchere_file, _vider_filtre_enchere, _vider_new_enchere, api } from "../constants/constants"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export const isLoading = () => {
@@ -28,10 +28,22 @@ export const get_all_encheres = (hostID) => async (dispatch) => {
     }
 }
 
+export const get_all_encheres_without_loading = (hostID) => async (dispatch) => {
+    try {
+        const token = await AsyncStorage.getItem('cookie')
+
+        const response = await axios.get(`${api}/api/enchere/${hostID}`, { headers: { token } })
+
+        dispatch({ type: _get_all_encheres_without_loading, payload: response?.data?.response })
+    } catch (error) {
+        dispatch(error_enchere(error))
+    }
+}
+
+_get_all_encheres_without_loading
+
 export const like_enchere = (enchere_id, hostID, data) => async (dispatch) => {
     try {
-        dispatch(isLoading())
-
         const token = await AsyncStorage.getItem('cookie')
 
         const response = await axios.patch(`${api}/api/enchere/like-enchere/${enchere_id}/${hostID}`, data, { headers: { token } })
@@ -44,8 +56,6 @@ export const like_enchere = (enchere_id, hostID, data) => async (dispatch) => {
 
 export const dislike_enchere = (enchere_id, hostID, data) => async (dispatch) => {
     try {
-        dispatch(isLoading())
-
         const token = await AsyncStorage.getItem('cookie')
 
         const response = await axios.patch(`${api}/api/enchere/dislike-enchere/${enchere_id}/${hostID}`, data, { headers: { token } })

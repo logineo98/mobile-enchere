@@ -14,10 +14,13 @@ import { useRef } from 'react'
 import { vider_new_enchere } from '../../../libs/redux/actions/enchere.action'
 
 const Detail = ({ route }) => {
-    const [visible, setVisible] = useState(false)
     const navigation = useNavigation()
     const { data } = route?.params
+
+    const [visible, setVisible] = useState(false)
     const [relatedData, setRelatedData] = useState([])
+    const [enchereStatus, setEnchereStatus] = useState("non connue")
+
     const scrollViewRef = useRef(null)
 
     const { host } = useSelector(state => state?.user)
@@ -34,6 +37,11 @@ const Detail = ({ route }) => {
                 if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time)) tab.push(enchere)
         })
         setRelatedData(tab)
+
+        if (data?.enchere_status === "published") setEnchereStatus("publiée")
+        else if (data?.enchere_status === "pending") setEnchereStatus("en attente de validation")
+        else if (data?.enchere_status === "rejected") setEnchereStatus("rejetée")
+        else if (data?.enchere_status === "closed") setEnchereStatus("terminée")
     }, [encheres, data])
 
     useEffect(() => {
@@ -47,7 +55,6 @@ const Detail = ({ route }) => {
             Alert.alert("Avertissement", "Veuillez, vous connecter à facebook d'abord au niveau du profil.", [{ text: "OK" }])
         }
     }
-
 
     return (
         <>
@@ -145,39 +152,46 @@ const Detail = ({ route }) => {
                                     </View>
                                 </View>
                             </View>
+                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                                <Text style={{ gap: 20 }}>Status :</Text>
+                                <Text style={{ color: Colors.warning }}> {enchereStatus} </Text>
+                            </View>
                         </View>
 
                     </Container>
 
-                    <Container>
-                        <View style={[css.details.main_content, css.details.button, { backgroundColor: themes === "sombre" ? Colors.black : Colors.white }]}>
-                            <TouchableOpacity onPress={participate_enchere} style={css.details.detail_bid_button}>
-                                <Text style={css.details.detail_bid_button_text}>Participer à l'enchère</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </Container>
-
-                    {/* related products down */}
-                    {relatedData?.length > 0 && <>
-                        <View style={[css.details.separateur, { marginTop: 40 }]} />
-                        <Container >
-                            <View style={{ width: "100%", backgroundColor: themes === "sombre" ? Colors.black : Colors.white, padding: 10 }}>
-                                <Text style={css.details.detail_title_text}>Articles similaires</Text>
-                                <View style={css.creer.screen_title_line} />
-
-                                <View>
-                                    {relatedData?.slice(0, 5)?.map(related => (
-                                        <Related scrollViewRef={scrollViewRef} theme={themes} data={related} key={related?._id} />
-                                    ))}
-                                </View>
-
+                    {data?.sellerID !== host?._id && data?.enchere_status === "published" &&
+                        <Container  >
+                            <View style={[css.details.main_content, css.details.button, { backgroundColor: themes === "sombre" ? Colors.black : Colors.white }]}>
+                                <TouchableOpacity onPress={participate_enchere} style={css.details.detail_bid_button}>
+                                    <Text style={css.details.detail_bid_button_text}>Participer à l'enchère</Text>
+                                </TouchableOpacity>
                             </View>
                         </Container>
-                    </>
+                    }
+
+                    {/* related products down */}
+                    {relatedData?.length > 0 &&
+                        <>
+                            <View style={[css.details.separateur, { marginTop: 40 }]} />
+                            <Container >
+                                <View style={{ width: "100%", backgroundColor: themes === "sombre" ? Colors.black : Colors.white, padding: 10 }}>
+                                    <Text style={css.details.detail_title_text}>Articles similaires</Text>
+                                    <View style={css.creer.screen_title_line} />
+
+                                    <View>
+                                        {relatedData?.slice(0, 5)?.map(related => (
+                                            <Related scrollViewRef={scrollViewRef} theme={themes} data={related} key={related?._id} />
+                                        ))}
+                                    </View>
+
+                                </View>
+                            </Container>
+                        </>
                     }
 
                 </View>
-            </ScrollView>
+            </ScrollView >
         </>
     )
 }

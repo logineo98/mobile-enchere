@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Image } from 'react-native'
 import { Colors, api_public, convertDateToMillis, css } from '../../../libs'
@@ -31,6 +31,23 @@ const Small_Enchere_Card = ({ data, type, theme }) => {
         setTypOverlay("edit")
     }
 
+    const styles = StyleSheet.create({
+        container: { flex: 1, marginVertical: 2, backgroundColor: Colors.white, borderRadius: 5, borderWidth: 1, borderColor: data?.enchere_type === "private" ? "tomato" : Colors.input_border_color },
+
+        main_content: { width: "100%", flexDirection: "row" },
+        image_container: { width: "40%", borderTopLeftRadius: 10, borderBottomLeftRadius: 10 },
+        title: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+        image: { width: "100%", height: "100%", resizeMode: "cover", borderTopLeftRadius: 10, borderBottomLeftRadius: 10 },
+        infos: { width: "60%", padding: 5, height: "100%", borderLeftWidth: 1, borderLeftColor: data?.enchere_type === "private" ? "tomato" : "rgba(0,0,0,0.1)" },
+        content: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 2 },
+        name: { width: "70%", fontSize: 18, letterSpacing: 1, fontWeight: "300" },
+
+        price: { fontWeight: "300", color: Colors.main, fontSize: 12 },
+        reserve: { fontSize: 13 },
+        categorie: {},
+        delai: { fontSize: 12 },
+    })
+
     return (
         <TouchableOpacity onPress={() => navigation.navigate("detail", { data })} style={[styles.container, { backgroundColor: theme === "sombre" ? Colors.home_card : Colors.white }]}>
             <StatusBar barStyle={"light-content"} backgroundColor={Colors.black} />
@@ -59,7 +76,7 @@ const Small_Enchere_Card = ({ data, type, theme }) => {
                 <View style={styles.infos}>
                     <View style={styles.title}>
                         <Text style={[styles.name, { color: theme === "sombre" ? Colors.white : Colors.black }]}>{data?.title?.length <= 10 ? data?.title?.slice(0, 10) : data?.title?.slice(0, 10) + "..."}</Text>
-                        {type === "reject" ? <Edit_Delete edit={true} handleEdit={handleEdit} data={data} /> : <Edit_Delete data={data} />}
+                        {type === "reject" && <Edit_Delete edit={true} handleEdit={handleEdit} data={data} />}
                     </View>
                     <View>
                         <Text style={styles.price}>{data?.history[data?.history?.length - 1]?.montant || data?.started_price} FCFA</Text>
@@ -77,12 +94,6 @@ const Small_Enchere_Card = ({ data, type, theme }) => {
                             <Text style={[styles.delai, { color: Colors.warning }]}>Expirée</Text>
                         </View>
                     }
-                    {type !== "reject" && type !== "finished" &&
-                        <View style={styles.content}>
-                            <Text style={[styles.delai, { color: theme === "sombre" ? Colors.white : Colors.black }]}>Expiration :</Text>
-                            <CountdownTimer targetDate={convertDateToMillis(data?.expiration_time)} size={11} hideLabel={true} />
-                        </View>
-                    }
                     {type === "reject" &&
                         <>
                             <View style={styles.content}>
@@ -94,6 +105,18 @@ const Small_Enchere_Card = ({ data, type, theme }) => {
                             </TouchableOpacity>
                         </>
                     }
+                    {type === "pending" &&
+                        <View style={styles.content}>
+                            <Text style={[styles.delai, { color: theme === "sombre" ? Colors.white : Colors.black }]}>Status :</Text>
+                            <Text style={[styles.delai, { color: Colors.warning }]}>En attente</Text>
+                        </View>
+                    }
+                    {type !== "reject" && type !== "finished" && type !== "pending" &&
+                        <View style={styles.content}>
+                            <Text style={[styles.delai, { color: theme === "sombre" ? Colors.white : Colors.black }]}>Expiration :</Text>
+                            <CountdownTimer targetDate={convertDateToMillis(data?.expiration_time)} size={11} hideLabel={true} />
+                        </View>
+                    }
                 </View>
             </View>
             <View style={{ alignSelf: "flex-end", borderWidth: 0.3, borderColor: Colors.input_border_color, width: "40%", borderRadius: 100 }} />
@@ -102,20 +125,3 @@ const Small_Enchere_Card = ({ data, type, theme }) => {
 }
 
 export default Small_Enchere_Card
-
-const styles = StyleSheet.create({
-    container: { flex: 1, marginVertical: 2, backgroundColor: Colors.white, borderRadius: 5, borderWidth: 0.6, borderColor: Colors.input_border_color },
-
-    main_content: { width: "100%", flexDirection: "row" },
-    image_container: { width: "40%", borderTopLeftRadius: 7, borderBottomLeftRadius: 7 },
-    title: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-    image: { width: "100%", height: "100%", resizeMode: "cover", borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
-    infos: { width: "60%", padding: 5, height: "100%", borderLeftWidth: 1, borderLeftColor: "rgba(0,0,0,0.1)" },
-    content: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 2 },
-    name: { width: "70%", fontSize: 18, letterSpacing: 1, fontWeight: "300" },
-
-    price: { fontWeight: "300", color: Colors.main, fontSize: 12 },
-    reserve: { fontSize: 13 },
-    categorie: {},
-    delai: { fontSize: 12 },
-})

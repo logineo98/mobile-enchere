@@ -45,7 +45,7 @@ const Profile = ({ navigation, route }) => {
                         <Image source={!isEmpty(host?.facebook) ? { uri: host?.facebook?.picture_url } : images.user_avatar} style={css.profile.profile_image} />
                     </View>
                     <View style={css.profile.profile_details}>
-                        {(host?.facebook?.first_name || host?.facebook?.last_name) && <Text style={[css.profile.profile_details_text, { fontSize: 20, fontWeight: 300, color: themes === "sombre" ? Colors.white : Colors.dark }]}>{host?.facebook?.first_name + " " + host?.facebook?.last_name || host?.name}</Text>}
+                        {(host?.facebook?.first_name || host?.facebook?.last_name) && <Text style={[css.profile.profile_details_text, { fontSize: 20, fontWeight: 300, color: themes === "sombre" ? Colors.white : Colors.dark }]}>{(host?.facebook?.first_name + " " + host?.facebook?.last_name).length < 14 ? (host?.facebook?.first_name + " " + host?.facebook?.last_name) : (host?.facebook?.first_name + " " + host?.facebook?.last_name).slice(0, 14) + "..."}</Text>}
                         <Text style={css.profile.profile_details_text}>{host?.phone}</Text>
                         {(host?.facebook?.email || host?.email) && <Text style={[css.profile.profile_details_text, { fontSize: 13, color: themes === "sombre" ? Colors.white : Colors.dark }]}>{host?.email?.slice(0, 25)}{host?.email?.length > 25 && "..."}</Text>}
                         {(host?.facebook?.town || host?.town) && <Text style={[css.profile.profile_details_text, { fontSize: 10, color: themes === "sombre" ? Colors.white : Colors.dark }]}>{host?.town?.slice(0, 25)}{host?.town?.length > 25 && "..."}</Text>}

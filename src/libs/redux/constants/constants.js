@@ -1,12 +1,12 @@
 
-export const api = "http://192.168.50.82:5000"
-export const api_public = "http://192.168.50.82:5000/api/public"
+// export const api = "http://192.168.50.82:5000"
+// export const api_public = "http://192.168.50.82:5000/api/public"
 
 // export const api = "http://192.168.1.102:5000"
 // export const api_public = "http://192.168.1.102:5000/api/public"
 
-// export const api = "http://192.168.1.103:5000"
-// export const api_public = "http://192.168.1.103:5000/api/public"
+export const api = "http://192.168.1.103:5000"
+export const api_public = "http://192.168.1.103:5000/api/public"
 
 // export const api = "http://192.168.50.247:5000"
 // export const api_public = "http://192.168.50.247:5000/api/public"
@@ -46,7 +46,7 @@ export const _error_enchere = "_error_enchere"
 
 
 export const _get_all_encheres = "_get_all_encheres"
-export const _get_encheres_en_cours = "_get_encheres_en_cours"
+export const _get_all_encheres_without_loading = "_get_all_encheres_without_loading"
 export const _get_enchere = "_get_enchere"
 export const _create_enchere = "_create_enchere"
 export const _edit_enchere = "_edit_enchere"

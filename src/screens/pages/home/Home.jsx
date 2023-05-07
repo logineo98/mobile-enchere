@@ -21,8 +21,13 @@ const Home = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        setData(encheres?.filter(enchere => enchere?.enchere_status == "published" && !ExpirationVerify(enchere?.expiration_time)))
+        if (host?.vip === true)
+            setData(encheres?.filter(enchere => enchere?.enchere_status === "published" && !ExpirationVerify(enchere?.expiration_time) && (enchere?.enchere_type === "private" || enchere?.enchere_type === "public")))
+        else
+            setData(encheres?.filter(enchere => enchere?.enchere_status === "published" && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public"))
+
     }, [encheres])
+
 
     const onRefresh = useCallback(() => {
         dispatch(get_all_encheres(host._id))
@@ -49,7 +54,6 @@ const Home = () => {
         }
     }, [firebase_token])
 
-
     return (
         loading ? <Loading text="chargement en cours" color="green" /> : (
 
@@ -59,16 +63,15 @@ const Home = () => {
                     <CustSwiper />
                 </View>
 
-
                 <View style={css.home.enchere_container}>
                     <Text style={[css.home.enchere_category_title, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Enchères en vedette</Text>
+                    <View style={[css.creer.screen_title_line, { marginTop: 0, width: "20%" }]} />
 
-                    {isEmpty(data) ? <NoEnchere theme={themes} message="Aucune enchère n'existe pour le moment." /> :
-                        <FlatList
-                            data={data}
-                            horizontal
-                            showsHorizontalScrollIndicator={false}
-                            keyExtractor={(item) => item?._id.toString()}
+                    {isEmpty(data) ?
+                        <View style={{ height: 180, justifyContent: "center" }}>
+                            <NoEnchere size={15} style={{ textAlign: "center" }} theme={themes} message="Aucune enchère en vedette n'existe pour le moment." />
+                        </View> :
+                        <FlatList data={data.slice(0, 4)} horizontal showsHorizontalScrollIndicator={false} keyExtractor={(item) => item?._id.toString()}
                             renderItem={({ item }) => <Favorite data={item} theme={themes} width={data.length <= 1 ? 340 : 290} height={180} />}
                         />
                     }
@@ -76,6 +79,8 @@ const Home = () => {
 
                 <View style={css.home.category_container}>
                     <Text style={css.home.enchere_category_title}>Les catégories</Text>
+                    <View style={[css.creer.screen_title_line, { marginTop: 0, marginBottom: 15, width: "20%" }]} />
+
 
                     <View style={css.home.categories_lists}>
                         {categories.map(category => <CardHome key={category.id} h_img={135} theme={themes} container_width={"47%"} mb={10} category={category} />)}

@@ -6,7 +6,6 @@ import CountdownTimer from '../../commons/timer/CountdownTimer'
 import { api_public } from '../../../libs/redux/constants/constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { dislike_enchere, like_enchere } from '../../../libs/redux/actions/enchere.action'
-import Edit_Delete from '../../commons/Edit_Delete'
 
 const Favorite = ({ data, width, height, theme }) => {
   const navigation = useNavigation()
@@ -19,7 +18,7 @@ const Favorite = ({ data, width, height, theme }) => {
     categories: { width: '70%', flexDirection: 'row', alignItems: 'center', marginHorizontal: 3, marginVertical: 3, gap: 5 },
     categories_item: { marginRight: 3, fontSize: 10, color: theme === "sombre" ? "wheat" : Colors.brown },
     title: { fontSize: 20, fontWeight: 'bold', marginBottom: 10, color: '#262626' },
-    card: { marginRight: 20, borderRadius: 5, width: 300, borderWidth: 1, borderColor: 'rgba(0,0,0,0.12)', backgroundColor: theme === "sombre" ? Colors.home_card : Colors.white, marginVertical: 5 },
+    card: { marginRight: 20, borderRadius: 5, width: 300, borderWidth: 1, borderColor: data?.enchere_type === "private" ? "tomato" : "rgba(0,0,0,0.12)", backgroundColor: theme === "sombre" ? Colors.home_card : Colors.white, marginVertical: 5 },
     bottom: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%', paddingVertical: 5 },
     left: { flexDirection: 'row', alignItems: "center" },
     right: { flexDirection: 'row', alignItems: "center" },
@@ -27,7 +26,7 @@ const Favorite = ({ data, width, height, theme }) => {
   })
 
   const like = () => {
-    if (host?.facebook) {
+    if (host?.facebook || host?.vip === true) {
       dispatch(like_enchere(data?._id, host?._id, { user_id: host?._id }))
     } else {
       Alert.alert("Avertissement", "Veuillez, vous connecter à facebook d'abord au niveau du profil.", [{ text: "OK" }])
@@ -35,7 +34,7 @@ const Favorite = ({ data, width, height, theme }) => {
   }
 
   const dislike = () => {
-    if (host?.facebook) {
+    if (host?.facebook || host?.vip === true) {
       dispatch(dislike_enchere(data?._id, host?._id, { user_id: host?._id }))
     } else {
       Alert.alert("Avertissement", "Veuillez, vous connecter à facebook d'abord au niveau du profil.", [{ text: "OK" }])
@@ -43,20 +42,19 @@ const Favorite = ({ data, width, height, theme }) => {
   }
 
   return (
-    <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate("detail", { data })} style={[styles.card, { width: width ? width : 300, }]}>
+    <TouchableOpacity activeOpacity={0.5} onPress={() => navigation.navigate("detail", { data })} style={[styles.card, { width: width ? width : 300 }]}>
       <Image source={{ uri: `${api_public}/images/${data?.medias[0]}` }} style={[styles.image, { height: height ? height : 150 }]} />
-      <View style={{ padding: 10, borderTopWidth: 1, borderTopColor: "rgba(0,0,0,0.1)" }}>
+      <View style={{ padding: 10, borderTopWidth: 1, borderTopColor: data?.enchere_type === "private" ? "tomato" : "rgba(0,0,0,0.1)" }}>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
           <Text style={styles.name}>{data?.title?.length <= 22 ? data?.title?.slice(0, 22) : data?.title?.slice(0, 22) + "..."}</Text>
 
-          {host?._id !== data?.sellerID?._id ?
+          {(host?._id !== data?.sellerID) &&
             <TouchableOpacity>
               {data?.likes?.includes(host?._id) ?
                 <Ionicons name={'md-bookmark'} color={Colors.main} size={25} onPress={dislike} /> :
                 <Ionicons name={'ios-bookmark-outline'} color={theme === "sombre" ? Colors.white : Colors.gray} size={25} onPress={like} />
               }
-            </TouchableOpacity> :
-            <Edit_Delete data={data} />
+            </TouchableOpacity>
           }
         </View>
 

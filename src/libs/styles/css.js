@@ -156,7 +156,7 @@ const home = StyleSheet.create({
 
 
     // pour les attributs communs au deux enchere et categories
-    enchere_category_title: { color: Colors.black, fontSize: 18, fontWeight: "bold", marginBottom: 10 },
+    enchere_category_title: { color: Colors.black, fontSize: 18, fontWeight: "bold", marginBottom: 0 },
 })
 
 const creer = StyleSheet.create({

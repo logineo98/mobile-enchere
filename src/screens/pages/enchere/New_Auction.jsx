@@ -7,7 +7,7 @@ import { CheckBox } from 'react-native-elements'
 import DatePicker from 'react-native-date-picker'
 import { format } from 'date-fns'
 import DocumentPicker from 'react-native-document-picker'
-import { CategoriesArticle, Colors, css, handleChange, images, isEmpty, isImage, isVideo, validation_create_enchere } from '../../../libs'
+import { CategoriesArticle, Colors, css, formatNumberWithSpaces, handleChange, images, isEmpty, isImage, isVideo, validation_create_enchere } from '../../../libs'
 import { Container, InputHandleError, Loading, Separateur } from '../../../components'
 import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list'
 import { useDispatch, useSelector } from 'react-redux'
@@ -20,7 +20,7 @@ const New_Auction = () => {
     const init = { files: "", sellerID: "", title: "", description: "", categories: [], delivery_options: { teliman: true, own: false, cost: false }, started_price: "", increase_price: "", reserve_price: "", expiration_time: "", enchere_status: "", enchere_type: "", hostID: "" }
     const [inputs, setInputs] = useState(init)
     const [categories, setCategories] = useState([])
-    const [selectedValue, setSelectedValue] = useState("publique")
+    const [selectedValue, setSelectedValue] = useState("privée")
     const [date, setDate] = useState(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
     const [selectedFiles, setSelectedFiles] = useState([])
     const [modalVisible, setModalVisible] = useState(false)
@@ -113,7 +113,7 @@ const New_Auction = () => {
     //------------submit -----------------
     const handleSubmit = () => {
 
-        if (host?.facebook) {
+        if (host?.facebook || host?.vip === true) {
             inputs.sellerID = host?._id
             inputs.categories = categories
             inputs.expiration_time = new Date(date).toISOString()
@@ -154,8 +154,6 @@ const New_Auction = () => {
         } else {
             Alert.alert("Avertissement", "Veuillez, vous connecter à facebook d'abord au niveau du profil.", [{ text: "OK" }])
         }
-
-
     }
 
     useEffect(() => {
@@ -164,7 +162,7 @@ const New_Auction = () => {
             setCategories([])
             setSelectedFiles([])
             setDate(new Date(new Date().getTime() + 24 * 60 * 60 * 1000))
-            setSelectedValue("publique")
+            setSelectedValue("privée")
             setClickSubmit(false)
 
             all_firebase_token?.forEach(token => {
@@ -361,7 +359,7 @@ const New_Auction = () => {
                                         data={data}
                                         save="value"
                                         search={false}
-                                        placeholder={data[0].value}
+                                        placeholder={data[1].value}
                                         dropdownStyles={{ borderWidth: 1, borderColor: Colors.input_border_color, borderRadius: 5 }}
                                         boxStyles={{ borderWidth: 1, borderColor: Colors.input_border_color, borderRadius: 5 }}
                                     />
