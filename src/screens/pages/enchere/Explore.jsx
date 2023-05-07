@@ -1,21 +1,22 @@
 import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Colors, ExpirationVerify, css, isEmpty } from '../../../libs'
+import { Colors, ExpirationVerify, css } from '../../../libs'
 import { Favorite, Loading, NoEnchere, Reloader } from '../../../components'
 import { Switch } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
 import { get_all_encheres } from '../../../libs/redux/actions/enchere.action'
 
 const Explorer = () => {
-    const [refreshing, setRefreshing] = useState(false)
-    const [vip, setVip] = useState(false)
-    const { encheres, loading } = useSelector(state => state?.enchere)
+
     const { host } = useSelector(state => state?.user)
-    const dispatch = useDispatch()
-    const [allEncheres, setAllEncheres] = useState([])
     const { themes } = useSelector(state => state?.setting)
+    const dispatch = useDispatch()
 
+    const [refreshing, setRefreshing] = useState(false)
+    const [vip, setVip] = useState(host?.vip === true ? true : false)
+    const { encheres, loading } = useSelector(state => state?.enchere)
 
+    const [allEncheres, setAllEncheres] = useState([])
 
     //recuperer les encheres selon qu'il soit vip ou pas
     useEffect(() => {
@@ -59,7 +60,7 @@ const Explorer = () => {
                     <Reloader refreshing={refreshing} onRefresh={onRefresh} theme={themes}>
                         {allEncheres?.length <= 0 ?
                             <View style={{ flex: 1, alignItems: "center", paddingHorizontal: 20, height: "100%", justifyContent: "center", backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }}>
-                                <NoEnchere style={{ textAlign: "center" }} theme={themes} message="Aucune enchère n'existe pour le moment." />
+                                <NoEnchere style={{ textAlign: "center" }} theme={themes} message={host?.vip === true ? "Aucune enchère VIP n'existe pour le moment" : "Aucune enchère n'existe pour le moment."} />
                             </View> :
                             <>
                                 {allEncheres?.map(enchere => <Favorite key={enchere._id} theme={themes} data={enchere} width={"100%"} height={200} />)}

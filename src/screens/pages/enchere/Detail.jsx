@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Fontisto from 'react-native-vector-icons/Fontisto'
-import { Colors, ExpirationVerify, areIn, convertDateToMillis, css } from '../../../libs'
+import { Colors, ExpirationVerify, areIn, convertDateToMillis, css, formatNumberWithSpaces } from '../../../libs'
 import { Container, CountdownTimer, Related } from '../../../components'
 import { Overlay } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
@@ -14,13 +14,16 @@ import { useRef } from 'react'
 import { vider_new_enchere } from '../../../libs/redux/actions/enchere.action'
 
 const Detail = ({ route }) => {
-    const [visible, setVisible] = useState(false)
     const navigation = useNavigation()
     const { data } = route?.params
+
+    const [visible, setVisible] = useState(false)
     const [relatedData, setRelatedData] = useState([])
+    const [enchereStatus, setEnchereStatus] = useState("non connue")
+
     const scrollViewRef = useRef(null)
 
-    const { host } = useSelector(state => state?.user)
+    const { host, users } = useSelector(state => state?.user)
     const { encheres } = useSelector(state => state?.enchere)
     const { themes } = useSelector(state => state?.setting)
     const dispatch = useDispatch()
@@ -34,6 +37,11 @@ const Detail = ({ route }) => {
                 if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time)) tab.push(enchere)
         })
         setRelatedData(tab)
+
+        if (data?.enchere_status === "published") setEnchereStatus("publiée")
+        else if (data?.enchere_status === "pending") setEnchereStatus("en attente de validation")
+        else if (data?.enchere_status === "rejected") setEnchereStatus("rejetée")
+        else if (data?.enchere_status === "closed") setEnchereStatus("terminée")
     }, [encheres, data])
 
     useEffect(() => {
@@ -47,7 +55,6 @@ const Detail = ({ route }) => {
             Alert.alert("Avertissement", "Veuillez, vous connecter à facebook d'abord au niveau du profil.", [{ text: "OK" }])
         }
     }
-
 
     return (
         <>
@@ -97,7 +104,10 @@ const Detail = ({ route }) => {
                                     <Text style={[css.details.detail_title_text, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{(data?.title && data?.title?.length <= 14) ? data?.title?.slice(0, 14) : data?.title?.slice(0, 14) + "..."}</Text>
                                     <View style={css.details.location}>
                                         <Ionicons name="location-sharp" size={16} color={themes === "sombre" ? Colors.white : Colors.black} />
-                                        <Text style={[css.details.detail_text, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{data?.sellerID?.town ? data?.sellerID?.town?.length <= 14 ? data?.sellerID?.town?.slice(0, 14) : data?.sellerID?.town?.slice(0, 14) + "..." : "Non renseignée"}</Text>
+                                        {users?.map(user => {
+                                            if (data?.sellerID === user?._id)
+                                                return <Text key={data?.sellerID} style={[css.details.detail_text, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{user?.town ? user?.town?.length <= 14 ? user?.town?.slice(0, 14) : user?.town?.slice(0, 14) + "..." : "Non renseignée"}</Text>
+                                        })}
                                     </View>
                                 </View>
 
@@ -116,11 +126,11 @@ const Detail = ({ route }) => {
                             <View style={css.details.detail_price_container}>
                                 <View style={css.details.price_info}>
                                     <Text style={[css.details.detail_label, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Prix initial</Text>
-                                    <Text style={[css.details.price, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{data?.started_price} FCFA</Text>
+                                    <Text style={[css.details.price, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{formatNumberWithSpaces(data?.started_price)} FCFA</Text>
                                 </View>
                                 <View style={css.details.price_info}>
                                     <Text style={[css.details.detail_label, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Prix de reserve</Text>
-                                    <Text style={[css.details.price, , { color: themes === "sombre" ? Colors.white : Colors.black }]}>{data?.reserve_price} FCFA</Text>
+                                    <Text style={[css.details.price, , { color: themes === "sombre" ? Colors.white : Colors.black }]}>{formatNumberWithSpaces(data?.reserve_price)} FCFA</Text>
                                 </View>
                             </View>
 
@@ -134,7 +144,7 @@ const Detail = ({ route }) => {
                             <View style={css.details.detail_bid_info}>
                                 <View style={css.details.detail_bid_left}>
                                     <Text style={[css.details.detail_label, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Prix d'enchère actuel</Text>
-                                    <Text style={[css.details.price, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{data?.history[data?.history?.length - 1]?.montant || data?.started_price} FCFA</Text>
+                                    <Text style={[css.details.price, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{formatNumberWithSpaces(data?.history[data?.history?.length - 1]?.montant || data?.started_price)} FCFA</Text>
                                 </View>
                                 <View style={css.details.detail_bid_right}>
                                     <Text style={[css.details.detail_label, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Délai d'expiration</Text>
@@ -145,39 +155,46 @@ const Detail = ({ route }) => {
                                     </View>
                                 </View>
                             </View>
+                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                                <Text style={{ gap: 20 }}>Status :</Text>
+                                <Text style={{ color: Colors.warning }}> {enchereStatus} </Text>
+                            </View>
                         </View>
 
                     </Container>
 
-                    <Container>
-                        <View style={[css.details.main_content, css.details.button, { backgroundColor: themes === "sombre" ? Colors.black : Colors.white }]}>
-                            <TouchableOpacity onPress={participate_enchere} style={css.details.detail_bid_button}>
-                                <Text style={css.details.detail_bid_button_text}>Participer à l'enchère</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </Container>
-
-                    {/* related products down */}
-                    {relatedData?.length > 0 && <>
-                        <View style={[css.details.separateur, { marginTop: 40 }]} />
-                        <Container >
-                            <View style={{ width: "100%", backgroundColor: themes === "sombre" ? Colors.black : Colors.white, padding: 10 }}>
-                                <Text style={css.details.detail_title_text}>Articles similaires</Text>
-                                <View style={css.creer.screen_title_line} />
-
-                                <View>
-                                    {relatedData?.slice(0, 5)?.map(related => (
-                                        <Related scrollViewRef={scrollViewRef} theme={themes} data={related} key={related?._id} />
-                                    ))}
-                                </View>
-
+                    {data?.sellerID !== host?._id && data?.enchere_status === "published" &&
+                        <Container  >
+                            <View style={[css.details.main_content, css.details.button, { backgroundColor: themes === "sombre" ? Colors.black : Colors.white }]}>
+                                <TouchableOpacity onPress={participate_enchere} style={css.details.detail_bid_button}>
+                                    <Text style={css.details.detail_bid_button_text}>Participer à l'enchère</Text>
+                                </TouchableOpacity>
                             </View>
                         </Container>
-                    </>
+                    }
+
+                    {/* related products down */}
+                    {relatedData?.length > 0 &&
+                        <>
+                            <View style={[css.details.separateur, { marginTop: 40 }]} />
+                            <Container >
+                                <View style={{ width: "100%", backgroundColor: themes === "sombre" ? Colors.black : Colors.white, padding: 10 }}>
+                                    <Text style={css.details.detail_title_text}>Articles similaires</Text>
+                                    <View style={css.creer.screen_title_line} />
+
+                                    <View>
+                                        {relatedData?.slice(0, 5)?.map(related => (
+                                            <Related scrollViewRef={scrollViewRef} theme={themes} data={related} key={related?._id} />
+                                        ))}
+                                    </View>
+
+                                </View>
+                            </Container>
+                        </>
                     }
 
                 </View>
-            </ScrollView>
+            </ScrollView >
         </>
     )
 }

@@ -1,43 +1,40 @@
 import React from 'react'
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { NavigationContainer } from '@react-navigation/native'
-import MainTabNavigation from './stacks/MainTabNavigation';
-import AuthStack from './stacks/AuthStack';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { auth } from '../redux/actions/user.action';
-import { _user_gets_fail } from '../redux/constants/constants';
-import { isEmpty } from '../utils/functions';
-import NetInfo from '@react-native-community/netinfo';
-import { Screen404 } from '../../screens';
-import { useState } from 'react';
-import { activeMode, activeMsg, activeNotif, settings } from '../redux/actions/setting.action';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import MainTabNavigation from './stacks/MainTabNavigation'
+import AuthStack from './stacks/AuthStack'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
+import { auth } from '../redux/actions/user.action'
+import { _user_gets_fail } from '../redux/constants/constants'
+import { isEmpty } from '../utils/functions'
+import NetInfo from '@react-native-community/netinfo'
+import { Screen404 } from '../../screens'
+import { useState } from 'react'
+import { settings } from '../redux/actions/setting.action'
 
 const RootNavigation = () => {
     const Stack = createNativeStackNavigator()
 
-    const dispatch = useDispatch();
-    const { isAuth, host } = useSelector(state => state?.user);
+    const dispatch = useDispatch()
+    const { isAuth, host } = useSelector(state => state?.user)
     const [isOnline, setIsOnline] = useState()
 
     useEffect(() => {
-        dispatch(auth());
-    }, [dispatch]);
+        dispatch(auth())
+    }, [dispatch])
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
-            setIsOnline(state.isConnected);
-        });
+            setIsOnline(state.isConnected)
+        })
 
-        return () => {
-            unsubscribe();
-        };
-    }, []);
+        return () => unsubscribe()
+    }, [])
 
     useEffect(() => {
         dispatch(settings())
-    }, [dispatch]);
+    }, [dispatch])
 
     return (
         <NavigationContainer>

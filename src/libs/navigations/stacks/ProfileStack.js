@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Support, My_Auctions, Detail, Edit_Profile, Make_A_Bid, Profile, Settings, FacebookValidation, MySales, MyPurchases, MyFavorites, Evaluations, Historiques, Invitations, Vitepay_confirm } from '../../../screens'
@@ -7,9 +7,6 @@ import { useLayoutEffect } from 'react'
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native'
 import { useDispatch } from 'react-redux'
 import { checking } from '../../redux/actions/user.action'
-
-
-
 
 const SettingStack = () => {
     const accStack = createNativeStackNavigator()
@@ -21,7 +18,6 @@ const SettingStack = () => {
         </accStack.Navigator>
     )
 }
-
 
 const ProfileStack = ({ route }) => {
     const profStack = createNativeStackNavigator()
@@ -66,7 +62,6 @@ const ProfileStack = ({ route }) => {
             {/* concerne les enchères */}
             <profStack.Screen name="detail" component={Detail} />
             <profStack.Screen name="make_a_bid" component={Make_A_Bid} />
-
             {/* concerne le profile */}
             <profStack.Screen name="edit_profile" component={Edit_Profile} />
             <profStack.Screen name="facebook_validation" component={FacebookValidation} />

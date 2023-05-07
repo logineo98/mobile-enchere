@@ -1,9 +1,10 @@
-import { _clear_errors, _clear_invitation, _clear_message, _clear_user_updated, _send_invitation_success, _user_auth_success, _user_compte_activation_success, _user_delete_success, _user_error, _user_forgot_success, _user_get_success, _user_gets_success, _user_loading, _user_login_success, _user_logout, _user_register_success, _user_reset_forgot_password_success, _user_update_success, _user_verify_confirm_code_success } from "../constants/constants"
+import { _clear_errors, _clear_invitation, _clear_message, _clear_user_updated, _get_all_users_success, _send_invitation_success, _user_auth_success, _user_compte_activation_success, _user_delete_success, _user_error, _user_forgot_success, _user_get_success, _user_gets_success, _user_loading, _user_login_success, _user_logout, _user_register_success, _user_reset_forgot_password_success, _user_update_success, _user_verify_confirm_code_success } from "../constants/constants"
 
 const init = {
     isAuth: false,
     host: null,
     user: null,
+    users: [],
     message: null,
     errors: null,
     loading: false,
@@ -28,6 +29,8 @@ const user_reducer = (state = init, action) => {
         case _user_auth_success: return { ...state, loading: false, errors: null, host: action.payload.ans, isAuth: true }
         case "_user_auth_failed": return { ...state, loading: false, errors: null, host: null, isAuth: action.payload }
 
+        case _get_all_users_success: return { ...state, users: action.payload, loading: false, errors: null }
+
         case _user_login_success: return { ...state, loading: false, errors: null, host: action.payload.ans, login_succeed: true, isAuth: true, message: action.payload.message }
 
         case _user_compte_activation_success: return { ...state, loading: false, errors: null, compte_active: action.payload.ans, message: action.payload.message }
@@ -42,7 +45,14 @@ const user_reducer = (state = init, action) => {
 
         case _user_register_success: return { ...state, loading: false, errors: null, register_succeed: action.payload.ans, phone: action.payload.ans.phone, message: action.payload.message }
 
-        case _user_update_success: return { ...state, loading: false, errors: null, host: action.payload.ans, user_updated: action.payload.ans }
+        case _user_update_success: return {
+            ...state, loading: false, errors: null, host: action.payload.ans, user_updated: action.payload.ans,
+            users: state.users.map(user => {
+                if (user?._id === action.payload.ans._id)
+                    return action.payload.ans
+                else return user
+            })
+        }
 
         case _user_delete_success: return { ...state, loading: false, errors: null, user_deleted: action.payload.ans }
 
