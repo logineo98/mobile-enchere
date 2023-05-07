@@ -18,6 +18,16 @@ const auth = StyleSheet.create({
         elevation: 2,
         borderRadius: 10
     },
+    inputStyle: {
+        borderWidth: 2,
+        borderRadius: 5,
+        marginHorizontal: 5,
+        paddingHorizontal: 10,
+        paddingVertical: 8,
+        fontSize: 20,
+        color: 'black',
+        borderRadius: 10, backgroundColor: "red"
+    },
     scroll_container: {
         flexGrow: 1, paddingVertical: 50, width: "100%",
     },

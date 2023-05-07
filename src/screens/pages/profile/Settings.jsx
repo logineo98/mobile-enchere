@@ -17,7 +17,7 @@ const Settings = ({ navigation, route }) => {
     const [notif, setNotif] = useState(false);
     const [msg, setMsg] = useState(false);
     const [them, setThem] = useState(false);
-    const [mode, setMode] = useState("")
+    const [mode, setMode] = useState("clair")
     const [data, setData] = useState(false);
     const dispatch = useDispatch();
     const handleRedirect = (link) => { navigation.navigate(link) }

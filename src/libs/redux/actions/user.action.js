@@ -23,6 +23,7 @@ export const user_error = (error) => {
     }
 }
 
+//verifier que l'utilisateur est connecté
 export const checking = () => async (dispatch) => {
     try {
         const token = await AsyncStorage.getItem('cookie');
@@ -34,7 +35,7 @@ export const checking = () => async (dispatch) => {
     }
 }
 
-
+//maintenir un utilisateur connecter
 export const auth = () => async (dispatch) => {
     try {
         dispatch(isLoading());
@@ -53,11 +54,11 @@ export const auth = () => async (dispatch) => {
     }
 }
 
+//se connexion
 export const login = (data) => async (dispatch) => {
     try {
         dispatch(isLoading());
         const ans = await axios.post(`${api}/api/user/login`, data);
-        console.log("key: ", ans.data.response.licenseKey)
         if (!isEmpty(ans.data)) {
             await AsyncStorage.setItem('cookie', ans.data.token);
             dispatch({ type: _user_login_success, payload: { ans: ans?.data?.response, message: ans.data.message } });
@@ -67,19 +68,36 @@ export const login = (data) => async (dispatch) => {
     }
 }
 
-export const user_compte_activation = (data) => async (dispatch) => {
+//verifier le numero lors de l'inscription et renvoyer le code d'activation
+export const checking_phone = (data) => async (dispatch) => {
     try {
         dispatch(isLoading());
-        const token = await AsyncStorage.getItem('cookie');
-        const ans = await axios.post(`${api}/api/user/activation-license`, data, { headers: { token } });
+        const ans = await axios.post(`${api}/api/user/checking-phone`, data);
         if (!isEmpty(ans.data)) {
-            dispatch({ type: _user_compte_activation_success, payload: { ans: ans?.data?.response, message: ans.data.message } });
+            console.log(ans.data)
+            await AsyncStorage.setItem("activation_code", JSON.stringify({ code: ans?.data?.response }))
+            dispatch({ type: "_user_checking_phone_success", payload: { ans: ans?.data?.response, message: ans.data.message } });
         }
     } catch (error) {
-        dispatch(user_error(error))
+        dispatch(user_error(error || error.message))
     }
 }
 
+//inscription d'utilisateur
+export const signup = (data) => async (dispatch) => {
+    try {
+        dispatch(isLoading());
+        const ans = await axios.post(`${api}/api/user/signup`, data);
+        if (!isEmpty(ans.data)) {
+            await AsyncStorage.setItem('cookie', ans.data.token);
+            dispatch({ type: "_user_signup_success", payload: { ans: ans?.data?.response, message: ans.data.message } });
+        }
+    } catch (error) {
+        dispatch(user_error(error || error.message))
+    }
+}
+
+//deconnexion
 export const logout = () => async (dispatch) => {
     try {
         dispatch(isLoading());
@@ -90,6 +108,7 @@ export const logout = () => async (dispatch) => {
     }
 }
 
+//mot de passe oublier
 export const forgot = (data) => async (dispatch) => {
     try {
         dispatch(isLoading());
@@ -104,6 +123,7 @@ export const forgot = (data) => async (dispatch) => {
     }
 }
 
+//verifier que le code de recuperation est correct
 export const verify_confirm_code = (data) => async (dispatch) => {
     try {
         dispatch(isLoading());
@@ -117,6 +137,7 @@ export const verify_confirm_code = (data) => async (dispatch) => {
     }
 }
 
+//reinitialiser le mot de passe
 export const reset_forgot_password = (data) => async (dispatch) => {
     try {
         dispatch(isLoading());
@@ -128,18 +149,7 @@ export const reset_forgot_password = (data) => async (dispatch) => {
     }
 }
 
-export const register = (data) => async (dispatch) => {
-    try {
-        dispatch(isLoading());
-        const ans = await axios.post(`${api}/api/user`, data)
-
-        if (!isEmpty(ans.data))
-            dispatch({ type: _user_register_success, payload: { ans: ans.data.response, message: ans.data.message } })
-    } catch (error) {
-        dispatch(user_error(error))
-    }
-}
-
+//envoyer une invitation
 export const send_invitation = (data) => async (dispatch) => {
     try {
         dispatch(isLoading());
@@ -152,6 +162,7 @@ export const send_invitation = (data) => async (dispatch) => {
     }
 }
 
+//mise à jour de l'utilisateur
 export const updateUser = (data) => async (dispatch) => {
     try {
         dispatch(isLoading());
@@ -165,6 +176,7 @@ export const updateUser = (data) => async (dispatch) => {
     }
 }
 
+//supprimer l'utilisateur
 export const deleteUser = (data) => async (dispatch) => {
     try {
         dispatch(isLoading());
@@ -177,7 +189,6 @@ export const deleteUser = (data) => async (dispatch) => {
         dispatch(user_error(error))
     }
 }
-
 
 export const get_all_users = (hostID) => async (dispatch) => {
     try {

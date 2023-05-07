@@ -82,7 +82,7 @@ const FacebookValidation = ({ navigation }) => {
                         <View style={css.auth.separator} />
                         <View style={[css.auth.auth_bottom_container]}>
                             <TouchableOpacity onPress={() => navigation.goBack()} activeOpacity={0.7} style={[css.auth.auth_submit_btn, { backgroundColor: Colors.black, borderRadius: 5 }]}>
-                                <Text style={css.auth.auth_submit_btn_text}>Annuler</Text>
+                                <Text style={css.auth.auth_submit_btn_text}>Retour</Text>
                             </TouchableOpacity>
                         </View>
 

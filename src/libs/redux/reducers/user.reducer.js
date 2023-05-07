@@ -10,7 +10,6 @@ const init = {
     loading: false,
     user_updated: null,
     user_deleted: null,
-    compte_active: null,
     invitation_data: null,
     code_de_recuperation: null,
     phone: null,
@@ -18,7 +17,7 @@ const init = {
     reset_succeed: null,
     register_succeed: null,
     login_succeed: false,
-    license: null,
+    account_activation_code: null,
 }
 
 const user_reducer = (state = init, action) => {
@@ -26,14 +25,15 @@ const user_reducer = (state = init, action) => {
 
         case _user_loading: return { ...state, loading: true, errors: null }
 
+        //auth
         case _user_auth_success: return { ...state, loading: false, errors: null, host: action.payload.ans, isAuth: true }
+
         case "_user_auth_failed": return { ...state, loading: false, errors: null, host: null, isAuth: action.payload }
 
-        case _get_all_users_success: return { ...state, users: action.payload, loading: false, errors: null }
-
+        case "_user_signup_success":
         case _user_login_success: return { ...state, loading: false, errors: null, host: action.payload.ans, login_succeed: true, isAuth: true, message: action.payload.message }
 
-        case _user_compte_activation_success: return { ...state, loading: false, errors: null, compte_active: action.payload.ans, message: action.payload.message }
+        case "_user_checking_phone_success": return { ...state, loading: false, errors: null, account_activation_code: action.payload.ans, message: action.payload.message }
 
         case _user_logout: return { ...init, message: action.payload.message };
 
@@ -45,18 +45,13 @@ const user_reducer = (state = init, action) => {
 
         case _user_register_success: return { ...state, loading: false, errors: null, register_succeed: action.payload.ans, phone: action.payload.ans.phone, message: action.payload.message }
 
-        case _user_update_success: return {
-            ...state, loading: false, errors: null, host: action.payload.ans, user_updated: action.payload.ans,
-            users: state.users.map(user => {
-                if (user?._id === action.payload.ans._id)
-                    return action.payload.ans
-                else return user
-            })
-        }
+        case _user_update_success: return { ...state, loading: false, errors: null, host: action.payload.ans, user_updated: action.payload.ans }
 
         case _user_delete_success: return { ...state, loading: false, errors: null, user_deleted: action.payload.ans }
 
         case _send_invitation_success: return { ...state, host: action.payload.ans, invitation_data: action.payload.ans, message: action.payload.message, loading: false, errors: null, }
+
+        case _get_all_users_success: return { ...state, users: action.payload, loading: false, errors: null }
 
         case _user_error: return { ...state, loading: false, errors: action.payload }
 

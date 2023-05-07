@@ -2,7 +2,6 @@ import Forgot_Password from "./pages/auth/Forgot_Password";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Reset_Password from "./pages/auth/Reset_Password";
-import Synchonisation_Facebook from "./pages/auth/Synchonisation_Facebook";
 import Verification_Code_De_Confirmation from "./pages/auth/Verification_Code_De_Confirmation";
 import Detail from "./pages/enchere/Detail";
 import Explore from "./pages/enchere/Explore";
@@ -33,8 +32,8 @@ import Active_compte from "./pages/auth/Active_compte";
 
 
 export {
-    Login, Register, Forgot_Password, Verification_Code_De_Confirmation, Synchonisation_Facebook, Reset_Password,
+    Login, Register, Forgot_Password, Verification_Code_De_Confirmation, Reset_Password,
     Detail, Explore, Home, Make_A_Bid, My_Auctions, Profile, Settings, Edit_Profile, FacebookValidation,
     Confidentiality, Evaluations, Historiques, MyFavorites, MyPurchases, MySales, Support, New_Auction, Search, Filter,
-    Invitations, Vitepay_confirm, Screen404, Active_compte
+    Invitations, Vitepay_confirm, Screen404, Active_compte,
 }

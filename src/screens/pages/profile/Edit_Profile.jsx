@@ -52,7 +52,7 @@ const EditUserProfile = ({ navigation, route }) => {
         <>
             <StatusBar barStyle={"light-content"} backgroundColor={Colors.black} />
             {errors !== "" && <Toast config={toastConfig} />}
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[css.auth.scroll_container, { backgroundColor: themes === "sombre" ? Colors.black : "inherit" }]}>
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"} contentContainerStyle={[css.auth.scroll_container, { backgroundColor: themes === "sombre" ? Colors.black : "inherit" }]}>
 
                 <View style={css.auth.main_content}>
 

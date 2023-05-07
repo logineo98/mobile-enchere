@@ -6,9 +6,13 @@ import CountdownTimer from '../../commons/timer/CountdownTimer'
 import { api_public } from '../../../libs/redux/constants/constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { dislike_enchere, like_enchere } from '../../../libs/redux/actions/enchere.action'
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
+import * as Animatable from 'react-native-animatable';
+import { useEffect, useState } from 'react'
 
 const Favorite = ({ data, width, height, theme }) => {
   const navigation = useNavigation()
+  const [isCrownOn, setIsCrownOn] = useState(false);
   const { host, users } = useSelector(state => state?.user)
   const dispatch = useDispatch()
 
@@ -24,6 +28,15 @@ const Favorite = ({ data, width, height, theme }) => {
     right: { flexDirection: 'row', alignItems: "center" },
     delai: { flexDirection: 'row', alignItems: "center", backgroundColor: theme === "sombre" ? Colors.warning : Colors.light_red, borderRadius: 5, paddingHorizontal: 8 },
   })
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIsCrownOn(!isCrownOn);
+    }, 300);
+
+    return () => clearInterval(interval);
+  }, [isCrownOn]);
 
   const like = () => {
     if (host?.facebook || host?.vip === true) {
@@ -46,7 +59,12 @@ const Favorite = ({ data, width, height, theme }) => {
       <Image source={{ uri: `${api_public}/images/${data?.medias[0]}` }} style={[styles.image, { height: height ? height : 150 }]} />
       <View style={{ padding: 10, borderTopWidth: 1, borderTopColor: data?.enchere_type === "private" ? "tomato" : "rgba(0,0,0,0.1)" }}>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-          <Text style={styles.name}>{data?.title?.length <= 22 ? data?.title?.slice(0, 22) : data?.title?.slice(0, 22) + "..."}</Text>
+          <Text style={styles.name}>{data?.title?.length <= 22 ? data?.title?.slice(0, 22) : data?.title?.slice(0, 22) + "..."}
+            {data?.enchere_type === "private" &&
+              <Animatable.View style={{ alignItems: "center" }} animation={isCrownOn ? 'pulse' : null} iterationCount={isCrownOn ? 'infinite' : 1} >
+                <FontAwesome5Icon name="crown" size={10} color={isCrownOn ? Colors.main : Colors.home_card} style={{ paddingLeft: 5 }} />
+              </Animatable.View>}
+          </Text>
 
           {(host?._id !== data?.sellerID) &&
             <TouchableOpacity>

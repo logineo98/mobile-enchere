@@ -49,8 +49,9 @@ const Detail = ({ route }) => {
     }, [])
 
     const participate_enchere = () => {
+        const own = data?.sellerID !== host?._id && data?.enchere_status === "published" ? false : true
         if (host?.facebook) {
-            navigation.navigate("make_a_bid", { data })
+            navigation.navigate("make_a_bid", { data, own })
         } else {
             Alert.alert("Avertissement", "Veuillez, vous connecter à facebook d'abord au niveau du profil.", [{ text: "OK" }])
         }
@@ -102,8 +103,8 @@ const Detail = ({ route }) => {
                             <View style={[css.details.detail_title_container, { paddingBottom: 0 }]}>
                                 <View style={css.details.left}>
                                     <Text style={[css.details.detail_title_text, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{(data?.title && data?.title?.length <= 14) ? data?.title?.slice(0, 14) : data?.title?.slice(0, 14) + "..."}</Text>
-                                    <View style={css.details.location}>
-                                        <Ionicons name="location-sharp" size={16} color={themes === "sombre" ? Colors.white : Colors.black} />
+                                    <View style={[css.details.location]}>
+                                        <Ionicons name="location-sharp" size={12} color={themes === "sombre" ? Colors.white : Colors.black} />
                                         {users?.map(user => {
                                             if (data?.sellerID === user?._id)
                                                 return <Text key={data?.sellerID} style={[css.details.detail_text, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{user?.town ? user?.town?.length <= 14 ? user?.town?.slice(0, 14) : user?.town?.slice(0, 14) + "..." : "Non renseignée"}</Text>
@@ -156,21 +157,29 @@ const Detail = ({ route }) => {
                                 </View>
                             </View>
                             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-                                <Text style={{ gap: 20 }}>Status :</Text>
+                                <Text style={{ gap: 20, textDecorationLine: "underline", color: themes === "sombre" ? Colors.white : Colors.black }}>Status :</Text>
                                 <Text style={{ color: Colors.warning }}> {enchereStatus} </Text>
                             </View>
                         </View>
 
                     </Container>
 
-                    {data?.sellerID !== host?._id && data?.enchere_status === "published" &&
+                    {data?.sellerID !== host?._id && data?.enchere_status === "published" ?
                         <Container  >
                             <View style={[css.details.main_content, css.details.button, { backgroundColor: themes === "sombre" ? Colors.black : Colors.white }]}>
                                 <TouchableOpacity onPress={participate_enchere} style={css.details.detail_bid_button}>
                                     <Text style={css.details.detail_bid_button_text}>Participer à l'enchère</Text>
                                 </TouchableOpacity>
                             </View>
+                        </Container> :
+                        <Container  >
+                            <View style={[css.details.main_content, css.details.button, { backgroundColor: themes === "sombre" ? Colors.black : Colors.white }]}>
+                                <TouchableOpacity onPress={participate_enchere} style={[css.details.detail_bid_button, { backgroundColor: Colors.info }]}>
+                                    <Text style={css.details.detail_bid_button_text}>Voir l'etat de l'enchère</Text>
+                                </TouchableOpacity>
+                            </View>
                         </Container>
+
                     }
 
                     {/* related products down */}

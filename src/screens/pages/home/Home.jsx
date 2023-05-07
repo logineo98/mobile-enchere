@@ -78,7 +78,7 @@ const Home = () => {
                 </View>
 
                 <View style={css.home.category_container}>
-                    <Text style={css.home.enchere_category_title}>Les catégories</Text>
+                    <Text style={[css.home.enchere_category_title, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Les catégories</Text>
                     <View style={[css.creer.screen_title_line, { marginTop: 0, marginBottom: 15, width: "20%" }]} />
 
                     <View style={css.home.categories_lists}>

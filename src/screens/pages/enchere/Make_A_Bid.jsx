@@ -10,7 +10,7 @@ import { useEffect } from 'react'
 
 const Make_A_Bid = ({ navigation, route }) => {
     const [visible, setVisible] = useState(false);
-    const { data } = route?.params
+    const { data, own } = route?.params
     const dispatch = useDispatch();
     const { host } = useSelector(state => state?.user)
     const { themes } = useSelector(state => state?.setting)
@@ -88,7 +88,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                     </View>
                 }
             </ScrollView>
-            <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
+            {!own && <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
                 {ExpirationVerify(data?.expiration) ?
                     <TouchableOpacity onPress={toggleOverlay} style={styles.make}>
                         <Text style={styles.btn_text}>Placer une offre</Text>
@@ -98,6 +98,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                     </TouchableOpacity>
                 }
             </View>
+            }
         </View>
     )
 }

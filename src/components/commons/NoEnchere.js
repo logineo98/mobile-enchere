@@ -7,7 +7,7 @@ const NoEnchere = ({ message, size, theme, style }) => {
         message: { fontSize: size ? size : 17 }
     })
 
-    return <Text style={[styles.message, style, { color: theme === "sombre" ? Colors.white : Colors.black }]}> {message} </Text>
+    return <Text style={[styles.message, style, { color: theme === "sombre" ? "wheat" : Colors.black }]}> {message} </Text>
 }
 
 export default NoEnchere

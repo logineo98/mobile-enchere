@@ -76,7 +76,7 @@ const My_Auctions = () => {
                 <Reloader style={styles.screen_container} refreshing={refreshing} onRefresh={onRefresh} theme={themes}>
                     {isEmpty(enchere_en_cours) ?
                         <View style={{ flex: 1, alignItems: "center", paddingHorizontal: 20, height: "100%", justifyContent: "center", backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }}>
-                            <NoEnchere style={{ textAlign: "center" }} message="Aucune enchère en cours trouvée pour le moment" />
+                            <NoEnchere theme={themes} style={{ textAlign: "center" }} message="Aucune enchère en cours trouvée pour le moment" />
                         </View> :
                         <>
                             {enchere_en_cours?.map(enchere => <RenderItem key={enchere._id} theme={themes} item={enchere} width={"100%"} height={200} />)}
@@ -101,7 +101,7 @@ const My_Auctions = () => {
                 <Reloader style={styles.screen_container} refreshing={refreshing} onRefresh={onRefresh} theme={themes}>
                     {isEmpty(enchere_en_terminee) ?
                         <View style={{ flex: 1, alignItems: "center", paddingHorizontal: 20, height: "100%", justifyContent: "center", backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }}>
-                            <NoEnchere style={{ textAlign: "center" }} message="Aucune enchère terminée trouvée pour le moment" />
+                            <NoEnchere theme={themes} style={{ textAlign: "center" }} message="Aucune enchère terminée trouvée pour le moment" />
                         </View> :
                         <>
                             {enchere_en_terminee?.map(enchere => <RenderItem key={enchere._id} theme={themes} item={enchere} width={"100%"} height={200} />)}
@@ -124,7 +124,7 @@ const My_Auctions = () => {
                 <Reloader style={styles.screen_container} refreshing={refreshing} onRefresh={onRefresh} theme={themes}>
                     {isEmpty(enchere_en_rejetee) ?
                         <View style={{ flex: 1, alignItems: "center", paddingHorizontal: 20, height: "100%", justifyContent: "center", backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }}>
-                            <NoEnchere style={{ textAlign: "center" }} message="Aucune enchère rejetée trouvée pour le moment" />
+                            <NoEnchere theme={themes} style={{ textAlign: "center" }} message="Aucune enchère rejetée trouvée pour le moment" />
                         </View> :
                         <>
                             {enchere_en_rejetee?.map(enchere => <RenderItem key={enchere._id} theme={themes} item={enchere} width={"100%"} height={200} />)}
@@ -147,7 +147,7 @@ const My_Auctions = () => {
                 <Reloader style={styles.screen_container} refreshing={refreshing} onRefresh={onRefresh} theme={themes}>
                     {isEmpty(enchere_en_attente_de_validation) ?
                         <View style={{ flex: 1, alignItems: "center", paddingHorizontal: 20, height: "100%", justifyContent: "center", backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }}>
-                            <NoEnchere style={{ textAlign: "center" }} message="Aucune enchère en attente de validation trouvée pour le moment" />
+                            <NoEnchere theme={themes} style={{ textAlign: "center" }} message="Aucune enchère en attente de validation trouvée pour le moment" />
                         </View> :
                         <>
                             {enchere_en_attente_de_validation?.map(enchere => <RenderItem key={enchere._id} theme={themes} item={enchere} width={"100%"} height={200} />)}
@@ -181,9 +181,9 @@ const My_Auctions = () => {
 
                         {host?.vip &&
                             <View style={css.explorer.is_auth_button}>
-                                <Text style={{ color: Colors.dark }}>Public</Text>
+                                <Text style={{ color: themes === "sombre" ? Colors.white : Colors.dark }}>Public</Text>
                                 <Switch value={vip} onValueChange={vip => setVip(vip)} trackColor={{ false: '#767577', true: '#767577' }} thumbColor={vip ? Colors.main : '#f4f3f4'} />
-                                <Text style={{ color: vip ? Colors.main : Colors.dark }}>VIP</Text>
+                                <Text style={{ color: vip ? Colors.main : themes === "sombre" ? Colors.white : Colors.dark }}>VIP</Text>
                             </View>
                         }
                     </View>
@@ -191,7 +191,7 @@ const My_Auctions = () => {
                 </Container>
             </View>
 
-            <View style={styles.header}>
+            <View style={[styles.header, { backgroundColor: "white" }]}>
                 <TouchableOpacity style={styles.element} onPress={() => setHeaderItem({ encours: true, termine: false, rejete: false, attente: false })}>
                     <Text style={{ ...styles.element_text, color: headerItem.encours ? "tomato" : "rgba(0,0,0,0.7)" }}>EN COURS</Text>
                     {headerItem.encours && <View style={styles.active_under} />}

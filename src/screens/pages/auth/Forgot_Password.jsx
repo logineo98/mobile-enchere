@@ -13,18 +13,18 @@ const Forgot_Password = ({ navigation }) => {
     const dispatch = useDispatch()
     const { errors, code_de_recuperation, phone, message, loading } = useSelector(state => state?.user);
 
-
+    //verify if errors
     useEffect(() => {
-        if (!isEmpty(errors)) {
-            Toast.show({ type: 'danger', text1: 'Erreurs', text2: errors });
-            dispatch({ type: _clear_errors })
+        if ((!isEmpty(errors) || errors !== null) && errors !== undefined) {
+            Toast.show({ type: 'danger', text1: 'Erreur', text2: errors });
+            dispatch({ type: "_clear_errors" })
         }
-    }, [errors]);
+    }, [errors])
 
     useEffect(() => {
         if (code_de_recuperation !== null && phone !== null && message !== null)
             navigation.navigate('verification_code_de_confirmation', { message });
-    }, [code_de_recuperation, message])
+    }, [code_de_recuperation])
 
 
     const handleSubmit = (e) => {
@@ -46,7 +46,7 @@ const Forgot_Password = ({ navigation }) => {
         <ImageBackground resizeMode="cover" source={images.background} style={css.auth.container}>
             <StatusBar barStyle={"light-content"} backgroundColor={Colors.main} />
             <Toast config={toastConfig} />
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={css.auth.scroll_container}>
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"} contentContainerStyle={css.auth.scroll_container}>
                 <View style={css.auth.main_content}>
 
                     <Container>

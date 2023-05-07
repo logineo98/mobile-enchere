@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { ScrollView, Text, TouchableOpacity, View, TextInput, ImageBackground, StatusBar } from 'react-native'
 import { CheckBox } from 'react-native-elements';
 import { Container } from '../../../components'
-import { Colors, _clear_errors, _clear_message, css, handleChange, images, isEmpty, login, toastConfig } from '../../../libs'
+import { Colors, _clear_errors, _clear_message, auth, css, handleChange, images, isEmpty, login, toastConfig } from '../../../libs'
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import Toast from 'react-native-toast-message';
@@ -15,31 +15,36 @@ const Login = ({ navigation, route }) => {
     const [remember, setRemember] = useState(false);
     const datas = { phone: "", password: "" }
     const [inputs, setInputs] = useState(datas)
-    const [redirect, setRedirect] = useState(false)
-    const [redirect2, setRedirect2] = useState(false)
     const dispatch = useDispatch()
 
-    const { isAuth, host, errors, message, loading } = useSelector(state => state?.user);
+    const { isAuth, errors, message, loading } = useSelector(state => state?.user);
 
-    //auto remplissage champ phone apres inscription
     useEffect(() => {
-        const autoFill = async () => {
-            try {
-                const data = await AsyncStorage.getItem("login");
-                const logData = data ? JSON.parse(data) : null;
-
-                if (routes?.phone)
-                    setInputs({ ...inputs, phone: routes?.phone })
-                else if (!isEmpty(logData)) {
-                    setRemember(true)
-                    setInputs({ ...inputs, phone: logData?.phone })
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        autoFill()
+        if (!isEmpty(routes?.phone) && routes?.phone !== undefined)
+            setInputs(old => { return { ...old, phone: routes?.phone } })
     }, [routes])
+
+    //notifications
+    useEffect(() => {
+        if ((!isEmpty(routes?.message) || message !== null)) {
+            Toast.show({ type: 'info', text1: 'Infos', text2: routes?.message || message });
+            if (routes?.message) routes.message = null
+            dispatch({ type: "_clear_message" })
+        }
+    }, [routes, message])
+
+    //verify if errors
+    useEffect(() => {
+        if ((!isEmpty(errors) || errors !== null) && errors !== undefined) {
+            Toast.show({ type: 'danger', text1: 'Erreur', text2: errors });
+            dispatch({ type: "_clear_errors" })
+        }
+    }, [errors])
+
+    useEffect(() => {
+        if (isEmpty(errors) && isAuth && isAuth !== undefined)
+            auth()
+    }, [isAuth])
 
     useEffect(() => {
         const autoremove = async () => {
@@ -52,54 +57,10 @@ const Login = ({ navigation, route }) => {
         if (!remember) autoremove()
     }, [remember])
 
-
-    //notifications
-    useEffect(() => {
-        if (routes?.message || message) {
-            Toast.show({ type: 'info', text1: 'Infos', text2: routes?.message || message });
-            if (routes?.message) routes.message = ""
-            dispatch({ type: "_clear_message" })
-        }
-    }, [routes, message])
-
-    //erreurs
-    useEffect(() => {
-        if (!isEmpty(errors)) {
-            Toast.show({ type: 'danger', text1: 'Erreurs', text2: errors });
-            dispatch({ type: "_clear_errors" })
-        }
-    }, [errors]);
-
-    //@if connected and compte is disable, redirect to enable screen
-    //else
-    //@if connected and compte is enable and fbk not yet, redirect to fbk sync
-    //else
-    //redirect to main screen
-    useEffect(() => {
-        if (isAuth && !isEmpty(host)) {
-            if (host?.license_status) {
-
-                if (isEmpty(host?.facebook) && !host?.confirm_facebook_later) {
-                    setRedirect2(true)
-                    navigation.navigate("synchronisation_facebook")
-                }
-            }
-            else {
-                setRedirect(true)
-                navigation.navigate("activate_compte", { message: message && message })
-                dispatch({ type: "_clear_message" })
-            }
-        }
-    }, [isAuth, host, redirect, redirect2, message])
-
-
-
     //fonction pour le dispatch du login
     const handleSubmit = async (e) => {
         try {
             e.preventDefault()
-            setRedirect(false)
-            setRedirect2(false)
             dispatch(login(inputs))
             if (remember) await AsyncStorage.setItem("login", JSON.stringify(inputs));
         } catch (error) {
@@ -119,8 +80,10 @@ const Login = ({ navigation, route }) => {
     return (
         <ImageBackground resizeMode="cover" source={images.background} style={css.auth.container}>
             <StatusBar barStyle={"light-content"} backgroundColor={Colors.main} />
-            <Toast config={toastConfig} />
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={css.auth.scroll_container}>
+            <View style={{ position: "absolute", zIndex: 100, top: -30, left: "50%" }}>
+                <Toast config={toastConfig} />
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"} contentContainerStyle={css.auth.scroll_container}>
                 <View style={css.auth.main_content}>
 
                     <Container>

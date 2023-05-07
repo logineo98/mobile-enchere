@@ -184,7 +184,7 @@ const New_Auction = () => {
                     <View style={css.creer.screen_title_line} />
                 </Container>
 
-                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[css.creer.scrollable_content, { backgroundColor: themes === "sombre" ? Colors.white : Colors.white }]}>
+                <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"} contentContainerStyle={[css.creer.scrollable_content, { backgroundColor: themes === "sombre" ? Colors.white : Colors.white }]}>
                     <Container >
 
                         <Separateur style={css.creer.title} text={"Informations sur l'article"} />

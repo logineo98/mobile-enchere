@@ -1,6 +1,7 @@
 
 const init = {
     notifs: false,
+    vips: false,
     msgs: false,
     thems: false,
     themes: "clair",
@@ -9,10 +10,12 @@ const init = {
 }
 
 const setting_reducer = (state = init, action) => {
+
     switch (action.type) {
 
         case "_loading": return { ...state, loading: true, errors: null }
 
+        case "_active_vip_success": return { ...state, vips: action.payload }
         case "_active_notif_success": return { ...state, notifs: action.payload }
         case "_active_msg_success": return { ...state, msgs: action.payload }
         case "_active_mode_success": return { ...state, themes: action.payload.mode, thems: action.payload.them }

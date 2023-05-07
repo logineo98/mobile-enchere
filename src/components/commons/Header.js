@@ -1,18 +1,69 @@
-import { Image, StyleSheet, TextInput, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import Fontisto from "react-native-vector-icons/Fontisto"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import { Colors, images, vider_filtre_enchere } from '../../libs'
 import { useDispatch, useSelector } from 'react-redux'
+import * as Animatable from 'react-native-animatable';
+
 
 
 const Header = ({ navigation, stackHeader, tabHeader, searchHeader, text, setText, filter }) => {
     const { notifs, msgs } = useSelector(state => state?.setting)
-
-
+    const { host } = useSelector(state => state?.user)
     const dispatch = useDispatch();
+    const [isCrownOn, setIsCrownOn] = useState(false);
+
+
+    const styles = StyleSheet.create({
+        //stack
+        s_container: { backgroundColor: Colors.black, padding: 10, flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", },
+        s_left: { padding: 10, alignItems: "center", justifyContent: "center" },
+        s_center: { alignItems: 'center', justifyContent: "center" },
+        s_image: { width: 170, height: 40, resizeMode: "cover" },
+        s_right: { flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 10, position: "relative", paddingRight: 10 },
+        s_badge: { position: "absolute", height: 10, width: 10, borderRadius: 10, backgroundColor: Colors.main, top: 0, right: "5%" },
+
+        //tab
+        t_container: { backgroundColor: Colors.black, padding: 10, paddingVertical: 5, flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", },
+        t_left: { alignItems: "center", justifyContent: "center", },
+        t_image: { width: 170, height: 40, resizeMode: "cover" },
+        t_badge: { position: "absolute", height: 10, width: 10, borderRadius: 10, backgroundColor: Colors.main, top: 0, right: 0 },
+        t_right: { padding: 10, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 18, paddingRight: 20 },
+        t_right_item: { position: "relative", alignItems: "center", justifyContent: "center" },
+        t_mes_enchere: { backgroundColor: Colors.white, padding: 3, borderRadius: 100, alignItems: "center", justifyContent: "center" },
+
+        //search
+        // pour la partie logo
+        sh_container: { backgroundColor: Colors.black, padding: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
+        sh_img_container: { width: 50, height: 50, alignItems: "center", justifyContent: "center", backgroundColor: "red" },
+        sh_img: { width: "100%", height: "100%", resizeMode: "cover" },
+
+        // pour la partie input et icon de recherche      @with notif icon width:"85%"
+        sh_input_search_container: { flexDirection: "row", height: 40, width: "100%", alignItems: "center", borderRadius: 5, backgroundColor: Colors.white },
+        sh_input_search: { paddingLeft: 10, paddingRight: 35, borderRadius: 5, width: "100%" }, //@with notif icon width:"80%"
+        sh_search_icon: { fontWeight: "bold", paddingHorizontal: 4 },
+        sh_filter: { position: "absolute", right: 2, alignItems: "center" },
+
+        // pour la partie notification
+        sh_notification_container: { flexDirection: "row", alignItems: "center", justifyContent: "center" },
+        sh_notification_icon: { fontWeight: "bold" },
+        sh_badge: { position: "absolute", height: 10, width: 10, borderRadius: 10, backgroundColor: Colors.main, top: 0, right: 3 },
+
+    })
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIsCrownOn(!isCrownOn);
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, [isCrownOn]);
+
+
     const handleGoBack = () => { navigation.goBack(); }
     const handleNavigate = (link) => { navigation.navigate(link); }
 
@@ -26,8 +77,20 @@ const Header = ({ navigation, stackHeader, tabHeader, searchHeader, text, setTex
             </TouchableOpacity>
         )
     }
-    const StackRight = () => (notifs ? <TouchableOpacity activeOpacity={0.7} style={[styles.s_right]} ><Fontisto name='bell-alt' size={24} color={"white"} /><View style={styles.s_badge} /></TouchableOpacity> :
-        <View style={[styles.s_right]} ></View>
+    const StackRight = () => (
+        <>
+            <View style={[styles.s_right]}>
+                {notifs && <TouchableOpacity activeOpacity={0.7}  ><Fontisto name='bell-alt' size={24} color={"white"} /><View style={styles.s_badge} /></TouchableOpacity>}
+
+                {host?.vip &&
+                    <Animatable.View style={{ alignItems: "center" }} animation={isCrownOn ? 'pulse' : null} iterationCount={isCrownOn ? 'infinite' : 1} >
+                        <FontAwesome5 name="crown" size={40} color={isCrownOn ? 'gold' : Colors.main} />
+                        <Text style={{ color: isCrownOn ? Colors.main : 'gold' }}>VIP</Text>
+                    </Animatable.View>
+                }
+            </View>
+            {(!notifs && !host?.vip) && <View style={[styles.s_right]}></View>}
+        </>
     )
 
     // --------------TAB HEADER---------------
@@ -41,6 +104,15 @@ const Header = ({ navigation, stackHeader, tabHeader, searchHeader, text, setTex
             {notifs && <TouchableOpacity activeOpacity={0.7} style={styles.t_right_item} ><Fontisto name='bell-alt' size={24} color={"white"} /><View style={styles.t_badge} /></TouchableOpacity>}
             {msgs && <TouchableOpacity activeOpacity={0.7} style={styles.t_right_item} ><MaterialIcons name='message' size={26} color={"white"} /><View style={styles.t_badge} /></TouchableOpacity>}
             <TouchableOpacity onPress={() => handleNavigate("my_auctions")} activeOpacity={0.5} style={[styles.t_right_item, styles.t_mes_enchere]}><MaterialCommunityIcons name='gavel' size={26} color={Colors.black} /></TouchableOpacity>
+
+            {host?.vip &&
+                <TouchableOpacity onPress={() => navigation.navigate("Explorer")}>
+                    <Animatable.View style={{ alignItems: "center" }} animation={isCrownOn ? 'pulse' : null} iterationCount={isCrownOn ? 'infinite' : 1} >
+                        <FontAwesome5 name="crown" size={40} color={isCrownOn ? 'gold' : Colors.main} />
+                        <Text style={{ color: isCrownOn ? Colors.main : 'gold' }}>VIP</Text>
+                    </Animatable.View>
+                </TouchableOpacity>
+            }
         </View>)
 
 
@@ -72,39 +144,3 @@ const Header = ({ navigation, stackHeader, tabHeader, searchHeader, text, setTex
 
 export default Header;
 
-const styles = StyleSheet.create({
-    //stack
-    s_container: { backgroundColor: Colors.black, padding: 10, flexDirection: "row", alignItems: "center", justifyContent: "center", width: "100%", },
-    s_left: { padding: 10, width: "10%", alignItems: "center", justifyContent: "center" },
-    s_center: { alignItems: 'center', justifyContent: "center", width: "75%" },
-    s_image: { width: 170, height: 40, resizeMode: "cover" },
-    s_right: { width: "15%", alignItems: "center", justifyContent: "center", position: "relative", },
-    s_badge: { position: "absolute", height: 10, width: 10, borderRadius: 10, backgroundColor: Colors.main, top: 0, right: "28%" },
-
-    //tab
-    t_container: { backgroundColor: Colors.black, padding: 10, paddingVertical: 5, flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", },
-    t_left: { alignItems: "center", justifyContent: "center", },
-    t_image: { width: 170, height: 40, resizeMode: "cover" },
-    t_badge: { position: "absolute", height: 10, width: 10, borderRadius: 10, backgroundColor: Colors.main, top: 0, right: 0 },
-    t_right: { padding: 10, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 18, paddingRight: 20 },
-    t_right_item: { position: "relative", alignItems: "center", justifyContent: "center" },
-    t_mes_enchere: { backgroundColor: Colors.white, padding: 3, borderRadius: 100, alignItems: "center", justifyContent: "center" },
-
-    //search
-    // pour la partie logo
-    sh_container: { backgroundColor: Colors.black, padding: 10, flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
-    sh_img_container: { width: 50, height: 50, alignItems: "center", justifyContent: "center", backgroundColor: "red" },
-    sh_img: { width: "100%", height: "100%", resizeMode: "cover" },
-
-    // pour la partie input et icon de recherche      @with notif icon width:"85%"
-    sh_input_search_container: { flexDirection: "row", height: 40, width: "100%", alignItems: "center", borderRadius: 5, backgroundColor: Colors.white },
-    sh_input_search: { paddingLeft: 10, paddingRight: 35, borderRadius: 5, width: "100%" }, //@with notif icon width:"80%"
-    sh_search_icon: { fontWeight: "bold", paddingHorizontal: 4 },
-    sh_filter: { position: "absolute", right: 2, alignItems: "center" },
-
-    // pour la partie notification
-    sh_notification_container: { flexDirection: "row", alignItems: "center", justifyContent: "center" },
-    sh_notification_icon: { fontWeight: "bold" },
-    sh_badge: { position: "absolute", height: 10, width: 10, borderRadius: 10, backgroundColor: Colors.main, top: 0, right: 3 },
-
-})

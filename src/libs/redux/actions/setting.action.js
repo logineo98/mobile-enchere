@@ -7,6 +7,18 @@ export const isLoading = () => {
     }
 }
 
+export const activeVIP = (data) => async (dispatch) => {
+    try {
+        dispatch(isLoading());
+        if (!isEmpty(data)) {
+            await AsyncStorage.setItem('vip', data.toString());
+            dispatch({ type: "_active_vip_success", payload: data });
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 export const activeNotif = (data) => async (dispatch) => {
     try {
         dispatch(isLoading());
@@ -49,6 +61,11 @@ export const settings = () => async (dispatch) => {
     try {
 
         dispatch(isLoading());
+
+        AsyncStorage.getItem('vip').then(ans => {
+            let vip = ans === "true" ? true : false
+            if (!isEmpty(ans)) dispatch(activeVIP(vip))
+        })
 
 
         AsyncStorage.getItem('notif').then(ans => {

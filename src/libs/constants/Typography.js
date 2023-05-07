@@ -17,7 +17,7 @@ export const Colors = {
     info: "#54B4D3",
 
     facebook: "#3b5998",
-
+    gold: "gold",
 
     auth_card_bg: "rgba(255,255,255,0.8)",
     input_border_color: "rgba(0,0,0,0.2)",

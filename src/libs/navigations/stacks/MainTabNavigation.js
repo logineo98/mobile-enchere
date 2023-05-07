@@ -4,6 +4,7 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
+import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import HomeStack from './HomeStack'
 import ExploreStack from './ExploreStack'
@@ -74,7 +75,9 @@ const MainTabNavigation = ({ navigation, route }) => {
             <tb.Screen name="Explorer" component={ExploreStack} options={{ title: "Explorer", tabBarIcon: (({ color, focused, size }) => { size = size + 3; color = focused ? Colors.main : Colors.black; return <MaterialIcons name='dashboard' size={size} color={color} /> }), tabBarLabel: (({ color, focused }) => { color = focused ? Colors.main : Colors.black; return <Text style={{ color, fontSize: 12 }}>Explorer</Text> }), headerShown: false }} />
             <tb.Screen name="Nouvelle" component={NewAuctionStack} options={({ navigation }) => ({ title: "Création d'une nouvelle enchère", tabBarIcon: () => !isKeyboardShown && <TabCustomPlus navigation={navigation} />, tabBarLabel: (({ color, focused }) => { color = focused ? Colors.main : Colors.black; return <Text style={{ color, fontSize: 12 }}>Créer</Text> }), tabBarHideOnKeyboard: true, tabBarVisible: !isKeyboardShown, headerShown: false })} />
             <tb.Screen name="Recherche" component={SearchStack} options={{ title: "Recherche", tabBarIcon: (({ color, focused, size }) => { size = size + 3; color = focused ? Colors.main : Colors.black; return <Fontisto name='search' size={size} color={color} /> }), tabBarLabel: (({ color, focused }) => { color = focused ? Colors.main : Colors.black; return <Text style={{ color, fontSize: 12 }}>Recherche</Text> }), headerShown: false }} />
-            <tb.Screen name="Profil" component={ProfileStack} options={{ title: "Profile", tabBarIcon: (({ color, focused, size }) => { size = size + 3; color = focused ? Colors.main : Colors.black; return <FontAwesome name='user' size={size} color={color} /> }), tabBarLabel: (({ color, focused }) => { color = focused ? Colors.main : Colors.black; return <Text style={{ color, fontSize: 12 }}>Profile</Text> }), tabBarHideOnKeyboard: true, tabBarVisible: !isKeyboardShown, headerShown: false }} />
+            {!host?.vip ? <tb.Screen name="Profil" component={ProfileStack} options={{ title: "Profile", tabBarIcon: (({ color, focused, size }) => { size = size + 3; color = focused ? Colors.main : Colors.black; return <FontAwesome name='user' size={size} color={color} /> }), tabBarLabel: (({ color, focused }) => { color = focused ? Colors.main : Colors.black; return <Text style={{ color, fontSize: 12 }}>Profile</Text> }), tabBarHideOnKeyboard: true, tabBarVisible: !isKeyboardShown, headerShown: false }} />
+                : <tb.Screen name="Profil" component={ProfileStack} options={{ title: "Profile", tabBarLabel: (({ color, focused, size }) => { return <FontAwesome name='user' size={32} color={focused ? Colors.main : Colors.black} /> }), tabBarIcon: (({ color, focused }) => { color = focused ? Colors.main : Colors.black; return <View style={{ color, fontSize: 12 }}><FontAwesome5Icon name='crown' size={12} color={Colors.danger} /></View> }), tabBarHideOnKeyboard: true, tabBarVisible: !isKeyboardShown, headerShown: false }} />
+            }
         </tb.Navigator>
     )
 }

@@ -1,44 +1,61 @@
 import { ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { Colors, auth, css, handleChange, images, isEmpty, toastConfig, user_compte_activation } from '../../../libs'
+import { Colors, auth, css, images, isEmpty, signup, toastConfig } from '../../../libs'
 import Toast from 'react-native-toast-message'
 import { Container } from '../../../components'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import Spinner from 'react-native-loading-spinner-overlay'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Active_compte = ({ navigation, route }) => {
-    const [inputs, setInputs] = useState({ licenseKey: "" })
-    const { compte_active, host, errors, message, loading } = useSelector(state => state?.user);
+    const [code, setCode] = useState()
+    const { login_succeed, errors, message, loading } = useSelector(state => state?.user);
     const dispatch = useDispatch();
 
     //notifications
     useEffect(() => {
         if (message) {
             Toast.show({ type: 'info', text1: 'Infos', text2: message });
+            dispatch({ type: "_clear_message" })
         }
     }, [message])
 
-    //errors notif
+    //verify if errors
     useEffect(() => {
-        if (!isEmpty(errors)) {
-            Toast.show({ type: 'danger', text1: 'Erreurs', text2: errors });
+        if ((!isEmpty(errors) || errors !== null) && errors !== undefined) {
+            Toast.show({ type: 'danger', text1: 'Erreur', text2: errors });
             dispatch({ type: "_clear_errors" })
-            return;
         }
-    }, [errors]);
+    }, [errors])
+
 
     //auth is compte is active
     useEffect(() => {
-        if (!isEmpty(compte_active) && compte_active)
+        if (login_succeed && login_succeed !== undefined)
             dispatch(auth())
-    }, [compte_active, dispatch])
+    }, [login_succeed, dispatch])
+
+
+
 
     //handle active compte
-    const handleActivate = (e) => {
-        const datas = { userID: host?._id, licenseKey: inputs.licenseKey }
-        dispatch(user_compte_activation(datas))
+    const handleActivate = async (e) => {
+
+        try {
+            const codeData = await AsyncStorage.getItem("activation_code")
+            const _code = JSON.parse(codeData)
+            const inputsData = await AsyncStorage.getItem("inputs")
+            const inputs = JSON.parse(inputsData)
+
+            inputs.code = code
+            inputs.activation_code = _code?.code;
+
+            dispatch(signup(inputs))
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     if (loading)
@@ -53,8 +70,10 @@ const Active_compte = ({ navigation, route }) => {
     return (
         <ImageBackground resizeMode="cover" source={images.background} style={css.auth.container}>
             <StatusBar barStyle={"light-content"} backgroundColor={Colors.main} />
-            <Toast config={toastConfig} />
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={css.auth.scroll_container}>
+            <View style={{ position: "absolute", zIndex: 100, top: -30, left: "50%" }}>
+                <Toast config={toastConfig} />
+            </View>
+            <ScrollView keyboardShouldPersistTaps={"handled"} showsVerticalScrollIndicator={false} contentContainerStyle={css.auth.scroll_container}>
                 <View style={css.auth.main_content}>
 
                     <Container>
@@ -65,13 +84,13 @@ const Active_compte = ({ navigation, route }) => {
 
                             <View style={css.auth.input_container}>
                                 <Text style={css.auth.input_label}>Code d'activation<Text style={css.auth.require}>*</Text></Text>
-                                <TextInput style={css.auth.input}
-                                    value={inputs.licenseKey} onChangeText={text => handleChange('licenseKey', text, setInputs)}
+                                <TextInput style={css.auth.input} keyboardType='number-pad'
+                                    value={code} onChangeText={text => setCode(text)}
                                 />
                             </View>
 
                             <TouchableOpacity onPress={handleActivate} activeOpacity={0.7} style={css.auth.auth_submit_btn}>
-                                <Text style={css.auth.auth_submit_btn_text}>Connecter</Text>
+                                <Text style={css.auth.auth_submit_btn_text}>Vérification</Text>
                             </TouchableOpacity>
 
 

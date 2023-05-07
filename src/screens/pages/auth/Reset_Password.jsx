@@ -16,19 +16,20 @@ const Reset_Password = ({ navigation, route }) => {
 
     //notification
     useEffect(() => {
-        if (!isEmpty(routes?.message)) {
+        if (!isEmpty(routes?.message) && routes?.message !== undefined) {
             Toast.show({ type: 'info', text1: 'Infos', text2: routes?.message });
             routes.message = ""
         }
     }, [routes])
 
-    //erreurs
+    //verify if errors
     useEffect(() => {
-        if (!isEmpty(errors)) {
-            Toast.show({ type: 'danger', text1: 'Erreurs', text2: errors });
-            dispatch({ type: _clear_errors })
+        if ((!isEmpty(errors) || errors !== null) && errors !== undefined) {
+            Toast.show({ type: 'danger', text1: 'Erreur', text2: errors });
+            dispatch({ type: "_clear_errors" })
         }
-    }, [errors]);
+    }, [errors])
+
 
     //redirection, si reussi
     useEffect(() => {
@@ -55,8 +56,10 @@ const Reset_Password = ({ navigation, route }) => {
     return (
         <ImageBackground resizeMode="cover" source={images.background} style={css.auth.container}>
             <StatusBar barStyle={"light-content"} backgroundColor={Colors.main} />
-            <Toast config={toastConfig} />
-            <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={css.auth.scroll_container}>
+            <View style={{ position: "absolute", zIndex: 100, top: -30, left: "50%" }}>
+                <Toast config={toastConfig} />
+            </View>
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"} contentContainerStyle={css.auth.scroll_container}>
                 <View style={css.auth.main_content}>
 
                     <Container>
@@ -80,7 +83,7 @@ const Reset_Password = ({ navigation, route }) => {
                             </View>
 
                             <TouchableOpacity onPress={handleSubmit} activeOpacity={0.7} style={css.auth.auth_submit_btn}>
-                                <Text style={css.auth.auth_submit_btn_text}>Enregistrer</Text>
+                                <Text style={css.auth.auth_submit_btn_text}>Réinitialiser</Text>
                             </TouchableOpacity>
 
                             <View style={css.auth.separator} />

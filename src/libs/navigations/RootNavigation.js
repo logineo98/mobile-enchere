@@ -40,7 +40,7 @@ const RootNavigation = () => {
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }} >
                 {isOnline ? (
-                    (isAuth && (!isEmpty(host?.facebook) || host?.confirm_facebook_later) && host?.license_status) ?
+                    (isAuth && isAuth !== undefined) ?
                         <Stack.Screen name="main" component={MainTabNavigation} /> :
                         <Stack.Screen name="auth" component={AuthStack} />
                 ) :
