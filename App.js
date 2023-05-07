@@ -6,8 +6,6 @@ import { Provider } from 'react-redux';
 import { Store } from './src/libs';
 
 
-
-
 const App = () => {
 
   useEffect(() => {
