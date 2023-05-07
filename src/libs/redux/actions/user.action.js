@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
-    _clear_errors, _send_invitation_success, _user_auth_request, _user_auth_success,
+    _clear_errors, _get_all_users_success, _send_invitation_success, _user_auth_request, _user_auth_success,
     _user_compte_activation_success,
     _user_delete_success, _user_error, _user_forgot_success, _user_get_request, _user_get_success,
     _user_gets_success, _user_loading, _user_login_success, _user_logout, _user_register_success,
@@ -178,3 +178,17 @@ export const deleteUser = (data) => async (dispatch) => {
     }
 }
 
+
+export const get_all_users = (hostID) => async (dispatch) => {
+    try {
+        dispatch(isLoading());
+
+        const token = await AsyncStorage.getItem('cookie')
+
+        const response = await axios.get(`${api}/api/user/${hostID}`, { headers: { token } })
+
+        dispatch({ type: _get_all_users_success, payload: response?.data?.response })
+    } catch (error) {
+        dispatch(user_error(error))
+    }
+}

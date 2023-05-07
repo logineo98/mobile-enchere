@@ -17,27 +17,28 @@ export const api_public = "http://192.168.1.103:5000/api/public"
 
 
 //users
-export const _user_error = "_user_error";
-export const _user_loading = "_user_loading";
+export const _user_error = "_user_error"
+export const _user_loading = "_user_loading"
 
-export const _clear_errors = "_clear_errors";
-export const _clear_message = "_clear_message";
-export const _clear_user_updated = "_clear_user_updated";
-export const _clear_invitation = "_clear_invitation";
+export const _clear_errors = "_clear_errors"
+export const _clear_message = "_clear_message"
+export const _clear_user_updated = "_clear_user_updated"
+export const _clear_invitation = "_clear_invitation"
 
 
-export const _user_auth_success = "_user_auth_success";
-export const _user_login_success = "_user_login_success";
-export const _user_compte_activation_success = "_user_compte_activation_success";
-export const _user_logout = "_user_logout";
-export const _user_forgot_success = "_user_forgot_success";
-export const _user_register_success = "_user_register_success";
-export const _user_verify_confirm_code_success = "_user_verify_confirm_code_success";
-export const _user_reset_forgot_password_success = "_user_reset_forgot_password_success";
-export const _user_get_success = "_user_get_success";
-export const _user_update_success = "_user_update_success";
-export const _user_delete_success = "_user_delete_success";
-export const _send_invitation_success = "_send_invitation_success";
+export const _user_auth_success = "_user_auth_success"
+export const _user_login_success = "_user_login_success"
+export const _user_compte_activation_success = "_user_compte_activation_success"
+export const _user_logout = "_user_logout"
+export const _user_forgot_success = "_user_forgot_success"
+export const _user_register_success = "_user_register_success"
+export const _user_verify_confirm_code_success = "_user_verify_confirm_code_success"
+export const _user_reset_forgot_password_success = "_user_reset_forgot_password_success"
+export const _user_get_success = "_user_get_success"
+export const _user_update_success = "_user_update_success"
+export const _user_delete_success = "_user_delete_success"
+export const _send_invitation_success = "_send_invitation_success"
+export const _get_all_users_success = "_get_all_users_success"
 
 
 //encheres

@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Fontisto from 'react-native-vector-icons/Fontisto'
-import { Colors, ExpirationVerify, areIn, convertDateToMillis, css } from '../../../libs'
+import { Colors, ExpirationVerify, areIn, convertDateToMillis, css, formatNumberWithSpaces } from '../../../libs'
 import { Container, CountdownTimer, Related } from '../../../components'
 import { Overlay } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
@@ -23,7 +23,7 @@ const Detail = ({ route }) => {
 
     const scrollViewRef = useRef(null)
 
-    const { host } = useSelector(state => state?.user)
+    const { host, users } = useSelector(state => state?.user)
     const { encheres } = useSelector(state => state?.enchere)
     const { themes } = useSelector(state => state?.setting)
     const dispatch = useDispatch()
@@ -104,7 +104,10 @@ const Detail = ({ route }) => {
                                     <Text style={[css.details.detail_title_text, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{(data?.title && data?.title?.length <= 14) ? data?.title?.slice(0, 14) : data?.title?.slice(0, 14) + "..."}</Text>
                                     <View style={css.details.location}>
                                         <Ionicons name="location-sharp" size={16} color={themes === "sombre" ? Colors.white : Colors.black} />
-                                        <Text style={[css.details.detail_text, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{data?.sellerID?.town ? data?.sellerID?.town?.length <= 14 ? data?.sellerID?.town?.slice(0, 14) : data?.sellerID?.town?.slice(0, 14) + "..." : "Non renseignée"}</Text>
+                                        {users?.map(user => {
+                                            if (data?.sellerID === user?._id)
+                                                return <Text key={data?.sellerID} style={[css.details.detail_text, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{user?.town ? user?.town?.length <= 14 ? user?.town?.slice(0, 14) : user?.town?.slice(0, 14) + "..." : "Non renseignée"}</Text>
+                                        })}
                                     </View>
                                 </View>
 
@@ -123,11 +126,11 @@ const Detail = ({ route }) => {
                             <View style={css.details.detail_price_container}>
                                 <View style={css.details.price_info}>
                                     <Text style={[css.details.detail_label, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Prix initial</Text>
-                                    <Text style={[css.details.price, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{data?.started_price} FCFA</Text>
+                                    <Text style={[css.details.price, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{formatNumberWithSpaces(data?.started_price)} FCFA</Text>
                                 </View>
                                 <View style={css.details.price_info}>
                                     <Text style={[css.details.detail_label, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Prix de reserve</Text>
-                                    <Text style={[css.details.price, , { color: themes === "sombre" ? Colors.white : Colors.black }]}>{data?.reserve_price} FCFA</Text>
+                                    <Text style={[css.details.price, , { color: themes === "sombre" ? Colors.white : Colors.black }]}>{formatNumberWithSpaces(data?.reserve_price)} FCFA</Text>
                                 </View>
                             </View>
 
@@ -141,7 +144,7 @@ const Detail = ({ route }) => {
                             <View style={css.details.detail_bid_info}>
                                 <View style={css.details.detail_bid_left}>
                                     <Text style={[css.details.detail_label, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Prix d'enchère actuel</Text>
-                                    <Text style={[css.details.price, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{data?.history[data?.history?.length - 1]?.montant || data?.started_price} FCFA</Text>
+                                    <Text style={[css.details.price, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{formatNumberWithSpaces(data?.history[data?.history?.length - 1]?.montant || data?.started_price)} FCFA</Text>
                                 </View>
                                 <View style={css.details.detail_bid_right}>
                                     <Text style={[css.details.detail_label, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Délai d'expiration</Text>

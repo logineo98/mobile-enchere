@@ -13,7 +13,7 @@ import NewAuctionStack from './NewAuctionStack'
 import { Colors } from '../../constants/Typography.js'
 import { TabCustomPlus } from '../../../components/index.js'
 import { useKeyboard } from '@react-native-community/hooks'
-import { auth, checking } from '../../redux/actions/user.action'
+import { auth, checking, get_all_users } from '../../redux/actions/user.action'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLayoutEffect } from 'react'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
@@ -63,6 +63,7 @@ const MainTabNavigation = ({ navigation, route }) => {
 
     useEffect(() => {
         dispatch(get_all_encheres(host?._id))
+        dispatch(get_all_users(host?._id))
         dispatch(get_all_user_fb_token(host?._id))
     }, [])
 

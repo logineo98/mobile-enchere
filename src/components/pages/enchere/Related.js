@@ -1,6 +1,6 @@
 import { Image, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { Colors, convertDateToMillis, css } from '../../../libs'
+import { Colors, convertDateToMillis, css, formatNumberWithSpaces } from '../../../libs'
 import { useNavigation } from '@react-navigation/core'
 import { api_public } from '../../../libs/redux/constants/constants'
 import CountdownTimer from '../../commons/timer/CountdownTimer'
@@ -24,8 +24,8 @@ const Related = ({ data, scrollViewRef, theme }) => {
 
                 <View style={[styles.infos, { backgroundColor: theme === "sombre" ? Colors.home_card : Colors.white }]}>
                     <View ><Text style={[styles.name, { color: theme === "sombre" ? Colors.white : Colors.black }]}>{data?.title?.slice(0, 17)}{data?.title?.length > 17 && "..."}</Text></View>
-                    <View ><Text style={[styles.price, { color: theme === "sombre" ? Colors.white : Colors.black }]}>{data?.history[data?.history?.length - 1]?.montant || data?.started_price} FCFA</Text></View>
-                    {data?.history[data?.history?.length - 1]?.montant < data?.reserve_price && <View style={styles.content}><Text style={styles.reserve}>prix de reserve</Text><Text>{data?.reserve_price} FCFA</Text></View>}
+                    <View ><Text style={[styles.price, { color: theme === "sombre" ? Colors.white : Colors.black }]}>{formatNumberWithSpaces(data?.history[data?.history?.length - 1]?.montant || data?.started_price)} FCFA</Text></View>
+                    {data?.history[data?.history?.length - 1]?.montant < data?.reserve_price && <View style={styles.content}><Text style={styles.reserve}>prix de reserve</Text><Text>{formatNumberWithSpaces(data?.reserve_price)} FCFA</Text></View>}
                     <View style={styles.content}><Text style={[styles.delivery, { color: theme === "sombre" ? Colors.white : Colors.black }]}>livraison: </Text><Text style={{ color: theme === "sombre" ? "wheat" : Colors.black }}>{data?.delivery_options?.teliman ? "Teliman" : (!data?.delivery_options?.teliman && data?.delivery_options?.own && data?.delivery_options?.deliveryPrice === 0 ? "gratuite" : data?.delivery_options?.deliveryPrice + " FCFA")}</Text></View>
                     <View style={[css.details.delai, { justifyContent: "space-between" }]}>
                         <Text style={{ color: theme === "sombre" ? Colors.white : Colors.black }}>Fin dans</Text>

@@ -40,8 +40,6 @@ export const get_all_encheres_without_loading = (hostID) => async (dispatch) => 
     }
 }
 
-_get_all_encheres_without_loading
-
 export const like_enchere = (enchere_id, hostID, data) => async (dispatch) => {
     try {
         const token = await AsyncStorage.getItem('cookie')

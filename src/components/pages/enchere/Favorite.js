@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import { Alert, Image, TouchableOpacity, View, Text, StyleSheet } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { Colors, convertDateToMillis } from '../../../libs'
+import { Colors, convertDateToMillis, formatNumberWithSpaces } from '../../../libs'
 import CountdownTimer from '../../commons/timer/CountdownTimer'
 import { api_public } from '../../../libs/redux/constants/constants'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,7 +9,7 @@ import { dislike_enchere, like_enchere } from '../../../libs/redux/actions/enche
 
 const Favorite = ({ data, width, height, theme }) => {
   const navigation = useNavigation()
-  const { host } = useSelector(state => state?.user)
+  const { host, users } = useSelector(state => state?.user)
   const dispatch = useDispatch()
 
   const styles = StyleSheet.create({
@@ -58,7 +58,7 @@ const Favorite = ({ data, width, height, theme }) => {
           }
         </View>
 
-        <View ><Text style={{ color: Colors.main, fontSize: 13, fontWeight: "200" }}> {data?.started_price} FCFA</Text></View>
+        <View ><Text style={{ color: Colors.main, fontSize: 13, fontWeight: "200" }}> {formatNumberWithSpaces(data?.started_price)} FCFA</Text></View>
 
         <View style={styles.categories}>
           {data?.categories?.map((categorie, i) => (<TouchableOpacity key={i} ><Text style={styles.categories_item}>{categorie}</Text></TouchableOpacity>))}
@@ -67,7 +67,10 @@ const Favorite = ({ data, width, height, theme }) => {
         <View style={styles.bottom}>
           <View style={styles.left}>
             <Ionicons name="ios-location-outline" size={16} color={theme === "sombre" ? Colors.white : Colors.black} />
-            <Text style={{ fontSize: 12, color: theme === "sombre" ? Colors.white : Colors.black }}>{data?.sellerID?.town ? data?.sellerID?.town?.length <= 14 ? data?.sellerID?.town?.slice(0, 14) : data?.sellerID?.town?.slice(0, 14) + "..." : "Non renseignée"}</Text>
+            {users?.map(user => {
+              if (data?.sellerID === user?._id)
+                return <Text key={data?.sellerID} style={{ fontSize: 12, color: theme === "sombre" ? Colors.white : Colors.black }}>{user?.town ? user?.town?.length <= 14 ? user?.town?.slice(0, 14) : user?.town?.slice(0, 14) + "..." : "Non renseignée"}</Text>
+            })}
           </View>
 
           <View style={styles.right}>

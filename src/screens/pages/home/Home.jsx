@@ -81,7 +81,6 @@ const Home = () => {
                     <Text style={css.home.enchere_category_title}>Les catégories</Text>
                     <View style={[css.creer.screen_title_line, { marginTop: 0, marginBottom: 15, width: "20%" }]} />
 
-
                     <View style={css.home.categories_lists}>
                         {categories.map(category => <CardHome key={category.id} h_img={135} theme={themes} container_width={"47%"} mb={10} category={category} />)}
                     </View>
