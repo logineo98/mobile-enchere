@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { StatusBar, TouchableOpacity } from 'react-native'
 import { View, Text } from 'react-native'
-import { Colors, css, filtre_enchere, isEmpty, toastConfig } from '../../../libs'
+import { Colors, css, filtre_enchere, formatNumberWithSpaces, isEmpty, toastConfig } from '../../../libs'
 import { Container, Separateur } from '../../../components'
 import { ScrollView } from 'react-native'
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
@@ -18,7 +18,7 @@ const Filter = ({ navigation }) => {
     const [value, setValue] = useState(500)
     const [dateModalFrom, setDateModalFrom] = useState(false)
 
-    const range = { step: 500, min: 500, max: 350000 }
+    const range = { step: 500, min: 500, max: 1000000000 }
     const [dateFrom, setDateFrom] = useState(new Date())
     const [Lieu, setLieu] = useState([])
     const [categorie, setCategorie] = useState([])
@@ -126,7 +126,7 @@ const Filter = ({ navigation }) => {
                         <Separateur my={15} style={[css.creer.title]} text={"Fourchette de prix (FCFA)"} />
                         <View style={css.creer.input_container}>
                             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                                <Text>{range.min}</Text><Text style={{ color: Colors.brown }}>{value}</Text>
+                                <Text>{formatNumberWithSpaces(range.min)}</Text><Text style={{ color: Colors.brown }}>{formatNumberWithSpaces(value)}</Text>
                             </View>
 
                             <Slider

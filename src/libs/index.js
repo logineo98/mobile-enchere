@@ -1,7 +1,7 @@
 //toutes les importations de routes dans libs
 
 //constants
-import { CategoriesArticle } from "./constants/CategoriesArticle";
+import { CategoriesArticle, CategoriesArticleHome } from "./constants/CategoriesArticle";
 import { Colors, PoliceSize, toastConfig } from "./constants/Typography";
 import { images } from "./constants/images";
 import { css } from "./styles/css";
@@ -33,5 +33,5 @@ export {
     auth, login, register, updateUser, deleteUser, getUser, getUsers, logout, forgot, verify_confirm_code, reset_forgot_password,
     _clear_errors, _clear_message, _user_update_fail, convertDateToMillis, areIn, getMongoDateDay, ExpirationVerify, _clear_user_registered, api_public, _clear_user_updated, convertOctetsToMo,
     validation_create_enchere, _clear_invitation, send_invitation, filtre_enchere, user_compte_activation, vider_filtre_enchere, activeMode, activeNotif, activeMsg, requestUserPermission, notificationListener,
-    formatNumberWithSpaces, checking_phone, signup, activeVIP
+    formatNumberWithSpaces, checking_phone, signup, activeVIP, CategoriesArticleHome
 }

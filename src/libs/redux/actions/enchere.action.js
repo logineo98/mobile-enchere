@@ -1,5 +1,5 @@
 import axios from "axios"
-import { _create_enchere, _delete_enchere, _dislike_enchere, _edit_enchere, _error_enchere, _filtre_enchere, _get_all_encheres, _get_all_encheres_without_loading, _get_enchere, _like_enchere, _loading_enchere, _participate_in_enchere, _upload_enchere_file, _vider_filtre_enchere, _vider_new_enchere, api } from "../constants/constants"
+import { _create_enchere, _delete_enchere, _dislike_enchere, _edit_enchere, _error_enchere, _filtre_enchere, _filtre_enchere_by_category, _get_all_encheres, _get_all_encheres_without_loading, _get_enchere, _like_enchere, _loading_enchere, _participate_in_enchere, _upload_enchere_file, _vider_filtre_enchere, _vider_filtre_enchere_by_category, _vider_new_enchere, api } from "../constants/constants"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export const isLoading = () => {
@@ -80,9 +80,29 @@ export const filtre_enchere = (hostID, data) => async (dispatch) => {
 
 export const vider_filtre_enchere = () => async (dispatch) => {
     try {
+        dispatch({ type: _vider_filtre_enchere, payload: [] })
+    } catch (error) {
+        dispatch(error_enchere(error))
+    }
+}
+
+export const filtre_enchere_by_category = (hostID, data) => async (dispatch) => {
+    try {
         dispatch(isLoading())
 
-        dispatch({ type: _vider_filtre_enchere, payload: [] })
+        const token = await AsyncStorage.getItem('cookie')
+
+        const response = await axios.patch(`${api}/api/enchere/filter_by_category/${hostID}`, data, { headers: { token } })
+
+        dispatch({ type: _filtre_enchere_by_category, payload: response?.data?.response })
+    } catch (error) {
+        dispatch(error_enchere(error))
+    }
+}
+
+export const vider_filtre_enchere_by_category = () => async (dispatch) => {
+    try {
+        dispatch({ type: _vider_filtre_enchere_by_category, payload: [] })
     } catch (error) {
         dispatch(error_enchere(error))
     }
@@ -110,9 +130,7 @@ export const create_enchere = (files, data) => async (dispatch) => {
 
 export const vider_new_enchere = () => async (dispatch) => {
     try {
-        dispatch(isLoading())
-
-        dispatch({ type: _vider_new_enchere, payload: [] })
+        dispatch({ type: _vider_new_enchere, payload: null })
     } catch (error) {
         dispatch(error_enchere(error))
     }

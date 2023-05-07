@@ -1,15 +1,18 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { Colors } from '../../libs'
-import { api_public } from '../../libs/redux/constants/constants'
 import { useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
+import { filtre_enchere_by_category } from '../../libs/redux/actions/enchere.action'
 
-const CardHome = ({ enchere, h_img, container_width, mb, item, category, texteBtn, theme }) => {
+const CardHome = ({ h_img, container_width, mb, category, theme }) => {
     const navigation = useNavigation()
 
-    const title = enchere ? item?.title : category.title
-    const description = enchere ? item?.description : category.description
-    const image = enchere ? `${api_public}/images/${item?.medias[0]}` : category.image
+    const title = category.title
+    const image = category.image
+
+    const { host } = useSelector(state => state?.user)
+    const dispatch = useDispatch()
 
     const styles = StyleSheet.create({
         // pour les items de la partie enchere : chaque enchère correspond à un item
@@ -21,29 +24,24 @@ const CardHome = ({ enchere, h_img, container_width, mb, item, category, texteBt
 
         // pour les informations en dessous de l'image dans le item container
         item_info_container: { paddingHorizontal: 10, justifyContent: "center", backgroundColor: theme === "sombre" ? Colors.home_card : Colors.white },
-        item_title: { color: theme === "sombre" ? Colors.white : Colors.black, textAlign: enchere ? "left" : "right", fontWeight: "bold", marginTop: 7 },
+        item_title: { color: theme === "sombre" ? Colors.white : Colors.black, textAlign: "right", fontWeight: "bold", marginTop: 7 },
         item_description: { color: Colors.black, textAlign: "left", marginTop: 5 },
         item_participate_enchere_container: { alignItems: "flex-end", marginTop: 10 },
         item_participate_enchere_texte: { fontSize: 12, color: Colors.main },
     })
 
     const handleNavigate = () => {
-        if (enchere) navigation.navigate("detail", { data: item })
+        dispatch(filtre_enchere_by_category(host?._id, { category: title }))
+        navigation.navigate("search")
     }
 
     return (
         <TouchableOpacity style={styles.item_container} onPress={handleNavigate}>
             <View style={styles.item_img_container}>
-                {enchere ? <Image source={{ uri: image }} style={styles.item_img} /> : <Image source={image} style={styles.item_img} />}
+                <Image source={image} style={styles.item_img} />
             </View>
             <View style={styles.item_info_container}>
                 <Text style={styles.item_title} numberOfLines={1}> {title} </Text>
-                {description && <Text style={styles.item_description} numberOfLines={4}> {description} </Text>}
-                {texteBtn &&
-                    (<TouchableOpacity style={styles.item_participate_enchere_container} activeOpacity={0.5}>
-                        <Text style={styles.item_participate_enchere_texte}> {texteBtn} </Text>
-                    </TouchableOpacity>)
-                }
             </View>
         </TouchableOpacity>
     )

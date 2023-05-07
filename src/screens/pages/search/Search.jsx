@@ -18,9 +18,6 @@ const Search = ({ navigation }) => {
 
     const { themes } = useSelector(state => state?.setting)
 
-
-
-
     !isEmpty(encheres) && encheres.forEach(enchere => {
         let expiration_date = new Date(enchere.expiration_time).getTime()
         if (expiration_date >= today) encheres_encours.push(enchere)

@@ -34,11 +34,11 @@ const Small_Enchere_Card = ({ data, type, theme }) => {
     const styles = StyleSheet.create({
         container: { flex: 1, marginVertical: 2, backgroundColor: Colors.white, borderRadius: 5, borderWidth: 1, borderColor: data?.enchere_type === "private" ? "tomato" : Colors.input_border_color },
 
-        main_content: { width: "100%", flexDirection: "row" },
-        image_container: { width: "40%", },
+        main_content: { width: "100%", flexDirection: "row", borderRadius: 5 },
+        image_container: { width: "40%", borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
         title: { flexDirection: "row", justifyContent: "space-between", alignItems: "center" },
         image: { width: "100%", height: "100%", resizeMode: "cover", borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
-        infos: { width: "60%", padding: 5, height: "100%", borderLeftWidth: 1, borderLeftColor: data?.enchere_type === "private" ? "tomato" : "rgba(0,0,0,0.1)" },
+        infos: { width: "60%", padding: 5, height: "100%", borderLeftWidth: 2, borderLeftColor: data?.enchere_type === "private" ? "tomato" : "rgba(0,0,0,0.1)", borderTopRightRadius: 5, borderBottomRightRadius: 5 },
         content: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", paddingVertical: 2 },
         name: { width: "70%", fontSize: 18, letterSpacing: 1, fontWeight: "300" },
 

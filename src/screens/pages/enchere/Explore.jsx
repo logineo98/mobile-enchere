@@ -60,7 +60,7 @@ const Explorer = () => {
                     <Reloader refreshing={refreshing} onRefresh={onRefresh} theme={themes} >
                         {allEncheres?.length <= 0 ?
                             <View style={{ flex: 1, alignItems: "center", paddingHorizontal: 20, height: "100%", justifyContent: "center", backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }}>
-                                <NoEnchere style={{ textAlign: "center" }} theme={themes} message={host?.vip === true ? "Aucune enchère VIP n'existe pour le moment" : "Aucune enchère n'existe pour le moment."} />
+                                <NoEnchere style={{ textAlign: "center" }} theme={themes} message={vip === true ? "Aucune enchère VIP n'existe pour le moment" : "Aucune enchère n'existe pour le moment."} />
                             </View> :
                             <>
                                 {allEncheres?.map(enchere => <Favorite key={enchere._id} theme={themes} data={enchere} width={"100%"} height={200} />)}

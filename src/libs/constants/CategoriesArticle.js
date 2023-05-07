@@ -1,3 +1,5 @@
+import { images } from "./images"
+
 export const CategoriesArticle = [
     { key: 1, value: "Collection" },
     { key: 2, value: "Véhicule" },
@@ -18,4 +20,26 @@ export const CategoriesArticle = [
     { key: 17, value: "Antiquité" },
     { key: 18, value: "Scientifique" },
     { key: 19, value: "Jardinage" }
+]
+
+export const CategoriesArticleHome = [
+    { image: images.background, title: "Collection" },
+    { image: images.background, title: "Véhicule" },
+    { image: images.background, title: "Immobilier" },
+    { image: images.background, title: "Électronique" },
+    { image: images.background, title: "Loisir" },
+    { image: images.background, title: "Bijou" },
+    { image: images.background, title: "Vêtement" },
+    { image: images.background, title: "Jeux" },
+    { image: images.background, title: "Sport" },
+    { image: images.background, title: "Cosmétique" },
+    { image: images.background, title: "Industrie" },
+    { image: images.background, title: "Électroménagers" },
+    { image: images.background, title: "Médical" },
+    { image: images.background, title: "Alimentaires" },
+    { image: images.background, title: "Animal" },
+    { image: images.background, title: "Livre" },
+    { image: images.background, title: "Antiquité" },
+    { image: images.background, title: "Scientifique" },
+    { image: images.background, title: "Jardinage" }
 ]
