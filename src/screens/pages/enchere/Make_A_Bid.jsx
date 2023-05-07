@@ -2,11 +2,9 @@ import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View 
 import React, { useState } from 'react'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import { Bid_Counter, CountdownTimer, Encherisseur, Separateur } from '../../../components'
-import { Colors, ExpirationVerify, Vitepay, api_public, convertDateToMillis, css, isEmpty } from '../../../libs'
+import { Colors, ExpirationVerify, Vitepay, api_public, convertDateToMillis, css, formatNumberWithSpaces, isEmpty } from '../../../libs'
 import { Overlay } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useEffect } from 'react'
 
 const Make_A_Bid = ({ navigation, route }) => {
     const [visible, setVisible] = useState(false);
@@ -18,9 +16,7 @@ const Make_A_Bid = ({ navigation, route }) => {
 
 
 
-    const toggleOverlay = () => {
-        setVisible(!visible);
-    };
+    const toggleOverlay = () => setVisible(!visible)
 
     const handleOpenVitepay = (e, orderId, amount) => {
         e.preventDefault()
@@ -50,7 +46,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                             <TouchableOpacity onPress={(e) => handleOpenVitepay(e, data?._id, data?.reserve_price)} style={[styles.make, { backgroundColor: Colors.black }]}>
                                 <Text style={styles.btn_text}>Reserver le produit</Text>
                             </TouchableOpacity>
-                            <View style={styles.reserver}><Text style={styles.reserve_txt}>prix de reservation: </Text><Text style={styles.reserce_prix}>{data?.reserve_price} FCFA</Text></View>
+                            <View style={styles.reserver}><Text style={styles.reserve_txt}>prix de reservation: </Text><Text style={styles.reserce_prix}>{formatNumberWithSpaces(data?.reserve_price)} FCFA</Text></View>
                         </View>
                     }
 
@@ -69,7 +65,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                     </View>
                     <View style={styles.infos}>
                         <Text style={[styles.name, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{(data?.title && data?.title?.length <= 14) ? data?.title.slice(0, 14) : data?.title.slice(0, 14) + "..."}</Text>
-                        <Text style={styles.price}>{data?.history[data?.history?.length - 1]?.montant || data?.started_price} FCFA</Text>
+                        <Text style={styles.price}>{formatNumberWithSpaces(data?.history[data?.history?.length - 1]?.montant || data?.started_price)} FCFA</Text>
                     </View>
                 </TouchableOpacity>
 
@@ -84,20 +80,21 @@ const Make_A_Bid = ({ navigation, route }) => {
                     data?.history?.map((enchere) => <Encherisseur data={data} enchere={enchere} own={host?._id === enchere?.buyerID ? true : false} key={enchere?._id} />) :
                     <View style={{ height: "100%", alignItems: "center", justifyContent: "center", }}>
                         <Text style={{ fontSize: 16, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Aucune participation pour l'instant</Text>
-                        <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>
+                        {!own && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>}
                     </View>
                 }
             </ScrollView>
-            {!own && <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
-                {ExpirationVerify(data?.expiration) ?
-                    <TouchableOpacity onPress={toggleOverlay} style={styles.make}>
-                        <Text style={styles.btn_text}>Placer une offre</Text>
-                    </TouchableOpacity> :
-                    <TouchableOpacity activeOpacity={0.8} style={[styles.make, { backgroundColor: Colors.secondary }]}>
-                        <Text style={styles.btn_text}>Enchère fermée</Text>
-                    </TouchableOpacity>
-                }
-            </View>
+            {!own &&
+                <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
+                    {ExpirationVerify(data?.expiration) ?
+                        <TouchableOpacity onPress={toggleOverlay} style={styles.make}>
+                            <Text style={styles.btn_text}>Placer une offre</Text>
+                        </TouchableOpacity> :
+                        <TouchableOpacity activeOpacity={0.8} style={[styles.make, { backgroundColor: Colors.secondary }]}>
+                            <Text style={styles.btn_text}>Enchère fermée</Text>
+                        </TouchableOpacity>
+                    }
+                </View>
             }
         </View>
     )

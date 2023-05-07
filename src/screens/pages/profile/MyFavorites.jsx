@@ -24,7 +24,7 @@ const MyFavorites = () => {
         switch (vip) {
             case true:
                 // setFavorites(encheres?.filter(enchere => enchere?.sellerID !== host?._id && enchere?.enchere_type === "private" && enchere?.likes?.includes(host?._id) && !ExpirationVerify(enchere?.expiration_time)))
-                setFavorites(encheres?.filter(enchere => enchere?.sellerID !== host?._id && enchere?.enchere_type === "private" && enchere?.likes?.includes(host?._id)))
+                setFavorites(encheres?.filter(enchere => enchere?.sellerID !== host?._id && enchere?.enchere_type === "private" && enchere?.likes?.includes(host?._id) && enchere?.enchere_status === "published"))
                 break;
 
             case false:

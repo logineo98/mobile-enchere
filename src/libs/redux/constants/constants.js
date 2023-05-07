@@ -2,11 +2,11 @@
 // export const api = "http://192.168.50.82:5000"
 // export const api_public = "http://192.168.50.82:5000/api/public"
 
-export const api = "http://192.168.1.102:5000"
-export const api_public = "http://192.168.1.102:5000/api/public"
+// export const api = "http://192.168.1.102:5000"
+// export const api_public = "http://192.168.1.102:5000/api/public"
 
-// export const api = "http://192.168.1.103:5000"
-// export const api_public = "http://192.168.1.103:5000/api/public"
+export const api = "http://192.168.1.103:5000"
+export const api_public = "http://192.168.1.103:5000/api/public"
 
 // export const api = "http://192.168.50.247:5000"
 // export const api_public = "http://192.168.50.247:5000/api/public"

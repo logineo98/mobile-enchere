@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect } from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useState } from 'react';
-import { Colors } from '../../libs';
+import { Colors, formatNumberWithSpaces } from '../../libs';
 import { useDispatch, useSelector } from 'react-redux';
 import { participate_in_enchere } from '../../libs/redux/actions/enchere.action';
 
@@ -30,7 +30,7 @@ const Bid_Counter = ({ lastAmount, data, handleOpenVitepay, toggleOverlay }) => 
 
     return (
         <View style={styles.container}>
-            <View style={styles.info_container}><Text style={styles.info}>Les mises augmentes de: </Text><Text style={{ fontWeight: "bold", color: Colors.dark, fontStyle: "italic" }}>{increase_price} FCFA</Text></View>
+            <View style={styles.info_container}><Text style={styles.info}>Les mises augmentes de: </Text><Text style={{ fontWeight: "bold", color: Colors.dark, fontStyle: "italic" }}>{formatNumberWithSpaces(increase_price)} FCFA</Text></View>
             <View style={styles.quantity_increaser}>
                 <TouchableOpacity style={styles.btn_container} onPress={() => decrement(increase_price)} >
                     <FontAwesome name="minus" size={24} color={Colors.white} />

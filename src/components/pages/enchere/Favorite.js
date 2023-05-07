@@ -48,7 +48,9 @@ const Favorite = ({ data, width, height, theme }) => {
 
   const dislike = () => {
     if (host?.facebook || host?.vip === true) {
-      dispatch(dislike_enchere(data?._id, host?._id, { user_id: host?._id }))
+      Alert.alert("Avertissement", "Voulez-vous vraiment la retirer de vos favoris ?",
+        [{ text: "Non" }, { text: "Oui", onPress: () => dispatch(dislike_enchere(data?._id, host?._id, { user_id: host?._id })) }]
+      )
     } else {
       Alert.alert("Avertissement", "Veuillez, vous connecter à facebook d'abord au niveau du profil.", [{ text: "OK" }])
     }
