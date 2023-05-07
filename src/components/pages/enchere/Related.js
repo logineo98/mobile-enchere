@@ -8,13 +8,24 @@ import CountdownTimer from '../../commons/timer/CountdownTimer'
 const Related = ({ data, scrollViewRef, theme }) => {
     const navigation = useNavigation()
 
+    const styles = StyleSheet.create({
+        container: { flex: 1, marginVertical: 5, borderWidth: 1, borderColor: data?.enchere_type === "private" ? "tomato" : "rgba(0,0,0,0.1)", borderRadius: 5 },
+        main_content: { width: "100%", flexDirection: "row", },
+        image_container: { width: "40%" },
+        image: { width: "100%", height: "100%", resizeMode: "cover", borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
+        infos: { width: "60%", padding: 5, height: "100%", borderTopRightRadius: 5, borderBottomRightRadius: 5, borderLeftWidth: 2, borderLeftColor: data?.enchere_type === "private" ? "tomato" : "rgba(0,0,0,0.3)" },
+        content: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 4 },
+        name: { fontSize: 18, letterSpacing: 1, fontWeight: "500" },
+
+        price: { fontWeight: "300", color: Colors.main },
+        categorie: {},
+        delai: {},
+    })
+
     return (
-        <TouchableOpacity onPress={() => {
-            navigation.navigate("detail", { data });
-            scrollViewRef.current.scrollTo({ y: 0, animated: true })
-        }}
-            style={styles.container}>
+        <TouchableOpacity onPress={() => { navigation.navigate("detail", { data }); scrollViewRef.current.scrollTo({ y: 0, animated: true }) }} style={styles.container}>
             <StatusBar barStyle={"light-content"} backgroundColor={Colors.black} />
+
             <View style={styles.main_content}>
                 {data?.medias?.length > 0 &&
                     <View style={styles.image_container}>
@@ -42,17 +53,3 @@ const Related = ({ data, scrollViewRef, theme }) => {
 }
 
 export default Related
-
-const styles = StyleSheet.create({
-    container: { flex: 1, marginVertical: 5 },
-    main_content: { width: "100%", flexDirection: "row" },
-    image_container: { width: "40%" },
-    image: { width: "100%", height: "100%", resizeMode: "cover" },
-    infos: { width: "60%", padding: 5, height: "100%", },
-    content: { flexDirection: "row", justifyContent: "space-between", paddingVertical: 4 },
-    name: { fontSize: 18, letterSpacing: 1, fontWeight: "500" },
-
-    price: { fontWeight: "300", color: Colors.main },
-    categorie: {},
-    delai: {},
-})

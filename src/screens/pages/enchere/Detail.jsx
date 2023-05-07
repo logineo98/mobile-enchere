@@ -19,7 +19,8 @@ const Detail = ({ route }) => {
 
     const [visible, setVisible] = useState(false)
     const [relatedData, setRelatedData] = useState([])
-    const [enchereStatus, setEnchereStatus] = useState("non connue")
+    const [enchereStatus, setEnchereStatus] = useState("non connu")
+    const [enchereType, setEnchereType] = useState("non connu")
 
     const scrollViewRef = useRef(null)
 
@@ -34,7 +35,10 @@ const Detail = ({ route }) => {
         const tab = []
         encheres?.forEach(enchere => {
             if (areIn(enchere?.categories, data?.categories))
-                if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time)) tab.push(enchere)
+                if (host?.vip === true) {
+                    if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time) && (enchere?.enchere_type === "private" || enchere?.enchere_type === "public")) tab.push(enchere)
+                } else if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public") tab.push(enchere)
+
         })
         setRelatedData(tab)
 
@@ -42,6 +46,9 @@ const Detail = ({ route }) => {
         else if (data?.enchere_status === "pending") setEnchereStatus("en attente de validation")
         else if (data?.enchere_status === "rejected") setEnchereStatus("rejetée")
         else if (data?.enchere_status === "closed") setEnchereStatus("terminée")
+
+        if (data?.enchere_type === "private") setEnchereType("VIP")
+        else setEnchereType("publique")
     }, [encheres, data])
 
     useEffect(() => {
@@ -156,9 +163,15 @@ const Detail = ({ route }) => {
                                     </View>
                                 </View>
                             </View>
-                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
-                                <Text style={{ gap: 20, textDecorationLine: "underline", color: themes === "sombre" ? Colors.white : Colors.black }}>Status :</Text>
-                                <Text style={{ color: Colors.warning }}> {enchereStatus} </Text>
+                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <Text style={{ gap: 20, textDecorationLine: "underline", color: themes === "sombre" ? Colors.white : Colors.black }}>Status :</Text>
+                                    <Text style={{ color: Colors.warning }}> {enchereStatus} </Text>
+                                </View>
+                                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                    <Text style={{ gap: 20, textDecorationLine: "underline", color: themes === "sombre" ? Colors.white : Colors.black }}>Type :</Text>
+                                    <Text style={{ color: Colors.warning }}> {enchereType} </Text>
+                                </View>
                             </View>
                         </View>
 
