@@ -45,7 +45,14 @@ const user_reducer = (state = init, action) => {
 
         case _user_register_success: return { ...state, loading: false, errors: null, register_succeed: action.payload.ans, phone: action.payload.ans.phone, message: action.payload.message }
 
-        case _user_update_success: return { ...state, loading: false, errors: null, host: action.payload.ans, user_updated: action.payload.ans }
+        case _user_update_success: return {
+            ...state, loading: false, errors: null, host: action.payload.ans, user_updated: action.payload.ans,
+            users: state.users.map(user => {
+                if (user?._id === action.payload.ans._id)
+                    return action.payload.ans
+                else return user
+            })
+        }
 
         case _user_delete_success: return { ...state, loading: false, errors: null, user_deleted: action.payload.ans }
 
