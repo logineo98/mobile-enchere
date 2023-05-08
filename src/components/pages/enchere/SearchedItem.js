@@ -18,7 +18,7 @@ const SearchedItem = ({ data, theme }) => {
     container: { justifyContent: 'center', alignItems: 'center', backgroundColor: Colors.white, borderRadius: 5, borderWidth: 1, borderColor: data?.enchere_type === "private" ? "tomato" : "rgba(0,0,0,0.1)", marginVertical: 5, marginHorizontal: 1 },
 
     content: { width: '100%', flexDirection: 'row', padding: 0 },
-    image_box: { width: '30%', height: 120, backgroundColor: 'gray' },
+    image_box: { width: '30%', height: 120, borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
     restaurant_infos: { paddingHorizontal: 5, width: '70%', borderLeftColor: data?.enchere_type === "private" ? "tomato" : "rgba(0,0,0,0.1)", borderLeftWidth: 1 },
     image: { width: '100%', height: "100%", resizeMode: 'cover', borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
 

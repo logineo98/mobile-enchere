@@ -123,7 +123,7 @@ const Detail = ({ route }) => {
                                     <Text style={[css.details.detail_categorie_text, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Categories</Text>
                                     {data?.categories?.length > 0 &&
                                         <View style={css.details.detail_categorie_item}>
-                                            {data?.categories?.slice(0, 3)?.map((categorie, i) => (<Text key={i} style={[css.details.categorie, { color: themes === "sombre" ? "wheat" : Colors.brown }]}>{categorie}</Text>))}
+                                            {data?.categories?.slice(0, 3)?.map((categorie, i) => (<Text key={i} style={[css.details.categorie, { color: themes === "sombre" ? "wheat" : Colors.brown }]}>.{categorie}</Text>))}
                                         </View>
                                     }
                                 </View>
@@ -165,11 +165,11 @@ const Detail = ({ route }) => {
                             </View>
                             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <Text style={{ gap: 20, textDecorationLine: "underline", color: themes === "sombre" ? Colors.white : Colors.black }}>Status :</Text>
+                                    <Text style={{ color: themes === "sombre" ? Colors.white : Colors.black }}>Status :</Text>
                                     <Text style={{ color: Colors.warning }}> {enchereStatus} </Text>
                                 </View>
                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                    <Text style={{ gap: 20, textDecorationLine: "underline", color: themes === "sombre" ? Colors.white : Colors.black }}>Type :</Text>
+                                    <Text style={{ color: themes === "sombre" ? Colors.white : Colors.black }}>Type :</Text>
                                     <Text style={{ color: Colors.warning }}> {enchereType} </Text>
                                 </View>
                             </View>
@@ -178,14 +178,22 @@ const Detail = ({ route }) => {
                     </Container>
 
                     {data?.sellerID !== host?._id && data?.enchere_status === "published" ?
-                        <Container  >
-                            <View style={[css.details.main_content, css.details.button, { backgroundColor: themes === "sombre" ? Colors.black : Colors.white }]}>
-                                <TouchableOpacity onPress={participate_enchere} style={css.details.detail_bid_button}>
-                                    <Text style={css.details.detail_bid_button_text}>Participer à l'enchère</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </Container> :
-                        <Container  >
+                        !ExpirationVerify(data?.expiration_time) ?
+                            <Container>
+                                <View style={[css.details.main_content, css.details.button, { backgroundColor: themes === "sombre" ? Colors.black : Colors.white }]}>
+                                    <TouchableOpacity onPress={participate_enchere} style={css.details.detail_bid_button}>
+                                        <Text style={css.details.detail_bid_button_text}>Participer à l'enchère</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </Container> :
+                            <Container>
+                                <View style={[css.details.main_content, css.details.button, { backgroundColor: themes === "sombre" ? Colors.black : Colors.white }]}>
+                                    <TouchableOpacity onPress={participate_enchere} style={[css.details.detail_bid_button, { backgroundColor: Colors.info }]}>
+                                        <Text style={css.details.detail_bid_button_text}>Voir l'etat de l'enchère</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </Container> :
+                        <Container>
                             <View style={[css.details.main_content, css.details.button, { backgroundColor: themes === "sombre" ? Colors.black : Colors.white }]}>
                                 <TouchableOpacity onPress={participate_enchere} style={[css.details.detail_bid_button, { backgroundColor: Colors.info }]}>
                                     <Text style={css.details.detail_bid_button_text}>Voir l'etat de l'enchère</Text>

@@ -80,11 +80,11 @@ const Make_A_Bid = ({ navigation, route }) => {
                     data?.history?.map((enchere) => <Encherisseur data={data} enchere={enchere} own={host?._id === enchere?.buyerID ? true : false} key={enchere?._id} />) :
                     <View style={{ height: "100%", alignItems: "center", justifyContent: "center", }}>
                         <Text style={{ fontSize: 16, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Aucune participation pour l'instant</Text>
-                        {!own && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>}
+                        {(!own && !ExpirationVerify(data?.expiration_time)) && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>}
                     </View>
                 }
             </ScrollView>
-            {!own &&
+            {(!own && !ExpirationVerify(data?.expiration_time)) &&
                 <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
                     {ExpirationVerify(data?.expiration) ?
                         <TouchableOpacity onPress={toggleOverlay} style={styles.make}>

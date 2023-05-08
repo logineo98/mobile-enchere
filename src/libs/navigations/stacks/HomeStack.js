@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Detail, Home, Make_A_Bid, My_Auctions, Search, Vitepay_confirm } from '../../../screens'
+import { Detail, Filter, Home, Make_A_Bid, My_Auctions, Search, Vitepay_confirm } from '../../../screens'
 import { Header } from '../../../components'
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native'
 import { useLayoutEffect } from 'react'
@@ -42,11 +42,12 @@ const HomeStack = ({ route }) => {
 
     return (
         <homStack.Navigator screenOptions={{ header: ({ navigation }) => <Header navigation={navigation} stackHeader={true} />, }}>
-            <homStack.Screen name="home" component={Home} options={{ header: ({ navigation }) => <Header navigation={navigation} tabHeader={true} /> }} />
+            <homStack.Screen name="home" listeners={({ navigation }) => ({ focus: () => navigation.navigate("home") })} component={Home} options={{ header: ({ navigation }) => <Header navigation={navigation} tabHeader={true} /> }} />
             <homStack.Screen name="detail" component={Detail} />
             <homStack.Screen name="make_a_bid" component={Make_A_Bid} />
             <homStack.Screen name="my_auctions" component={My_Auctions} />
             <homStack.Screen name="search" component={Search} options={{ headerShown: false }} />
+            <homStack.Screen name="filter" component={Filter} />
             <homStack.Screen name="vitepay_confirm" component={Vitepay_confirm} />
         </homStack.Navigator>
     )

@@ -39,7 +39,7 @@ export const notificationListener = () => {
                     'Notification caused app to open from quit state:',
                     remoteMessage.notification,
                 )
-                navigation.navigate(remoteMessage.data.type)
+                navigation.navigate("Explorer")
             }
         })
 

@@ -309,7 +309,7 @@ const details = StyleSheet.create({
     location: { flexDirection: "row", alignItems: "center", },
     detail_text: { fontSize: 11, paddingTop: 5 },
     detail_categorie_text: { fontSize: 16, letterSpacing: 1.5, fontWeight: 100 },
-    detail_categorie_item: { flexDirection: "row", flexWrap: "wrap", gap: 2, paddingLeft: 4 },
+    detail_categorie_item: { flexDirection: "row", flexWrap: "wrap", gap: 5, paddingLeft: 4 },
     categorie: { fontSize: 10, color: Colors.brown },
     right: { width: "30%", },
     detail_price_container: { flexDirection: "row", justifyContent: "space-between" },
