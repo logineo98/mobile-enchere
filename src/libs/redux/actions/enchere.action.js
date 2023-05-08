@@ -10,6 +10,7 @@ export const isLoading = () => {
 
 export const error_enchere = (error) => {
     return (dispatch) => {
+        console.log(error.response ? error.response.data?.message : error.message)
         dispatch({ type: _error_enchere, payload: error.response ? error.response.data?.message : error.message })
     }
 }

@@ -2,7 +2,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect } from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { useState } from 'react';
-import { Colors, formatNumberWithSpaces } from '../../libs';
+import { Colors, formatNumberWithSpaces, updateUser } from '../../libs';
 import { useDispatch, useSelector } from 'react-redux';
 import { participate_in_enchere } from '../../libs/redux/actions/enchere.action';
 
@@ -22,10 +22,13 @@ const Bid_Counter = ({ lastAmount, data, handleOpenVitepay, toggleOverlay }) => 
 
 
     const handleOpen = (e) => {
-        handleOpenVitepay(e, data?._id, montant + actual_price);
+        const tmp_data = { enchereID: data?._id, montant: montant + actual_price, reserve_price: false, date: new Date().getTime() }
+
+        dispatch(updateUser({ id: host?._id, hostID: host?._id, tmp: tmp_data }))
+
+        handleOpenVitepay(e, host?._id, montant + actual_price)
         toggleOverlay()
     }
-
 
 
     return (
