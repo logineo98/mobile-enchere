@@ -1,4 +1,4 @@
-import { _create_enchere, _delete_enchere, _dislike_enchere, _edit_enchere, _error_enchere, _filtre_enchere, _filtre_enchere_by_category, _get_all_encheres, _get_enchere, _like_enchere, _loading_enchere, _participate_in_enchere, _upload_enchere_file, _vider_filtre_enchere, _vider_filtre_enchere_by_category, _vider_new_enchere } from "../constants/constants";
+import { _create_enchere, _delete_enchere, _dislike_enchere, _edit_enchere, _error_enchere, _filtre_enchere, _filtre_enchere_by_category, _get_all_encheres, _get_all_encheres_without_loading, _get_enchere, _like_enchere, _loading_enchere, _participate_in_enchere, _upload_enchere_file, _vider_filtre_enchere, _vider_filtre_enchere_by_category, _vider_new_enchere } from "../constants/constants";
 
 const init = {
     enchere: null,
@@ -19,6 +19,9 @@ const enchere_reducer = (state = init, action) => {
             return { ...state, errors: action.payload }
 
         case _get_all_encheres:
+            return { ...state, encheres: action.payload, new_enchere: null, loading: false, errors: null }
+
+        case _get_all_encheres_without_loading:
             return { ...state, encheres: action.payload, new_enchere: null, loading: false, errors: null }
 
         case _get_enchere:

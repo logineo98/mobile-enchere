@@ -3,8 +3,11 @@ import { vitepay_api } from "../../redux/constants/constants";
 
 export const Config = {
 
-
-    // WEBSITE_URL: "https://webhook.site/d4846507-12e3-473c-8c64-b26bb19acf5e",
+    // WEBSITE_URL: "https://webhook.site/2d83b591-5722-4e89-9441-c7a5a20ffcd4",
+    // dolo
+    // WEBSITE_URL: "https://meyr-api.adaptable.app/vitepay/callback",
+    // tz nation
+    // WEBSITE_URL: "https://enchere-api.adaptable.app/vitepay/callback",
     WEBSITE_URL: vitepay_api,
     // WEBSITE_URL: 'meyere://main/vitepay_success',
     // RETURN_URL: 'https://jigiasso.com',

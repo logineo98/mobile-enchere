@@ -19,9 +19,9 @@ const Search = ({ navigation }) => {
         if (!isEmpty(search_result)) {
             search_result.forEach(result => {
                 if (host?.vip === true) {
-                    if (result?.enchere_type === "public" || result?.enchere_type === "private") tab.push(result)
+                    if (result.enchere_status === "published" && (result?.enchere_type === "public" || result?.enchere_type === "private")) tab.push(result)
                 } else {
-                    if (result?.enchere_type === "public") tab.push(result)
+                    if (result.enchere_status === "published" && result?.enchere_type === "public") tab.push(result)
                 }
             })
 

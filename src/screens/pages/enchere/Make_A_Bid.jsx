@@ -2,7 +2,7 @@ import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View 
 import React, { useState } from 'react'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import { Bid_Counter, CountdownTimer, Encherisseur, Separateur } from '../../../components'
-import { Colors, ExpirationVerify, Vitepay, api_public, convertDateToMillis, css, formatNumberWithSpaces, isEmpty } from '../../../libs'
+import { Colors, ExpirationVerify, Vitepay, api_public, convertDateToMillis, css, formatNumberWithSpaces, isEmpty, updateUser } from '../../../libs'
 import { Overlay } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -14,19 +14,20 @@ const Make_A_Bid = ({ navigation, route }) => {
     const { themes } = useSelector(state => state?.setting)
 
 
-
-
     const toggleOverlay = () => setVisible(!visible)
 
     const handleOpenVitepay = (e, orderId, amount) => {
         e.preventDefault()
+
+        const tmp_data = { enchereID: data?._id, montant: amount, reserve_price: true, date: new Date().getTime() }
+
+        dispatch(updateUser({ id: host?._id, hostID: host?._id, tmp: tmp_data }))
+
         const vitepay = new Vitepay()
         vitepay.post_data(orderId, amount)
             .then(link => navigation.navigate("vitepay_confirm", { link }))
-            .catch(error => console.error(error));
+            .catch(error => console.error(error))
     }
-
-    // console.log(data)
 
     return (
         <View style={styles.container}>
@@ -43,7 +44,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={css.details.desc_container}>
                     {(((data?.history?.length > 0 && data?.history[data?.history?.length - 1]?.montant) < data?.reserve_price) || isEmpty(data?.history)) &&
                         <View style={{ marginVertical: 4, marginBottom: 20 }}>
-                            <TouchableOpacity onPress={(e) => handleOpenVitepay(e, data?._id, data?.reserve_price)} style={[styles.make, { backgroundColor: Colors.black }]}>
+                            <TouchableOpacity onPress={(e) => handleOpenVitepay(e, host?._id, data?.reserve_price)} style={[styles.make, { backgroundColor: Colors.black }]}>
                                 <Text style={styles.btn_text}>Reserver le produit</Text>
                             </TouchableOpacity>
                             <View style={styles.reserver}><Text style={styles.reserve_txt}>prix de reservation: </Text><Text style={styles.reserce_prix}>{formatNumberWithSpaces(data?.reserve_price)} FCFA</Text></View>
@@ -84,9 +85,9 @@ const Make_A_Bid = ({ navigation, route }) => {
                     </View>
                 }
             </ScrollView>
-            {(!own && !ExpirationVerify(data?.expiration_time)) &&
+            {!own &&
                 <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
-                    {ExpirationVerify(data?.expiration) ?
+                    {!ExpirationVerify(data?.expiration_time) ?
                         <TouchableOpacity onPress={toggleOverlay} style={styles.make}>
                             <Text style={styles.btn_text}>Placer une offre</Text>
                         </TouchableOpacity> :

@@ -77,7 +77,7 @@ class Vitepay {
         return fetch(environmentUrl, options)
             .then(response => response.text())
             .then(link => { return link; })
-            .catch(error => console.error(error));
+            .catch(error => console.log(error));
 
     }
 }

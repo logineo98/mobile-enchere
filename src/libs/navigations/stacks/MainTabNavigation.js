@@ -19,7 +19,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useLayoutEffect } from 'react'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
 import { useState } from 'react'
-import { get_all_encheres } from '../../redux/actions/enchere.action'
+import { get_all_encheres, get_all_encheres_without_loading } from '../../redux/actions/enchere.action'
 import { get_all_user_fb_token } from '../../redux/actions/notification.action'
 
 const MainTabNavigation = ({ navigation, route }) => {
@@ -33,6 +33,7 @@ const MainTabNavigation = ({ navigation, route }) => {
 
     useEffect(() => {
         dispatch(checking());
+        dispatch(get_all_encheres_without_loading(host?._id))
     }, [dispatch, screen]);
 
     useLayoutEffect(() => {

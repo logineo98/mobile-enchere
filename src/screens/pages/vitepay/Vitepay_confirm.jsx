@@ -9,26 +9,26 @@ const Vitepay_confirm = ({ route }) => {
     const [process, setProcess] = useState(true)
     const [status, setStatus] = useState({ success: false, failed: false, cancel: true })
 
-    useEffect(() => {
-        Linking.addEventListener("url", (event) => {
-            const { url } = event;
-            console.log(url)
-            console.log(event)
-            // if (url.includes('meyere://main/vitepay_success')) {
-            //     setProcess(false)
-            //     setStatus({ success: true, failed: false, cancel: false })
+    // useEffect(() => {
+    //     Linking.addEventListener("url", (event) => {
+    //         const { url } = event;
+    //         console.log(url)
+    //         console.log(event)
+    //         // if (url.includes('meyere://main/vitepay_success')) {
+    //         //     setProcess(false)
+    //         //     setStatus({ success: true, failed: false, cancel: false })
 
-            // } else
-            //     if (url.includes('meyere://main/vitepay_failed')) {
-            //         setProcess(false)
-            //         setStatus({ success: false, failed: true, cancel: false })
-            //     }
-            //     else if (url.includes('meyere://main/vitepay_cancel')) {
-            //         setProcess(false)
-            //         setStatus({ success: false, failed: false, cancel: true })
-            //     }
-        });
-    }, [])
+    //         // } else
+    //         //     if (url.includes('meyere://main/vitepay_failed')) {
+    //         //         setProcess(false)
+    //         //         setStatus({ success: false, failed: true, cancel: false })
+    //         //     }
+    //         //     else if (url.includes('meyere://main/vitepay_cancel')) {
+    //         //         setProcess(false)
+    //         //         setStatus({ success: false, failed: false, cancel: true })
+    //         //     }
+    //     });
+    // }, [])
 
     console.log(datas?.link)
     return (

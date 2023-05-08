@@ -6,9 +6,9 @@ import {
     _user_gets_success, _user_loading, _user_login_success, _user_logout, _user_register_success,
     _user_reset_forgot_password_success,
     _user_update_success, _user_verify_confirm_code_success, api
-} from "../constants/constants";
-import { isEmpty } from "../../utils/functions";
-import axios from "axios";
+} from "../constants/constants"
+import { isEmpty } from "../../utils/functions"
+import axios from "axios"
 
 
 export const isLoading = () => {
@@ -19,6 +19,7 @@ export const isLoading = () => {
 
 export const user_error = (error) => {
     return (dispatch) => {
+        console.log(error?.response?.data?.message)
         dispatch({ type: _user_error, payload: error?.response?.data?.message })
     }
 }
