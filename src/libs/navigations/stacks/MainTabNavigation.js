@@ -32,8 +32,7 @@ const MainTabNavigation = ({ navigation, route }) => {
     const { host } = useSelector(state => state?.user)
 
     useEffect(() => {
-        dispatch(checking());
-        dispatch(get_all_encheres_without_loading(host?._id))
+        dispatch(checking())
     }, [dispatch, screen]);
 
     useLayoutEffect(() => {

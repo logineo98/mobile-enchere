@@ -7,12 +7,16 @@ import { Overlay } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
 
 const Make_A_Bid = ({ navigation, route }) => {
-    const [visible, setVisible] = useState(false);
     const { data, own } = route?.params
+
+    const [visible, setVisible] = useState(false);
+    const [montant, setMontant] = useState(data?.increase_price);
+
     const dispatch = useDispatch();
     const { host } = useSelector(state => state?.user)
     const { themes } = useSelector(state => state?.setting)
 
+    const lastAmount = parseInt(data?.history[data?.history?.length - 1]?.montant) || parseInt(data?.started_price);
 
     const toggleOverlay = () => setVisible(!visible)
 
@@ -42,7 +46,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                 <View style={css.creer.screen_title_line} />
 
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={css.details.desc_container}>
-                    {(((data?.history?.length > 0 && data?.history[data?.history?.length - 1]?.montant) < data?.reserve_price) || isEmpty(data?.history)) &&
+                    {(((data?.history?.length > 0 && data?.history[data?.history?.length - 1]?.montant) < data?.reserve_price) || isEmpty(data?.history)) && (montant + lastAmount < data?.reserve_price) &&
                         <View style={{ marginVertical: 4, marginBottom: 20 }}>
                             <TouchableOpacity onPress={(e) => handleOpenVitepay(e, host?._id, data?.reserve_price, true)} style={[styles.make, { backgroundColor: Colors.black }]}>
                                 <Text style={styles.btn_text}>Reserver le produit</Text>
@@ -54,7 +58,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                     <Separateur text={data?.history[data?.history?.length - 1]?.montant < data?.reserve_price ? "OU MISER" : "MISER"} />
 
                     <View style={{ marginVertical: 4 }}>
-                        <Bid_Counter toggleOverlay={toggleOverlay} lastAmount={data?.history[data?.history?.length - 1]?.montant} start={500} step={500} data={data} handleOpenVitepay={handleOpenVitepay} />
+                        <Bid_Counter toggleOverlay={toggleOverlay} montant={montant} setMontant={setMontant} lastAmount={lastAmount} data={data} handleOpenVitepay={handleOpenVitepay} />
                     </View>
                 </ScrollView>
             </Overlay>

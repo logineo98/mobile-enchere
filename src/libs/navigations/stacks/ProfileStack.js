@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Support, My_Auctions, Detail, Edit_Profile, Make_A_Bid, Profile, Settings, FacebookValidation, MySales, MyPurchases, MyFavorites, Evaluations, Historiques, Invitations, Vitepay_confirm } from '../../../screens'
 import { Header } from '../../../components'
-import { useLayoutEffect } from 'react'
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { checking } from '../../redux/actions/user.action'
+import { get_all_encheres_without_loading } from '../../redux/actions/enchere.action'
 
 const SettingStack = () => {
     const accStack = createNativeStackNavigator()
@@ -23,14 +23,18 @@ const ProfileStack = ({ route }) => {
     const profStack = createNativeStackNavigator()
     const navigation = useNavigation()
     const [screen, setScreen] = useState("")
-    const dispatch = useDispatch();
+
+    const { host } = useSelector(state => state?.user)
+    const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(checking());
-    }, [dispatch, screen]);
+        dispatch(checking())
+        console.log(screen)
+        if (screen === "my_auctions" || screen === "my_favorites" || screen === "historiques") dispatch(get_all_encheres_without_loading(host?._id))
+    }, [dispatch, screen])
 
     useLayoutEffect(() => {
-        const routeName = getFocusedRouteNameFromRoute(route);
+        const routeName = getFocusedRouteNameFromRoute(route)
         setScreen(getFocusedRouteNameFromRoute(route))
 
         switch (routeName) {
@@ -47,14 +51,14 @@ const ProfileStack = ({ route }) => {
             case "historiques":
             case "parametre":
             case "vitepay_confirm":
-                navigation.setOptions({ tabBarStyle: { display: "none" } });
-                break;
+                navigation.setOptions({ tabBarStyle: { display: "none" } })
+                break
 
             default:
-                navigation.setOptions({ tabBarStyle: { display: "flex" } });
-                break;
+                navigation.setOptions({ tabBarStyle: { display: "flex" } })
+                break
         }
-    }, [navigation, route]);
+    }, [navigation, route])
 
     return (
         <profStack.Navigator screenOptions={{ header: ({ navigation }) => <Header navigation={navigation} stackHeader={true} /> }}>
