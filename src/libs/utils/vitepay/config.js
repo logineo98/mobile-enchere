@@ -11,7 +11,7 @@ export const Config = {
     WEBSITE_URL: vitepay_api,
     // WEBSITE_URL: 'meyere://main/vitepay_success',
     // RETURN_URL: 'https://jigiasso.com',
-    RETURN_URL: vitepay_api,
+    RETURN_URL: "https://main--loquacious-souffle-f06037.netlify.app/#/",
     // RETURN_URL: 'meyere://main',
 
     /* Your website description */
