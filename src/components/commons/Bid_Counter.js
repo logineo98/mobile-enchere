@@ -1,35 +1,28 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useEffect } from 'react'
+import React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { useState } from 'react';
 import { Colors, formatNumberWithSpaces, updateUser } from '../../libs';
 import { useDispatch, useSelector } from 'react-redux';
-import { participate_in_enchere } from '../../libs/redux/actions/enchere.action';
 
-const Bid_Counter = ({ lastAmount, data, handleOpenVitepay, toggleOverlay }) => {
+const Bid_Counter = ({ lastAmount, data, handleOpenVitepay, toggleOverlay, montant, setMontant }) => {
     const { host } = useSelector(state => state?.user)
     const dispatch = useDispatch()
 
-    const actual_price = parseInt(lastAmount) || parseInt(data?.started_price);
+    const actual_price = lastAmount
     const increase_price = parseInt(data?.increase_price) || 500
-    const [montant, setMontant] = useState(increase_price);
 
     const increment = () => { setMontant((prevCount) => prevCount + increase_price); }
 
     const decrement = () => { if (montant - increase_price >= increase_price) setMontant((prevCount) => prevCount - increase_price); }
 
-    const participate = () => { dispatch(participate_in_enchere(data?._id, host?._id, { buyerID: host?._id, montant })) }
-
-
     const handleOpen = (e) => {
-        const tmp_data = { enchereID: data?._id, montant: montant + actual_price, reserve_price: false, date: new Date().getTime() }
+        const tmp_data = { enchereID: data?._id, montant: montant, reserve_price: false, date: new Date().getTime() }
 
         dispatch(updateUser({ id: host?._id, hostID: host?._id, tmp: tmp_data }))
 
-        handleOpenVitepay(e, host?._id, montant + actual_price)
+        handleOpenVitepay(e, host?._id, montant + actual_price, false)
         toggleOverlay()
     }
-
 
     return (
         <View style={styles.container}>
@@ -39,7 +32,6 @@ const Bid_Counter = ({ lastAmount, data, handleOpenVitepay, toggleOverlay }) => 
                     <FontAwesome name="minus" size={24} color={Colors.white} />
                 </TouchableOpacity>
                 <View style={styles.value_container}><Text style={styles.value}>{montant + actual_price}</Text></View>
-
 
                 <TouchableOpacity style={styles.btn_container} onPress={() => increment(increase_price)}>
                     <FontAwesome name="plus" size={24} color={Colors.white} />

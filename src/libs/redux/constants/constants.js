@@ -12,14 +12,14 @@
 // export const api_public = "http://192.168.50.247:5000/api/public"
 
 
-export const api = "https://meyere-api.adaptable.app"
-export const api_public = "https://meyere-api.adaptable.app/api/public"
-export const vitepay_api = "https://meyr.adaptable.app/vitepay/callback"
+// export const api = "https://meyere-api.adaptable.app"
+// export const api_public = "https://meyere-api.adaptable.app/api/public"
+// export const vitepay_api = "https://meyr.adaptable.app/vitepay/callback"
 
 // pour tz nation
-// export const api = "https://api-meyere.adaptable.app"
-// export const api_public = "https://api-meyere.adaptable.app/api/public"
-// export const vitepay_api = "https://api-meyere.adaptable.app/api/callback"
+export const api = "https://api-enchere.adaptable.app"
+export const api_public = "https://api-enchere.adaptable.app/api/public"
+export const vitepay_api = "https://api-enchere.adaptable.app/api/vitepay/callback"
 
 //users
 export const _user_error = "_user_error"

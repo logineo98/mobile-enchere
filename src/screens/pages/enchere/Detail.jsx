@@ -36,8 +36,8 @@ const Detail = ({ route }) => {
         encheres?.forEach(enchere => {
             if (areIn(enchere?.categories, data?.categories))
                 if (host?.vip === true) {
-                    if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time) && (enchere?.enchere_type === "private" || enchere?.enchere_type === "public")) tab.push(enchere)
-                } else if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public") tab.push(enchere)
+                    if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time) && (enchere?.enchere_type === "private" || enchere?.enchere_type === "public") && enchere?.enchere_status === "published") tab.push(enchere)
+                } else if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public" && enchere?.enchere_status === "published") tab.push(enchere)
 
         })
         setRelatedData(tab)
@@ -154,6 +154,7 @@ const Detail = ({ route }) => {
                                     <Text style={[css.details.detail_label, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Prix d'enchère actuel</Text>
                                     <Text style={[css.details.price, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{formatNumberWithSpaces(data?.history[data?.history?.length - 1]?.montant || data?.started_price)} FCFA</Text>
                                 </View>
+
                                 <View style={css.details.detail_bid_right}>
                                     <Text style={[css.details.detail_label, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Délai d'expiration</Text>
 
@@ -163,6 +164,7 @@ const Detail = ({ route }) => {
                                     </View>
                                 </View>
                             </View>
+
                             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
                                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                                     <Text style={{ color: themes === "sombre" ? Colors.white : Colors.black }}>Status :</Text>
@@ -172,6 +174,14 @@ const Detail = ({ route }) => {
                                     <Text style={{ color: themes === "sombre" ? Colors.white : Colors.black }}>Type :</Text>
                                     <Text style={{ color: Colors.warning }}> {enchereType} </Text>
                                 </View>
+                            </View>
+
+                            <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
+                                <Text style={{ color: themes === "sombre" ? Colors.white : Colors.black }}>Propriétaire :</Text>
+                                {users?.map(user => {
+                                    if (data?.sellerID === user?._id)
+                                        return <Text key={user?._id} style={{ color: Colors.main }}> {user?.phone} </Text>
+                                })}
                             </View>
                         </View>
 

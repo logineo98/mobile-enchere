@@ -5,23 +5,28 @@ import { Detail, Filter, Home, Make_A_Bid, My_Auctions, Search, Vitepay_confirm 
 import { Header } from '../../../components'
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native'
 import { useLayoutEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { checking } from '../../redux/actions/user.action'
+import { get_all_encheres_without_loading } from '../../redux/actions/enchere.action'
 
 const HomeStack = ({ route }) => {
     const homStack = createNativeStackNavigator()
-    const dispatch = useDispatch();
+
     const [screen, setScreen] = useState("")
 
+    const { host } = useSelector(state => state?.user)
+    const dispatch = useDispatch()
+
     useEffect(() => {
-        dispatch(checking());
-    }, [dispatch, screen]);
+        dispatch(checking())
+        if (screen === "home") dispatch(get_all_encheres_without_loading(host?._id))
+    }, [dispatch, screen])
 
     const navigation = useNavigation()
     useLayoutEffect(() => {
-        const routeName = getFocusedRouteNameFromRoute(route);
+        const routeName = getFocusedRouteNameFromRoute(route)
         setScreen(getFocusedRouteNameFromRoute(route))
         switch (routeName) {
 
@@ -31,14 +36,14 @@ const HomeStack = ({ route }) => {
             case "my_auctions":
             case "vitepay_confirm":
             case "vitepay_cancel":
-                navigation.setOptions({ tabBarStyle: { display: "none" } });
-                break;
+                navigation.setOptions({ tabBarStyle: { display: "none" } })
+                break
 
             default:
-                navigation.setOptions({ tabBarStyle: { display: "flex" } });
-                break;
+                navigation.setOptions({ tabBarStyle: { display: "flex" } })
+                break
         }
-    }, [navigation, route]);
+    }, [navigation, route])
 
     return (
         <homStack.Navigator screenOptions={{ header: ({ navigation }) => <Header navigation={navigation} stackHeader={true} />, }}>

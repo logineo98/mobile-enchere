@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { get_all_encheres } from '../../../libs/redux/actions/enchere.action'
 
 const Explorer = () => {
-
     const { host } = useSelector(state => state?.user)
     const { themes } = useSelector(state => state?.setting)
     const dispatch = useDispatch()
