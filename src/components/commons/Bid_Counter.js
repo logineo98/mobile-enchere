@@ -26,7 +26,7 @@ const Bid_Counter = ({ lastAmount, data, handleOpenVitepay, toggleOverlay }) => 
 
         dispatch(updateUser({ id: host?._id, hostID: host?._id, tmp: tmp_data }))
 
-        handleOpenVitepay(e, host?._id, montant + actual_price)
+        handleOpenVitepay(e, host?._id, montant + actual_price, false)
         toggleOverlay()
     }
 
@@ -39,7 +39,6 @@ const Bid_Counter = ({ lastAmount, data, handleOpenVitepay, toggleOverlay }) => 
                     <FontAwesome name="minus" size={24} color={Colors.white} />
                 </TouchableOpacity>
                 <View style={styles.value_container}><Text style={styles.value}>{montant + actual_price}</Text></View>
-
 
                 <TouchableOpacity style={styles.btn_container} onPress={() => increment(increase_price)}>
                     <FontAwesome name="plus" size={24} color={Colors.white} />
