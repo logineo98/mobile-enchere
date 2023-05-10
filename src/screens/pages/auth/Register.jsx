@@ -10,9 +10,8 @@ import authen from '@react-native-firebase/auth';
 import { LoginManager, AccessToken, } from 'react-native-fbsdk-next';
 import { Image } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Tooltip } from 'react-native-elements';
 import ReactNativeModal from 'react-native-modal';
-
+import messaging from '@react-native-firebase/messaging'
 
 const Register = ({ navigation }) => {
     const datas = { phone: "", password: "", password_confirm: "", facebook: null }
@@ -72,6 +71,9 @@ const Register = ({ navigation }) => {
     const handleSubmit = async (e) => {
         try {
             e.preventDefault();
+
+            let notification_token = await messaging().getToken()
+            inputs.notification_token = notification_token
             await AsyncStorage.setItem("inputs", JSON.stringify(inputs))
             dispatch(checking_phone(inputs))
         } catch (error) {

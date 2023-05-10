@@ -1,16 +1,19 @@
-import { Alert, StyleSheet } from 'react-native'
+import { Alert, StyleSheet, View } from 'react-native'
 import React, { useEffect } from 'react'
 import SplashScreen from 'react-native-splash-screen'
 import RootNavigation from './src/libs/navigations/RootNavigation'
 import { Provider } from 'react-redux'
-import { Store } from './src/libs'
+import { Store, toastConfig } from './src/libs'
 import messaging from '@react-native-firebase/messaging'
+import Toast from 'react-native-toast-message'
 
 const App = () => {
 
   useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    const unsubscribe = messaging().onMessage(remoteMessage => {
+      const notif = remoteMessage.notification
+      const data = remoteMessage.data
+      Toast.show({ type: data.type === "success" ? "success" : 'info', text1: notif?.title, text2: notif?.body, visibilityTime: 8000 });
     })
 
     return unsubscribe;
@@ -18,9 +21,7 @@ const App = () => {
 
 
   useEffect(() => {
-    messaging().setBackgroundMessageHandler(async remoteMessage => {
-      console.log('Message handled in the background!', remoteMessage);
-    });
+    messaging().setBackgroundMessageHandler(async remoteMessage => { });
   }, [])
 
   useEffect(() => {
@@ -28,7 +29,12 @@ const App = () => {
   }, []);
 
   return (
-    <Provider store={Store}><RootNavigation /></Provider>
+    <>
+      <View style={{ position: "absolute", zIndex: 100, top: 0, left: "50%" }}>
+        <Toast config={toastConfig} />
+      </View>
+      <Provider store={Store}><RootNavigation /></Provider>
+    </>
   )
 }
 

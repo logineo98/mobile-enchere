@@ -51,8 +51,6 @@ export const notificationListener = () => {
             )
         })
 
-    messaging().onMessage(async remoteMessage => {
-        console.log("Received in foreground", remoteMessage)
-    })
+    messaging().onMessage(async remoteMessage => { })
 }
 
