@@ -7,7 +7,7 @@ import { Colors } from '../../../libs';
 const ExpiredNotice = () => {
   return (
     <View style={{ alignItems: "center", justifyContent: "center" }}>
-      <Text style={{ color: Colors.danger }}>Expiré!!!</Text>
+      <Text style={{ color: Colors.danger }}>Terminée</Text>
     </View>
   );
 };

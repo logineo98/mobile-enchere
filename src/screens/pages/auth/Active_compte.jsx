@@ -1,6 +1,6 @@
 import { ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { Colors, auth, css, images, isEmpty, signup, toastConfig, updateUser } from '../../../libs'
+import { Colors, auth, css, images, isEmpty, notificationListener, requestUserPermission, signup, toastConfig, updateUser } from '../../../libs'
 import Toast from 'react-native-toast-message'
 import { Container } from '../../../components'
 import { useState } from 'react'
@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import Spinner from 'react-native-loading-spinner-overlay'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import messaging from '@react-native-firebase/messaging'
 
 const Active_compte = ({ navigation, route }) => {
     const [code, setCode] = useState()
@@ -35,8 +36,6 @@ const Active_compte = ({ navigation, route }) => {
     //auth is compte is active
     useEffect(() => {
         if (login_succeed && login_succeed !== undefined) {
-            requestUserPermission()
-            notificationListener()
             messaging().getToken().then(res => setFirebase_token(res))
 
             dispatch(auth())

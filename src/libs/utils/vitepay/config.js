@@ -40,5 +40,4 @@ export const Config = {
 
     /* ENV : sandbox on test mode otherwise ENV : prod on production mode */
     ENV: 'sandbox',
-
 }

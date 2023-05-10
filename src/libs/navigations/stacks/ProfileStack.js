@@ -29,7 +29,6 @@ const ProfileStack = ({ route }) => {
 
     useEffect(() => {
         dispatch(checking())
-        if (screen === "my_auctions" || screen === "my_favorites" || screen === "historiques") dispatch(get_all_encheres_without_loading(host?._id))
     }, [dispatch, screen])
 
     useLayoutEffect(() => {
@@ -68,13 +67,13 @@ const ProfileStack = ({ route }) => {
             {/* concerne le profile */}
             <profStack.Screen name="edit_profile" component={Edit_Profile} />
             <profStack.Screen name="facebook_validation" component={FacebookValidation} />
-            <profStack.Screen name="my_auctions" component={My_Auctions} />
+            <profStack.Screen name="my_auctions" listeners={() => ({ focus: () => dispatch(get_all_encheres_without_loading(host?._id)) })} component={My_Auctions} />
             <profStack.Screen name="my_sales" component={MySales} />
             <profStack.Screen name="my_purchases" component={MyPurchases} />
-            <profStack.Screen name="my_favorites" component={MyFavorites} />
+            <profStack.Screen name="my_favorites" component={MyFavorites} listeners={() => ({ focus: () => dispatch(get_all_encheres_without_loading(host?._id)) })} />
             <profStack.Screen name="evaluations" component={Evaluations} />
-            <profStack.Screen name="historiques" component={Historiques} />
-            <profStack.Screen name="my_auctions_win" component={My_Auctions_Win} />
+            <profStack.Screen name="historiques" component={Historiques} listeners={() => ({ focus: () => dispatch(get_all_encheres_without_loading(host?._id)) })} />
+            <profStack.Screen name="my_auctions_win" component={My_Auctions_Win} listeners={() => ({ focus: () => dispatch(get_all_encheres_without_loading(host?._id)) })} />
             <profStack.Screen name="invitations" component={Invitations} />
             <profStack.Screen name="parametre" component={SettingStack} options={{ headerShown: false }} />
             <profStack.Screen name="vitepay_confirm" component={Vitepay_confirm} />

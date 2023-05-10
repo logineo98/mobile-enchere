@@ -45,11 +45,11 @@ const Home = () => {
         }
     }, [])
 
-    useEffect(() => {
-        if (firebase_token !== "") {
-            dispatch(updateUser({ id: host?._id, hostID: host?._id, notification_token: firebase_token }))
-        }
-    }, [firebase_token])
+    // useEffect(() => {
+    //     if (firebase_token !== "") {
+    //         dispatch(updateUser({ id: host?._id, hostID: host?._id, notification_token: firebase_token }))
+    //     }
+    // }, [firebase_token])
 
     return (
         loading ? <Loading text="chargement en cours" color="green" /> : (
