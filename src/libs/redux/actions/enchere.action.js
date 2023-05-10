@@ -1,5 +1,5 @@
 import axios from "axios"
-import { _create_enchere, _delete_enchere, _dislike_enchere, _edit_enchere, _error_enchere, _filtre_enchere, _filtre_enchere_by_category, _get_all_encheres, _get_all_encheres_without_loading, _get_enchere, _like_enchere, _loading_enchere, _participate_in_enchere, _upload_enchere_file, _vider_filtre_enchere, _vider_filtre_enchere_by_category, _vider_new_enchere, api } from "../constants/constants"
+import { _add_bid_data, _add_bid_data_enchere, _create_enchere, _delete_enchere, _dislike_enchere, _edit_enchere, _error_enchere, _filtre_enchere, _filtre_enchere_by_category, _get_all_encheres, _get_all_encheres_without_loading, _get_enchere, _like_enchere, _loading_enchere, _participate_in_enchere, _upload_enchere_file, _vider_bid_data, _vider_filtre_enchere, _vider_filtre_enchere_by_category, _vider_new_enchere, api } from "../constants/constants"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export const isLoading = () => {
@@ -137,22 +137,6 @@ export const vider_new_enchere = () => async (dispatch) => {
     }
 }
 
-export const participate_in_enchere = (enchere_id, hostID, data) => async (dispatch) => {
-    try {
-        dispatch(isLoading())
-
-        const token = await AsyncStorage.getItem('cookie')
-
-        const config = { headers: { token } }
-
-        const response = await axios.patch(`${api}/api/enchere/participate-in-enchere/${enchere_id}/${hostID}`, data, config)
-
-        dispatch({ type: _participate_in_enchere, payload: response?.data?.response })
-    } catch (error) {
-        dispatch(error_enchere(error))
-    }
-}
-
 export const delete_enchere = (enchere_id, hostID) => async (dispatch) => {
     try {
         dispatch(isLoading())
@@ -210,6 +194,32 @@ export const edit_enchere = (enchere_id, hostID, files, data) => async (dispatch
 
             dispatch({ type: _edit_enchere, payload: { enchere_id, data: response?.data?.response } })
         }
+    } catch (error) {
+        dispatch(error_enchere(error))
+    }
+}
+
+export const add_bid_data = (data) => async (dispatch) => {
+    try {
+        console.log(data)
+        dispatch({ type: _add_bid_data, payload: data })
+    } catch (error) {
+        dispatch(error_enchere(error))
+    }
+}
+
+export const vider_bid_data = () => async (dispatch) => {
+    try {
+        dispatch({ type: _vider_bid_data, payload: null })
+    } catch (error) {
+        dispatch(error_enchere(error))
+    }
+}
+
+export const add_bid_data_enchere = (data) => async (dispatch) => {
+    try {
+        console.log(data, "pour ajouter a l'enchere")
+        dispatch({ type: _add_bid_data_enchere, payload: data })
     } catch (error) {
         dispatch(error_enchere(error))
     }

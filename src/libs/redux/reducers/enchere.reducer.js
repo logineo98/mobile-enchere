@@ -1,10 +1,11 @@
-import { _create_enchere, _delete_enchere, _dislike_enchere, _edit_enchere, _error_enchere, _filtre_enchere, _filtre_enchere_by_category, _get_all_encheres, _get_all_encheres_without_loading, _get_enchere, _like_enchere, _loading_enchere, _participate_in_enchere, _upload_enchere_file, _vider_filtre_enchere, _vider_filtre_enchere_by_category, _vider_new_enchere } from "../constants/constants";
+import { _add_bid_data, _add_bid_data_enchere, _create_enchere, _delete_enchere, _dislike_enchere, _edit_enchere, _error_enchere, _filtre_enchere, _filtre_enchere_by_category, _get_all_encheres, _get_all_encheres_without_loading, _get_enchere, _like_enchere, _loading_enchere, _participate_in_enchere, _upload_enchere_file, _vider_bid_data, _vider_filtre_enchere, _vider_filtre_enchere_by_category, _vider_new_enchere } from "../constants/constants";
 
 const init = {
     enchere: null,
     encheres: [],
     new_enchere: null,
     search_result: [],
+    bid_data: null,
     message: null,
     errors: null,
     loading: false
@@ -67,17 +68,6 @@ const enchere_reducer = (state = init, action) => {
         case _vider_new_enchere:
             return { ...state, new_enchere: action.payload, loading: false, errors: null }
 
-        case _participate_in_enchere:
-            return {
-                ...state,
-                encheres: state.encheres.map(enchere => {
-                    if (enchere._id === action.payload._id) {
-                        return action.payload
-                    } else return enchere
-                }),
-                new_enchere: null, loading: false, errors: null
-            }
-
         case _delete_enchere:
             return {
                 ...state,
@@ -91,6 +81,27 @@ const enchere_reducer = (state = init, action) => {
                 encheres: state.encheres.map(enchere => {
                     if (enchere._id === action.payload.enchere_id) return action.payload.data
                     else return enchere
+                }),
+                new_enchere: null, loading: false, errors: null
+            }
+
+        case _add_bid_data:
+            return { ...state, bid_data: action.payload, new_enchere: null, loading: false, errors: null }
+
+        case _vider_bid_data:
+            return { ...state, bid_data: action.payload, new_enchere: null, loading: false, errors: null }
+
+        case _add_bid_data_enchere:
+            return {
+                ...state,
+                encheres: state.encheres.map(enchere => {
+                    if (enchere._id === action.payload.enchereID) {
+                        console.log("pour ajouter a l'enchere vraiment")
+                        return {
+                            ...enchere,
+                            history: [...enchere.history, { buyerID: action.payload.hostID, real_montant: action.payload.real_montant, montant: action.payload.montant, reserve_price: action.payload.reserve_price, date: action.payload.date }]
+                        }
+                    } else return enchere
                 }),
                 new_enchere: null, loading: false, errors: null
             }

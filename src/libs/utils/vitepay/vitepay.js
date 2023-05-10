@@ -68,9 +68,8 @@ class Vitepay {
         const environmentUrl = this.env === 'sandbox' ? 'https://api.vitepay.com/v1/sandbox/payments' : 'https://api.vitepay.com/v1/prod/payments';
 
         const options = {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Access-Control-Allow-Origin': '*', },
+            method: 'POST', mode: 'no-cors',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Access-Control-Allow-Origin': '*' },
             body: payload
         };
 

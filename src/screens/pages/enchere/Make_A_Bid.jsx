@@ -1,20 +1,23 @@
 import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Fontisto from 'react-native-vector-icons/Fontisto'
-import { Bid_Counter, CountdownTimer, Encherisseur, Separateur } from '../../../components'
+import { Bid_Counter, CountdownTimer, Encherisseur, Loading, Reloader, Separateur } from '../../../components'
 import { Colors, ExpirationVerify, Vitepay, api_public, convertDateToMillis, css, formatNumberWithSpaces, isEmpty, updateUser } from '../../../libs'
 import { Overlay } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
+import { add_bid_data, get_all_encheres } from '../../../libs/redux/actions/enchere.action'
 
 const Make_A_Bid = ({ navigation, route }) => {
     const { data, own } = route?.params
 
     const [visible, setVisible] = useState(false);
     const [montant, setMontant] = useState(data?.increase_price);
+    const [refreshing, setRefreshing] = useState(false)
 
-    const dispatch = useDispatch();
+    const { loading } = useSelector(state => state?.enchere)
     const { host } = useSelector(state => state?.user)
     const { themes } = useSelector(state => state?.setting)
+    const dispatch = useDispatch()
 
     const lastAmount = parseInt(data?.history[data?.history?.length - 1]?.montant) || parseInt(data?.started_price);
 
@@ -24,14 +27,27 @@ const Make_A_Bid = ({ navigation, route }) => {
         e.preventDefault()
 
         const tmp_data = { enchereID: data?._id, montant: amount, reserve_price: true, date: new Date().getTime() }
+        const tmp_bid_data = { hostID: host?._id, enchereID: data?._id, real_montant: amount, montant: amount, reserve_price: true, date: new Date().getTime() }
 
-        reserve === true && dispatch(updateUser({ id: host?._id, hostID: host?._id, tmp: tmp_data }))
+        if (reserve === true) {
+            dispatch(updateUser({ id: host?._id, hostID: host?._id, tmp: tmp_data }))
+            dispatch(add_bid_data(tmp_bid_data))
+        }
 
         const vitepay = new Vitepay()
         vitepay.post_data(orderId, amount)
             .then(link => navigation.navigate("vitepay_confirm", { link }))
             .catch(error => console.error(error))
     }
+
+    const onRefresh = useCallback(() => {
+        dispatch(get_all_encheres(host?._id))
+        setRefreshing(true)
+    }, [])
+
+    useEffect(() => {
+        if (loading === false) setRefreshing(false)
+    }, [refreshing, loading])
 
     return (
         <View style={styles.container}>
@@ -55,7 +71,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                         </View>
                     }
 
-                    <Separateur text={data?.history[data?.history?.length - 1]?.montant < data?.reserve_price ? "OU MISER" : "MISER"} />
+                    <Separateur text={lastAmount > data?.reserve_price ? "OU MISER" : "MISER"} />
 
                     <View style={{ marginVertical: 4 }}>
                         <Bid_Counter toggleOverlay={toggleOverlay} montant={montant} setMontant={setMontant} lastAmount={lastAmount} data={data} handleOpenVitepay={handleOpenVitepay} />
@@ -80,23 +96,36 @@ const Make_A_Bid = ({ navigation, route }) => {
                 </View>
             </View>
             <View style={{ width: "100%", alignItems: "center" }}><View style={[css.creer.screen_title_line, { marginTop: 0 }]} /></View>
-            <ScrollView contentContainerStyle={{ paddingVertical: 10, flexGrow: 1, backgroundColor: themes === "sombre" ? "#262626" : Colors.white }}>
+
+
+            {loading ? <Loading text="chargement en cours" color="green" /> :
+                <Reloader refreshing={refreshing} onRefresh={onRefresh} theme={themes} >
+                    {data?.history?.length > 0 ?
+                        data?.history?.map((enchere) => <Encherisseur data={data} enchere={enchere} own={host?._id === enchere?.buyerID ? true : false} key={enchere?._id} />) :
+                        <View style={{ height: "100%", alignItems: "center", justifyContent: "center", }}>
+                            <Text style={{ fontSize: 16, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Aucune participation pour l'instant</Text>
+                            {((!own && !ExpirationVerify(data?.expiration_time) || data?.enchere_status !== "closed")) && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>}
+                        </View>
+                    }
+                </Reloader>
+            }
+            {/* <ScrollView contentContainerStyle={{ paddingVertical: 10, flexGrow: 1, backgroundColor: themes === "sombre" ? "#262626" : Colors.white }}>
                 {data?.history?.length > 0 ?
                     data?.history?.map((enchere) => <Encherisseur data={data} enchere={enchere} own={host?._id === enchere?.buyerID ? true : false} key={enchere?._id} />) :
                     <View style={{ height: "100%", alignItems: "center", justifyContent: "center", }}>
                         <Text style={{ fontSize: 16, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Aucune participation pour l'instant</Text>
-                        {(!own && !ExpirationVerify(data?.expiration_time)) && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>}
+                        {((!own && !ExpirationVerify(data?.expiration_time) || data?.enchere_status !== "closed")) && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>}
                     </View>
                 }
-            </ScrollView>
+            </ScrollView> */}
             {!own &&
                 <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
-                    {!ExpirationVerify(data?.expiration_time) ?
+                    {!ExpirationVerify(data?.expiration_time) && data?.enchere_status !== "closed" ?
                         <TouchableOpacity onPress={toggleOverlay} style={styles.make}>
                             <Text style={styles.btn_text}>Placer une offre</Text>
                         </TouchableOpacity> :
                         <TouchableOpacity activeOpacity={0.8} style={[styles.make, { backgroundColor: Colors.secondary }]}>
-                            <Text style={styles.btn_text}>Enchère fermée</Text>
+                            <Text style={styles.btn_text}>Enchère terminée</Text>
                         </TouchableOpacity>
                     }
                 </View>

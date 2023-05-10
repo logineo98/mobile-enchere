@@ -21,7 +21,6 @@ const HomeStack = ({ route }) => {
 
     useEffect(() => {
         dispatch(checking())
-        if (screen === "home") dispatch(get_all_encheres_without_loading(host?._id))
     }, [dispatch, screen])
 
     const navigation = useNavigation()
@@ -47,7 +46,7 @@ const HomeStack = ({ route }) => {
 
     return (
         <homStack.Navigator screenOptions={{ header: ({ navigation }) => <Header navigation={navigation} stackHeader={true} />, }}>
-            <homStack.Screen name="home" listeners={({ navigation }) => ({ focus: () => navigation.navigate("home") })} component={Home} options={{ header: ({ navigation }) => <Header navigation={navigation} tabHeader={true} /> }} />
+            <homStack.Screen name="home" listeners={({ navigation }) => ({ focus: () => { navigation.navigate("home"); dispatch(get_all_encheres_without_loading(host?._id)) } })} component={Home} options={{ header: ({ navigation }) => <Header navigation={navigation} tabHeader={true} /> }} />
             <homStack.Screen name="detail" component={Detail} />
             <homStack.Screen name="make_a_bid" component={Make_A_Bid} />
             <homStack.Screen name="my_auctions" component={My_Auctions} />
