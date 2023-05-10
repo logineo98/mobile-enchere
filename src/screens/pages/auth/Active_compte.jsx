@@ -1,6 +1,6 @@
 import { ImageBackground, ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import { Colors, auth, css, images, isEmpty, signup, toastConfig } from '../../../libs'
+import { Colors, auth, css, images, isEmpty, signup, toastConfig, updateUser } from '../../../libs'
 import Toast from 'react-native-toast-message'
 import { Container } from '../../../components'
 import { useState } from 'react'
@@ -11,7 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Active_compte = ({ navigation, route }) => {
     const [code, setCode] = useState()
-    const { login_succeed, errors, message, loading } = useSelector(state => state?.user);
+    const { login_succeed, errors, message, loading, host } = useSelector(state => state?.user);
+    const [firebase_token, setFirebase_token] = useState("")
     const dispatch = useDispatch();
 
     //notifications
@@ -33,16 +34,22 @@ const Active_compte = ({ navigation, route }) => {
 
     //auth is compte is active
     useEffect(() => {
-        if (login_succeed && login_succeed !== undefined)
+        if (login_succeed && login_succeed !== undefined) {
+            requestUserPermission()
+            notificationListener()
+            messaging().getToken().then(res => setFirebase_token(res))
+
             dispatch(auth())
+        }
     }, [login_succeed, dispatch])
 
-
-
+    useEffect(() => {
+        if (firebase_token !== "" && login_succeed)
+            dispatch(updateUser({ id: host?._id, hostID: host?._id, notification_token: firebase_token }))
+    }, [firebase_token, login_succeed, host])
 
     //handle active compte
     const handleActivate = async (e) => {
-
         try {
             const codeData = await AsyncStorage.getItem("activation_code")
             const _code = JSON.parse(codeData)
