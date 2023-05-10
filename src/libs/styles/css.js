@@ -321,7 +321,7 @@ const details = StyleSheet.create({
     detail_bid_button: { padding: 15, backgroundColor: Colors.main, alignItems: "center", justifyContent: "center", borderRadius: 5 },
     detail_bid_button_text: { color: Colors.white },
     separateur: { marginVertical: 5 },
-    delai: { flexDirection: "row" }
+    delai: { flexDirection: "row", alignItems: "center" }
 })
 
 const filter = StyleSheet.create({

@@ -1,13 +1,13 @@
 import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
 import { Colors, ExpirationVerify, css, } from '../../../libs'
-import { Container, Encherisseur, HistoriqueItem, Loading, Reloader } from '../../../components'
+import { Container, EnchereWinItem, Encherisseur, HistoriqueItem, Loading, Reloader } from '../../../components'
 import { Overlay, Switch } from 'react-native-elements'
 import Fontisto from "react-native-vector-icons/Fontisto"
 import { useDispatch, useSelector } from 'react-redux'
 import { get_all_encheres } from '../../../libs/redux/actions/enchere.action'
 
-const Historiques = ({ navigation }) => {
+const My_Auctions_Win = () => {
 
     const { encheres, loading } = useSelector(state => state?.enchere)
     const { host } = useSelector(state => state?.user)
@@ -90,7 +90,7 @@ const Historiques = ({ navigation }) => {
             <View style={{ width: "100%", alignItems: "center" }}>
                 <Container>
                     <View style={[css.explorer.is_auth_container, { width: "100%" }]}>
-                        <Text style={[css.myAuctions.title, { marginTop: 0, padding: 0, color: themes === "sombre" ? Colors.white : Colors.black }]}>Historiques</Text>
+                        <Text style={[css.myAuctions.title, { marginTop: 0, padding: 0, color: themes === "sombre" ? Colors.white : Colors.black }]}>Mes enchères remportées</Text>
                         {host?.vip &&
                             <View style={css.explorer.is_auth_button}>
                                 <Text style={{ color: themes === "sombre" ? Colors.white : Colors.dark }}>Public</Text>
@@ -108,7 +108,7 @@ const Historiques = ({ navigation }) => {
                 <Reloader refreshing={refreshing} onRefresh={onRefresh} theme={themes}>
                     {allEncheres?.length > 0 ?
                         <View style={{ paddingHorizontal: 10 }} >
-                            {allEncheres?.map((data) => (<HistoriqueItem key={data?._id} data={data} setData={setData} toggleOverlay={toggleOverlay} />))}
+                            {allEncheres?.map((data) => (<EnchereWinItem key={data?._id} data={data} setData={setData} toggleOverlay={toggleOverlay} />))}
 
                         </View>
                         : <View style={{ flex: 1, alignItems: "center", width: "100%", justifyContent: "center", backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }}><Text style={{ color: themes === "sombre" ? Colors.white : Colors.black }}>Pas d'historique</Text></View>
@@ -119,11 +119,8 @@ const Historiques = ({ navigation }) => {
     )
 }
 
-export default Historiques
+export default My_Auctions_Win
 
 const styles = StyleSheet.create({
     container: { flex: 1, backgroundColor: Colors.white }
 })
-
-
-

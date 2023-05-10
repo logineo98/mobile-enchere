@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
-import { Colors } from '../../../libs'
+import { Colors, formatNumberWithSpaces } from '../../../libs'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
 import moment from 'moment';
 
@@ -26,7 +26,7 @@ const Encherisseur = ({ own, data, enchere }) => {
                         <Text style={[styles.name, { color: own ? Colors.white : Colors.dark }]}>{own ? "Vous" : data?.name?.slice(0, 14) || "Anonyme"}{data?.name?.length > 14 && "..."}</Text>
                         {own && <FontAwesome name="check-circle" size={14} color={Colors.primary} />}
                     </View>
-                    <View style={[styles.bid_box]}><Text style={[styles.bid, { color: own ? Colors.white : Colors.dark, paddingLeft: !own ? 10 : 0 }]}>{enchere?.montant} FCFA</Text></View>
+                    <View style={[styles.bid_box]}><Text style={[styles.bid, { color: own ? Colors.white : Colors.dark, paddingLeft: !own ? 10 : 0 }]}>{formatNumberWithSpaces(enchere?.montant)} FCFA</Text></View>
 
                 </View>
                 <View style={[{ width: "48%", alignSelf: own ? "flex-end" : "flex-start", }]}>

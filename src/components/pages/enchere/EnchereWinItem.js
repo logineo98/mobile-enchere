@@ -1,11 +1,12 @@
-import { Image, TouchableOpacity, View, Text, StyleSheet } from 'react-native'
+import { Image, TouchableOpacity, View, Text, StyleSheet, Alert } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
+import Feather from 'react-native-vector-icons/Feather'
 import { Colors, api_public, convertDateToMillis, css, formatNumberWithSpaces } from '../../../libs'
 import CountdownTimer from '../../commons/timer/CountdownTimer'
 import { useSelector } from 'react-redux'
 
-const HistoriqueItem = ({ data, toggleOverlay, setData }) => {
+const EnchereWinItem = ({ data, toggleOverlay, setData }) => {
 
   const { host, users } = useSelector(state => state?.user)
 
@@ -24,9 +25,15 @@ const HistoriqueItem = ({ data, toggleOverlay, setData }) => {
     restaurant_infos: { paddingHorizontal: 5, paddingTop: 7, width: '70%', },
 
     top: { flexDirection: 'row', alignItems: "center", justifyContent: 'space-between', width: '100%' },
-    center: { flexDirection: 'row', marginVertical: 10, gap: 10, width: '70%' },
+    center: { flexDirection: 'row', gap: 10, width: '100%' },
     bottom: { flexDirection: 'row', alignItems: "center", justifyContent: 'space-between', width: '100%' },
   })
+
+  const handleConfirm = () => {
+    Alert.alert("Attention choix irréversible", "Avez-vous vraiment reçu votre produit ?",
+      [{ text: "Non" }, { text: "Oui" }]
+    )
+  }
 
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={handlePress} style={styles.container}>
@@ -39,7 +46,7 @@ const HistoriqueItem = ({ data, toggleOverlay, setData }) => {
           <View style={styles.top}>
             <Text style={{ fontWeight: 'bold', fontSize: 17, color: Colors.dark }}>{(data?.title && data?.title?.length <= 16) ? data?.title?.slice(0, 16) : data?.title?.slice(0, 16) + "..."}</Text>
             <TouchableOpacity onPress={toggleOverlay}>
-              <Entypo name="dots-three-vertical" size={19} />
+              <Feather name="check-circle" size={19} color={(data.receive_confirmation && data.receive_confirmation === true) ? "green" : "red"} />
             </TouchableOpacity>
           </View>
 
@@ -57,24 +64,32 @@ const HistoriqueItem = ({ data, toggleOverlay, setData }) => {
             )}
           </View>
 
+          <View style={styles.center}>
+            {data?.categories?.slice(0, 3)?.map((categorie, i) =>
+              <View key={i} style={{ flexDirection: 'row' }}>
+                <Text style={{ color: Colors.brown, fontSize: 12 }}>
+                  {categorie}
+                </Text>
+              </View>
+            )}
+          </View>
+
           <View style={styles.bottom}>
             <View style={{ flexDirection: 'row' }}>
-              <Ionicons name="location-sharp" color={Colors.dark} size={19} />
+              {/* <Ionicons name="location-sharp" color={Colors.dark} size={19} />
               {users?.map(user => {
                 if (data?.sellerID === user?._id)
                   return <Text key={user?._id} style={{ fontSize: 13, color: Colors.dark }}>{user?.town ? user?.town?.length <= 14 ? user?.town?.slice(0, 14) : user?.town?.slice(0, 14) + "..." : "Non renseignée"}</Text>
-              })}
+              })} */}
             </View>
 
-            <View style={css.details.delai}>
-              {/* <Ionicons name="ios-time-outline" size={16} /> */}
-              <CountdownTimer targetDate={convertDateToMillis(data?.expiration_time)} size={13} hideLabel={true} />
-            </View>
-
+            <TouchableOpacity style={{ backgroundColor: data.receive_confirmation && data.receive_confirmation === true ? "rgba(0,0,0,0.2)" : Colors.home_card, borderRadius: 5 }} activeOpacity={0.7} onPress={handleConfirm} disabled={(data.receive_confirmation && data.receive_confirmation === true) ? true : false}>
+              <Text style={{ paddingHorizontal: 10, paddingVertical: 3, color: Colors.white }}>Confirmer reception</Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>
     </TouchableOpacity>
   )
 }
-export default HistoriqueItem
+export default EnchereWinItem

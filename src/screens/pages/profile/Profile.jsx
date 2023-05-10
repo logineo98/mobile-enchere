@@ -4,6 +4,7 @@ import AntDesign from "react-native-vector-icons/AntDesign"
 import FontAwesome from "react-native-vector-icons/FontAwesome"
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons"
+import MaterialIcons from "react-native-vector-icons/MaterialIcons"
 import SimpleLineIcons from "react-native-vector-icons/SimpleLineIcons"
 import Octicons from "react-native-vector-icons/Octicons"
 import { Image } from 'react-native'
@@ -54,7 +55,6 @@ const Profile = ({ navigation, route }) => {
 
                 <Toast config={toastConfig} />
 
-
                 <View style={css.profile.profile_main_content}>
                     {/* section compte */}
                     <View style={css.profile.section} />
@@ -92,6 +92,19 @@ const Profile = ({ navigation, route }) => {
                                 <MaterialCommunityIcons name="gavel" size={22} color={Colors.white} />
                             </View>
                             <Text>Mes enchères</Text>
+                        </View>
+
+                        <FontAwesome name="angle-right" size={20} />
+
+                    </TouchableOpacity>
+                    <View style={css.profile.separator} />
+
+                    <TouchableOpacity onPress={() => navigation.navigate("my_auctions_win")} activeOpacity={0.6} style={css.profile.profile_item}>
+                        <View style={css.profile.left}>
+                            <View style={[css.profile.profile_item_icon_box, { backgroundColor: Colors.main }]}>
+                                <MaterialIcons name="gavel" size={22} color={Colors.white} />
+                            </View>
+                            <Text>Mes enchères remportées</Text>
                         </View>
 
                         <FontAwesome name="angle-right" size={20} />
