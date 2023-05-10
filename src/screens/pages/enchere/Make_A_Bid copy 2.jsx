@@ -66,7 +66,7 @@ const Make_A_Bid = ({ navigation, route }) => {
     console.log("lastAmount tz ", lastAmount)
 
     return (
-        loading ? <Loading text="chargement en cours" color="green" /> :
+        loading ? <Loading /> :
             <View style={styles.container}>
                 <StatusBar barStyle={"light-content"} backgroundColor={Colors.black} />
 

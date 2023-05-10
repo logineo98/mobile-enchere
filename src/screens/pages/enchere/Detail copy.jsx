@@ -58,7 +58,7 @@ const Detail = ({ route }) => {
     const participate_enchere = () => {
         const own = (data?.sellerID !== host?._id && data?.enchere_status === "published") ? false : true
         if (host?.facebook || host?.vip === true) {
-            navigation.navigate("make_a_bid", { enchere_id: data?._id, own })
+            navigation.navigate("make_a_bid", { data, own })
         } else {
             Alert.alert("Avertissement", "Veuillez, vous connecter à facebook d'abord au niveau du profil.", [{ text: "OK" }])
         }

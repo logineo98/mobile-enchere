@@ -163,7 +163,7 @@ export const get_enchere = (enchere_id, hostID) => async (dispatch) => {
 
         const response = await axios.get(`${api}/api/enchere/${enchere_id}/${hostID}`, config)
 
-        dispatch({ type: _get_enchere, payload: enchere_id })
+        dispatch({ type: _get_enchere, payload: response?.data?.response })
     } catch (error) {
         dispatch(error_enchere(error))
     }
