@@ -80,4 +80,4 @@ export const convertOctetsToMo = (octets) => {
     return megaoctets.toFixed(0)
 }
 
-export const formatNumberWithSpaces = (data) => data.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+export const formatNumberWithSpaces = (data) => data?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");

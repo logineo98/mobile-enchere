@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Support, My_Auctions, Detail, Edit_Profile, Make_A_Bid, Profile, Settings, FacebookValidation, MySales, MyPurchases, MyFavorites, Evaluations, Historiques, Invitations, Vitepay_confirm } from '../../../screens'
+import { Support, My_Auctions, Detail, Edit_Profile, Make_A_Bid, Profile, Settings, FacebookValidation, MySales, MyPurchases, MyFavorites, Evaluations, Historiques, Invitations, Vitepay_confirm, My_Auctions_Win } from '../../../screens'
 import { Header } from '../../../components'
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -29,7 +29,6 @@ const ProfileStack = ({ route }) => {
 
     useEffect(() => {
         dispatch(checking())
-        console.log(screen)
         if (screen === "my_auctions" || screen === "my_favorites" || screen === "historiques") dispatch(get_all_encheres_without_loading(host?._id))
     }, [dispatch, screen])
 
@@ -75,6 +74,7 @@ const ProfileStack = ({ route }) => {
             <profStack.Screen name="my_favorites" component={MyFavorites} />
             <profStack.Screen name="evaluations" component={Evaluations} />
             <profStack.Screen name="historiques" component={Historiques} />
+            <profStack.Screen name="my_auctions_win" component={My_Auctions_Win} />
             <profStack.Screen name="invitations" component={Invitations} />
             <profStack.Screen name="parametre" component={SettingStack} options={{ headerShown: false }} />
             <profStack.Screen name="vitepay_confirm" component={Vitepay_confirm} />

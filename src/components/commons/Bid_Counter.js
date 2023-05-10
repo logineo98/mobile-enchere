@@ -57,37 +57,14 @@ const Bid_Counter = ({ lastAmount, data, handleOpenVitepay, toggleOverlay, monta
 export default Bid_Counter
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1, alignItems: "center"
-    },
-    quantity_increaser: {
-        flex: 1,
-        alignItems: "center", justifyContent: "center",
-        width: "100%", flexDirection: "row"
-    },
-    btn_container: {
-        width: "15%",
-        backgroundColor: Colors.black,
-        padding: 18, alignItems: "center"
-    },
-    value_container: {
-        backgroundColor: Colors.light, borderWidth: 1, borderColor: Colors.input_border_color,
-        width: '70%',
-        padding: 15, alignItems: "center"
-    },
+    container: { flex: 1, alignItems: "center" },
+    quantity_increaser: { flex: 1, alignItems: "center", justifyContent: "center", width: "100%", flexDirection: "row" },
+    btn_container: { width: "15%", backgroundColor: Colors.black, padding: 18, alignItems: "center" },
+    value_container: { backgroundColor: Colors.light, borderWidth: 1, borderColor: Colors.input_border_color, width: '70%', padding: 15, alignItems: "center" },
 
-    value: {
-        fontSize: 18
-    },
-    info_container: {
-        flexDirection: "row", alignItems: "center", justifyContent: "center"
-    },
-    info: {
-        fontSize: 12, fontStyle: "italic", letterSpacing: 1
-    },
-    confirm_btn: {
-        padding: 15, alignSelf: "center",
-        backgroundColor: Colors.main, width: "40%", alignItems: "center", borderRadius: 5, marginTop: 20
-    }
+    value: { fontSize: 18 },
+    info_container: { flexDirection: "row", alignItems: "center", justifyContent: "center" },
+    info: { fontSize: 12, fontStyle: "italic", letterSpacing: 1 },
+    confirm_btn: { padding: 15, alignSelf: "center", backgroundColor: Colors.main, width: "40%", alignItems: "center", borderRadius: 5, marginTop: 20 }
 
 })

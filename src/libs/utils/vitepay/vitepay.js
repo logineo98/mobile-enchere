@@ -52,11 +52,11 @@ class Vitepay {
             // 'payment[buyer_ip_adress]': $_SERVER['REMOTE_ADDR'],
 
             // URL called if process was OK
-            'payment[return_url]': this.return_url,
+            'payment[return_url]': this.return_url + "success",
             // URL called when payment's failed
-            'payment[decline_url]': this.return_url,
+            'payment[decline_url]': this.return_url + "decline",
             // URL called when User's hit cancel
-            "payment[cancel_url]": this.return_url,
+            "payment[cancel_url]": this.return_url + "cancel",
             // URL for server - 2 - server call
             'payment[callback_url]': this.website_url,
             'payment[email]': '',
