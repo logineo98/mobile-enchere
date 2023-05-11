@@ -159,8 +159,7 @@ const Detail = ({ route }) => {
                                     <Text style={[css.details.detail_label, { color: themes === "sombre" ? Colors.white : Colors.black }]}>Délai d'expiration</Text>
 
                                     <View style={css.details.delai}>
-                                        {/* <Ionicons name="ios-time-outline" size={16} /> */}
-                                        <CountdownTimer targetDate={convertDateToMillis(data?.expiration_time)} size={13} txtSize={5} hideLabel={false} />
+                                        {(data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) ? <Text style={{ color: Colors.danger }}>Terminée</Text> : <CountdownTimer targetDate={convertDateToMillis(data?.expiration_time)} size={13} txtSize={5} hideLabel={false} />}
                                     </View>
                                 </View>
                             </View>

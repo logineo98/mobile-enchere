@@ -1,7 +1,7 @@
 import { Image, TouchableOpacity, View, Text, StyleSheet } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
-import { Colors, api_public, convertDateToMillis, css, formatNumberWithSpaces } from '../../../libs'
+import { Colors, ExpirationVerify, api_public, convertDateToMillis, css, formatNumberWithSpaces } from '../../../libs'
 import CountdownTimer from '../../commons/timer/CountdownTimer'
 import { useSelector } from 'react-redux'
 
@@ -67,8 +67,7 @@ const HistoriqueItem = ({ data, toggleOverlay, setData }) => {
             </View>
 
             <View style={css.details.delai}>
-              {/* <Ionicons name="ios-time-outline" size={16} /> */}
-              <CountdownTimer targetDate={convertDateToMillis(data?.expiration_time)} size={13} hideLabel={true} />
+              {(data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) ? <Text style={{ color: Colors.danger }}>Terminée</Text> : <CountdownTimer targetDate={convertDateToMillis(data?.expiration_time)} size={13} hideLabel={true} />}
             </View>
 
           </View>

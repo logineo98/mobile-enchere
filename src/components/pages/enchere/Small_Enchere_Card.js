@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Image } from 'react-native'
-import { Colors, api_public, convertDateToMillis, css, formatNumberWithSpaces } from '../../../libs'
+import { Colors, ExpirationVerify, api_public, convertDateToMillis, css, formatNumberWithSpaces } from '../../../libs'
 import { useNavigation } from '@react-navigation/core'
 import Fontisto from "react-native-vector-icons/Fontisto"
 import CountdownTimer from '../../commons/timer/CountdownTimer'
@@ -114,7 +114,7 @@ const Small_Enchere_Card = ({ data, type, theme }) => {
                     {type !== "reject" && type !== "finished" && type !== "pending" &&
                         <View style={styles.content}>
                             <Text style={[styles.delai, { color: theme === "sombre" ? Colors.white : Colors.black }]}>Expiration :</Text>
-                            <CountdownTimer targetDate={convertDateToMillis(data?.expiration_time)} size={11} hideLabel={true} />
+                            {(data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) ? <Text style={{ color: Colors.danger }}>Terminée</Text> : <CountdownTimer targetDate={convertDateToMillis(data?.expiration_time)} size={11} hideLabel={true} />}
                         </View>
                     }
                 </View>

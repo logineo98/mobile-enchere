@@ -78,7 +78,7 @@ const Historiques = ({ navigation }) => {
                     </View>
 
                     {data?.history?.length > 0 ?
-                        data?.history?.map((enchere) => <Encherisseur data={data} enchere={enchere} own={host?._id === enchere?.buyerID ? true : false} key={enchere?._id} />) :
+                        data?.history?.map((buyer, i) => <Encherisseur buyer={buyer} own={host?._id === buyer?.buyerID ? true : false} key={i} />) :
                         <View style={{ height: "100%", alignItems: "center", justifyContent: "center", }}>
                             <Text style={{ fontSize: 16, letterSpacing: 1, fontWeight: 300 }}>Aucune participation pour l'instant</Text>
                             {data?.enchere_status !== "closed" && !ExpirationVerify(data?.expiration_time) && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300 }}>Voulez-vous bien être la première!</Text>}

@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Colors, ExpirationVerify, css, isEmpty } from '../../../libs'
 import { Container, Loading, NoEnchere, Reloader, Small_Enchere_Card } from '../../../components'
-import { get_all_encheres } from '../../../libs/redux/actions/enchere.action'
+import { get_all_encheres, get_all_encheres_without_loading } from '../../../libs/redux/actions/enchere.action'
 import { Switch } from 'react-native-elements'
 
 const My_Auctions = () => {
@@ -22,32 +22,30 @@ const My_Auctions = () => {
     const [enchere_en_rejetee, setEnchere_en_rejetee] = useState([])
     const [enchere_en_terminee, setEnchere_en_terminee] = useState([])
     const [enchere_en_attente_de_validation, setEnchere_en_attente_de_validation] = useState([])
-
+    console.log(host?._id)
     //recuperer les favoris du host selon qu'il soit vip ou pas
     useEffect(() => {
         switch (vip) {
             case true:
                 setEnchere_en_cours(encheres?.filter(enchere => enchere?.sellerID === host?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "private"))
-                setEnchere_en_terminee(encheres?.filter(enchere => enchere?.sellerID === host?._id && ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "private"))
-                // setEnchere_en_rejetee(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "rejected" && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "private"))
+                setEnchere_en_terminee(encheres?.filter(enchere => (enchere?.sellerID === host?._id && ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "private") || (enchere?.sellerID === host?._id && enchere?.enchere_type === "private" && enchere?.enchere_status === "closed")))
                 break
 
             case false:
                 setEnchere_en_cours(encheres?.filter(enchere => enchere?.sellerID === host?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public" && enchere?.enchere_status === "published"))
-                setEnchere_en_terminee(encheres?.filter(enchere => enchere?.sellerID === host?._id && ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public" && enchere?.enchere_status === "published"))
-                host?.vip === false && setEnchere_en_rejetee(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "rejected" && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public"))
-                host?.vip === false && setEnchere_en_attente_de_validation(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "pending" && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public"))
+                setEnchere_en_terminee(encheres?.filter(enchere => (enchere?.sellerID === host?._id && ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public") || (enchere?.sellerID === host?._id && enchere?.enchere_type === "public" && enchere?.enchere_status === "closed")))
+                host?.vip === false && setEnchere_en_rejetee(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "rejected" && enchere?.enchere_type === "public"))
+                host?.vip === false && setEnchere_en_attente_de_validation(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "pending" && enchere?.enchere_type === "public"))
                 break
 
             default:
                 setEnchere_en_cours(encheres?.filter(enchere => enchere?.sellerID === host?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public" && enchere?.enchere_status === "published"))
-                setEnchere_en_terminee(encheres?.filter(enchere => enchere?.sellerID === host?._id && ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public" && enchere?.enchere_status === "published"))
-                host?.vip === false && setEnchere_en_rejetee(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "rejected" && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public"))
-                host?.vip === false && setEnchere_en_attente_de_validation(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "pending" && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public"))
+                setEnchere_en_terminee(encheres?.filter(enchere => (enchere?.sellerID === host?._id && ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public") || (enchere?.sellerID === host?._id && enchere?.enchere_type === "public" && enchere?.enchere_status === "closed")))
+                host?.vip === false && setEnchere_en_rejetee(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "rejected" && enchere?.enchere_type === "public"))
+                host?.vip === false && setEnchere_en_attente_de_validation(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "pending" && enchere?.enchere_type === "public"))
                 break
         }
     }, [encheres, host, vip])
-
 
     const onRefresh = useCallback(() => {
         dispatch(get_all_encheres(host?._id))
@@ -169,6 +167,14 @@ const My_Auctions = () => {
         item_container: { width: "100%", alignItems: "center" },
     })
 
+    const handlePress = (type) => {
+        dispatch(get_all_encheres_without_loading(host?._id))
+
+        if (type === "encours") setHeaderItem({ encours: true, termine: false, rejete: false, attente: false })
+        else if (type === "termine") setHeaderItem({ encours: false, termine: true, rejete: false, attente: false })
+        else if (type === "rejete") setHeaderItem({ encours: false, termine: false, rejete: true, attente: false })
+        else if (type === "attente") setHeaderItem({ encours: false, termine: false, rejete: false, attente: true })
+    }
 
     return (
         <View style={[styles.container, { backgroundColor: themes === "sombre" ? Colors.black : Colors.white }]}>
@@ -192,24 +198,24 @@ const My_Auctions = () => {
             </View>
 
             <View style={[styles.header, { backgroundColor: "white" }]}>
-                <TouchableOpacity style={styles.element} onPress={() => setHeaderItem({ encours: true, termine: false, rejete: false, attente: false })}>
+                <TouchableOpacity style={styles.element} onPress={() => handlePress("encours")}>
                     <Text style={{ ...styles.element_text, color: headerItem.encours ? "tomato" : "rgba(0,0,0,0.7)" }}>EN COURS</Text>
                     {headerItem.encours && <View style={styles.active_under} />}
                 </TouchableOpacity>
 
-                <TouchableOpacity style={styles.element} onPress={() => setHeaderItem({ encours: false, termine: true, rejete: false, attente: false })}>
+                <TouchableOpacity style={styles.element} onPress={() => handlePress("termine")}>
                     <Text style={{ ...styles.element_text, color: headerItem.termine ? "tomato" : "rgba(0,0,0,0.7)" }}>TERMINÉE</Text>
                     {headerItem.termine && <View style={styles.active_under} />}
                 </TouchableOpacity>
 
                 {host?.vip === false &&
                     <>
-                        <TouchableOpacity style={styles.element} onPress={() => setHeaderItem({ encours: false, termine: false, rejete: true, attente: false })}>
+                        <TouchableOpacity style={styles.element} onPress={() => handlePress("rejete")}>
                             <Text style={{ ...styles.element_text, color: headerItem.rejete ? "tomato" : "rgba(0,0,0,0.7)" }}>REJETÉE</Text>
                             {headerItem.rejete && <View style={styles.active_under} />}
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.element} onPress={() => setHeaderItem({ encours: false, termine: false, rejete: false, attente: true })}>
+                        <TouchableOpacity style={styles.element} onPress={() => handlePress("attente")}>
                             <Text style={{ ...styles.element_text, color: headerItem.attente ? "tomato" : "rgba(0,0,0,0.7)" }}>ATTENTE DE VALIDATION</Text>
                             {headerItem.attente && <View style={styles.active_under} />}
                         </TouchableOpacity>
