@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Colors, formatNumberWithSpaces, updateUser } from '../../libs';
+import { Colors, formatNumberWithSpaces, genRandomNums, updateUser } from '../../libs';
 import { useDispatch, useSelector } from 'react-redux';
 import { add_bid_data } from '../../libs/redux/actions/enchere.action';
 
@@ -23,7 +23,7 @@ const Bid_Counter = ({ lastAmount, data, handleOpenVitepay, toggleOverlay, monta
         dispatch(updateUser({ id: host?._id, hostID: host?._id, tmp: tmp_data }))
         dispatch(add_bid_data(tmp_bid_data))
 
-        handleOpenVitepay(e, host?._id, montant + actual_price, false)
+        handleOpenVitepay(e, `${host?._id}_${genRandomNums(6)}`, montant + actual_price, false)
         toggleOverlay()
     }
 

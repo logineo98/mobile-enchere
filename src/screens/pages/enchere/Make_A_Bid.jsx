@@ -2,24 +2,38 @@ import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View 
 import React, { useCallback, useEffect, useState } from 'react'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import { Bid_Counter, CountdownTimer, Encherisseur, Loading, Reloader, Separateur } from '../../../components'
-import { Colors, ExpirationVerify, Vitepay, api_public, convertDateToMillis, css, formatNumberWithSpaces, isEmpty, updateUser } from '../../../libs'
+import { Colors, ExpirationVerify, Vitepay, api_public, convertDateToMillis, css, formatNumberWithSpaces, genRandomNums, isEmpty, updateUser } from '../../../libs'
 import { Overlay } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
-import { add_bid_data, get_all_encheres } from '../../../libs/redux/actions/enchere.action'
+import { add_bid_data, get_enchere } from '../../../libs/redux/actions/enchere.action'
 
 const Make_A_Bid = ({ navigation, route }) => {
-    const { data, own } = route?.params
+    const { enchere_id, own } = route?.params
 
-    const [visible, setVisible] = useState(false);
-    const [montant, setMontant] = useState(data?.increase_price);
-    const [refreshing, setRefreshing] = useState(false)
-
-    const { loading } = useSelector(state => state?.enchere)
+    const { loading, enchere } = useSelector(state => state?.enchere)
     const { host } = useSelector(state => state?.user)
     const { themes } = useSelector(state => state?.setting)
     const dispatch = useDispatch()
 
-    const lastAmount = parseInt(data?.history[data?.history?.length - 1]?.montant) || parseInt(data?.started_price);
+    const [data, setData] = useState(null)
+    const [visible, setVisible] = useState(false)
+    const [refreshing, setRefreshing] = useState(false)
+    const [montant, setMontant] = useState(0)
+
+    useEffect(() => {
+        setMontant(data?.increase_price)
+    }, [data])
+
+    useEffect(() => {
+        dispatch(get_enchere(enchere_id, host?._id))
+    }, [enchere_id, host])
+
+    useEffect(() => {
+        setData(enchere)
+    }, [enchere])
+
+
+    let lastAmount = data?.history[data?.history?.length - 1]?.montant || data?.started_price
 
     const toggleOverlay = () => setVisible(!visible)
 
@@ -41,7 +55,7 @@ const Make_A_Bid = ({ navigation, route }) => {
     }
 
     const onRefresh = useCallback(() => {
-        dispatch(get_all_encheres(host?._id))
+        dispatch(get_enchere(enchere_id, host?._id))
         setRefreshing(true)
     }, [])
 
@@ -49,7 +63,10 @@ const Make_A_Bid = ({ navigation, route }) => {
         if (loading === false) setRefreshing(false)
     }, [refreshing, loading])
 
+    console.log("sur make a bid ", `${host?._id}_${genRandomNums(6)}`)
+
     return (
+        // loading ? <Loading text="veuillez patienter ..." color="green" /> :
         <View style={styles.container}>
             <StatusBar barStyle={"light-content"} backgroundColor={Colors.black} />
 
@@ -64,14 +81,14 @@ const Make_A_Bid = ({ navigation, route }) => {
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={css.details.desc_container}>
                     {(((data?.history?.length > 0 && data?.history[data?.history?.length - 1]?.montant) < data?.reserve_price) || isEmpty(data?.history)) && (montant + lastAmount < data?.reserve_price) &&
                         <View style={{ marginVertical: 4, marginBottom: 20 }}>
-                            <TouchableOpacity onPress={(e) => handleOpenVitepay(e, host?._id, data?.reserve_price, true)} style={[styles.make, { backgroundColor: Colors.black }]}>
+                            <TouchableOpacity onPress={(e) => handleOpenVitepay(e, `${host?._id}_${genRandomNums(6)}`, data?.reserve_price, true)} style={[styles.make, { backgroundColor: Colors.black }]}>
                                 <Text style={styles.btn_text}>Reserver le produit</Text>
                             </TouchableOpacity>
                             <View style={styles.reserver}><Text style={styles.reserve_txt}>prix de reservation: </Text><Text style={styles.reserce_prix}>{formatNumberWithSpaces(data?.reserve_price)} FCFA</Text></View>
                         </View>
                     }
 
-                    <Separateur text={lastAmount > data?.reserve_price ? "OU MISER" : "MISER"} />
+                    <Separateur text={lastAmount < data?.reserve_price ? "MISER" : "OU  MISER"} />
 
                     <View style={{ marginVertical: 4 }}>
                         <Bid_Counter toggleOverlay={toggleOverlay} montant={montant} setMontant={setMontant} lastAmount={lastAmount} data={data} handleOpenVitepay={handleOpenVitepay} />
@@ -101,7 +118,7 @@ const Make_A_Bid = ({ navigation, route }) => {
             {loading ? <Loading text="chargement en cours" color="green" /> :
                 <Reloader refreshing={refreshing} onRefresh={onRefresh} theme={themes} >
                     {data?.history?.length > 0 ?
-                        data?.history?.map((enchere) => <Encherisseur data={data} enchere={enchere} own={host?._id === enchere?.buyerID ? true : false} key={enchere?._id} />) :
+                        data?.history?.map((buyer, i) => <Encherisseur data={data} enchere={buyer} own={host?._id === buyer?.buyerID ? true : false} key={i} />) :
                         <View style={{ height: "100%", alignItems: "center", justifyContent: "center", }}>
                             <Text style={{ fontSize: 16, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Aucune participation pour l'instant</Text>
                             {((!own && !ExpirationVerify(data?.expiration_time) || data?.enchere_status !== "closed")) && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>}
@@ -109,15 +126,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                     }
                 </Reloader>
             }
-            {/* <ScrollView contentContainerStyle={{ paddingVertical: 10, flexGrow: 1, backgroundColor: themes === "sombre" ? "#262626" : Colors.white }}>
-                {data?.history?.length > 0 ?
-                    data?.history?.map((enchere) => <Encherisseur data={data} enchere={enchere} own={host?._id === enchere?.buyerID ? true : false} key={enchere?._id} />) :
-                    <View style={{ height: "100%", alignItems: "center", justifyContent: "center", }}>
-                        <Text style={{ fontSize: 16, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Aucune participation pour l'instant</Text>
-                        {((!own && !ExpirationVerify(data?.expiration_time) || data?.enchere_status !== "closed")) && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>}
-                    </View>
-                }
-            </ScrollView> */}
+
             {!own &&
                 <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
                     {!ExpirationVerify(data?.expiration_time) && data?.enchere_status !== "closed" ?
@@ -153,5 +162,4 @@ const styles = StyleSheet.create({
     reserce_prix: { color: Colors.main, fontWeight: "bold" },
     expiration: { paddingRight: 10 }
 })
-
 

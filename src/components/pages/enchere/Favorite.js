@@ -87,9 +87,9 @@ const Favorite = ({ data, width, height, theme }) => {
         <View style={styles.bottom}>
           <View style={styles.left}>
             <Ionicons name="ios-location-outline" size={16} color={theme === "sombre" ? Colors.white : Colors.black} />
-            {users?.map(user => {
+            {users?.map((user, i) => {
               if (data?.sellerID === user?._id)
-                return <Text key={data?.sellerID} style={{ fontSize: 12, color: theme === "sombre" ? Colors.white : Colors.black }}>{user?.town ? user?.town?.length <= 14 ? user?.town?.slice(0, 14) : user?.town?.slice(0, 14) + "..." : "Non renseignée"}</Text>
+                return <Text key={i} style={{ fontSize: 12, color: theme === "sombre" ? Colors.white : Colors.black }}>{user?.town ? user?.town?.length <= 14 ? user?.town?.slice(0, 14) : user?.town?.slice(0, 14) + "..." : "Non renseignée"}</Text>
             })}
           </View>
 

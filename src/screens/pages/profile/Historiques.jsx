@@ -109,7 +109,6 @@ const Historiques = ({ navigation }) => {
                     {allEncheres?.length > 0 ?
                         <View style={{ paddingHorizontal: 10 }} >
                             {allEncheres?.map((data) => (<HistoriqueItem key={data?._id} data={data} setData={setData} toggleOverlay={toggleOverlay} />))}
-
                         </View>
                         : <View style={{ flex: 1, alignItems: "center", width: "100%", justifyContent: "center", backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }}><Text style={{ color: themes === "sombre" ? Colors.white : Colors.black }}>Pas d'historique</Text></View>
                     }

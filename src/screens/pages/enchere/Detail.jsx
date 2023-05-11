@@ -58,7 +58,7 @@ const Detail = ({ route }) => {
     const participate_enchere = () => {
         const own = (data?.sellerID !== host?._id && data?.enchere_status === "published") ? false : true
         if (host?.facebook || host?.vip === true) {
-            navigation.navigate("make_a_bid", { data, own })
+            navigation.navigate("make_a_bid", { enchere_id: data?._id, own })
         } else {
             Alert.alert("Avertissement", "Veuillez, vous connecter à facebook d'abord au niveau du profil.", [{ text: "OK" }])
         }
@@ -112,9 +112,9 @@ const Detail = ({ route }) => {
                                     <Text style={[css.details.detail_title_text, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{(data?.title && data?.title?.length <= 14) ? data?.title?.slice(0, 14) : data?.title?.slice(0, 14) + "..."}</Text>
                                     <View style={[css.details.location]}>
                                         <Ionicons name="location-sharp" size={12} color={themes === "sombre" ? Colors.white : Colors.black} />
-                                        {users?.map(user => {
+                                        {users?.map((user, i) => {
                                             if (data?.sellerID === user?._id)
-                                                return <Text key={data?.sellerID} style={[css.details.detail_text, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{user?.town ? user?.town?.length <= 14 ? user?.town?.slice(0, 14) : user?.town?.slice(0, 14) + "..." : "Non renseignée"}</Text>
+                                                return <Text key={i} style={[css.details.detail_text, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{user?.town ? user?.town?.length <= 14 ? user?.town?.slice(0, 14) : user?.town?.slice(0, 14) + "..." : "Non renseignée"}</Text>
                                         })}
                                     </View>
                                 </View>
@@ -178,9 +178,9 @@ const Detail = ({ route }) => {
 
                             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
                                 <Text style={{ color: themes === "sombre" ? Colors.white : Colors.black }}>Propriétaire :</Text>
-                                {users?.map(user => {
+                                {users?.map((user, i) => {
                                     if (data?.sellerID === user?._id)
-                                        return <Text key={user?._id} style={{ color: Colors.main }}> {user?.phone} </Text>
+                                        return <Text key={i} style={{ color: Colors.main }}> {user?.phone} </Text>
                                 })}
                             </View>
                         </View>
@@ -223,8 +223,8 @@ const Detail = ({ route }) => {
                                     <View style={css.creer.screen_title_line} />
 
                                     <View>
-                                        {relatedData?.slice(0, 5)?.map(related => (
-                                            <Related scrollViewRef={scrollViewRef} theme={themes} data={related} key={related?._id} />
+                                        {relatedData?.slice(0, 5)?.map((related, i) => (
+                                            <Related scrollViewRef={scrollViewRef} theme={themes} data={related} key={i} />
                                         ))}
                                     </View>
 

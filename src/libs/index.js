@@ -14,7 +14,7 @@ import RootNavigation from "./navigations/RootNavigation";
 //redux
 
 //functions
-import { ExpirationVerify, addPhoneIndicatif, areIn, convertDateToMillis, convertOctetsToMo, formatNumberWithSpaces, getMongoDateDay, handleChange, isEmpty, isImage, isVideo, removePhoneIndicatif } from "./utils/functions";
+import { ExpirationVerify, addPhoneIndicatif, areIn, convertDateToMillis, convertOctetsToMo, formatNumberWithSpaces, genRandomNums, getMongoDateDay, handleChange, isEmpty, isImage, isVideo, removePhoneIndicatif } from "./utils/functions";
 import Vitepay from "./utils/vitepay/vitepay";
 import Store from "./redux/Store";
 import { auth, checking_phone, deleteUser, forgot, getUser, getUsers, login, logout, register, reset_forgot_password, send_invitation, signup, updateUser, user_compte_activation, verify_confirm_code, } from "./redux/actions/user.action";
@@ -33,5 +33,5 @@ export {
     auth, login, register, updateUser, deleteUser, getUser, getUsers, logout, forgot, verify_confirm_code, reset_forgot_password,
     _clear_errors, _clear_message, _user_update_fail, convertDateToMillis, areIn, getMongoDateDay, ExpirationVerify, _clear_user_registered, api_public, _clear_user_updated, convertOctetsToMo,
     validation_create_enchere, _clear_invitation, send_invitation, filtre_enchere, user_compte_activation, vider_filtre_enchere, activeMode, activeNotif, activeMsg, requestUserPermission, notificationListener,
-    formatNumberWithSpaces, checking_phone, signup, activeVIP, CategoriesArticleHome
+    formatNumberWithSpaces, checking_phone, signup, activeVIP, CategoriesArticleHome, genRandomNums
 }
