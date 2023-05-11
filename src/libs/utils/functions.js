@@ -81,3 +81,11 @@ export const convertOctetsToMo = (octets) => {
 }
 
 export const formatNumberWithSpaces = (data) => data?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+
+
+export const genRandomNums = (size) => {
+    let min = Math.pow(10, size - 1);
+    let max = Math.pow(10, size) - 1;
+    let token = Math.floor(min + Math.random() * (max - min + 1));
+    return token.toString();
+}

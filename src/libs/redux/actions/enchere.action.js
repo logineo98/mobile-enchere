@@ -201,7 +201,6 @@ export const edit_enchere = (enchere_id, hostID, files, data) => async (dispatch
 
 export const add_bid_data = (data) => async (dispatch) => {
     try {
-        console.log(data)
         dispatch({ type: _add_bid_data, payload: data })
     } catch (error) {
         dispatch(error_enchere(error))

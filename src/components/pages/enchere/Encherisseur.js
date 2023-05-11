@@ -18,12 +18,14 @@ const Encherisseur = ({ own, data, enchere }) => {
             <View style={[styles.content, {}]}>
                 <View style={[styles.user, { alignSelf: own ? "flex-end" : "flex-start", borderTopLeftRadius: own ? 10 : 0, borderBottomLeftRadius: own ? 10 : 0, borderTopRightRadius: !own ? 10 : 0, borderBottomRightRadius: !own ? 10 : 0, backgroundColor: own ? Colors.home_card : Colors.light_gray }]}>
                     <View style={styles.name_box}>
-                        {users?.map(user => {
-                            return data?.history?.map(buyer => {
-                                if (buyer?.buyerID === user?._id)
-                                    return <Text key={user?._id} style={[styles.name, { color: own ? Colors.white : Colors.dark }]}>{own ? "Vous" : user?.facebook?.last_name ? user?.facebook?.last_name.length < 25 ? user?.facebook?.last_name : user?.facebook?.last_name?.slice(0, 25) + "..." : "Anonyme"}</Text>
-                            })
-                        })}
+                        {
+                            data?.history?.map((buyer, i) => {
+                                return users?.map((user) => {
+                                    if (buyer?.buyerID === user?._id) {
+                                        return <Text key={i} style={[styles.name, { color: own ? Colors.white : Colors.dark }]} > {own ? "Vous" : user?.facebook?.last_name ? user?.facebook?.last_name.length < 25 ? user?.facebook?.last_name : user?.facebook?.last_name?.slice(0, 25) + "..." : "Anonyme"}</Text>
+                                    }
+                                })
+                            })}
                         {own && <FontAwesome name="check-circle" size={14} color={Colors.primary} />}
                     </View>
                     <View style={[styles.bid_box]}><Text style={[styles.bid, { color: own ? Colors.white : Colors.dark, paddingLeft: !own ? 10 : 0 }]}>{formatNumberWithSpaces(enchere?.montant)} FCFA</Text></View>
@@ -34,7 +36,7 @@ const Encherisseur = ({ own, data, enchere }) => {
                 </View>
 
             </View>
-        </View>
+        </View >
     )
 }
 
