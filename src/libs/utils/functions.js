@@ -89,3 +89,12 @@ export const genRandomNums = (size) => {
     let token = Math.floor(min + Math.random() * (max - min + 1));
     return token.toString();
 }
+
+export const inputSeparatorMille = (e, fieldName, setInputs) => {
+    const inputValue = e.target.value.replace(/[^0-9]/g, ''); // supprimer tous les caractères qui ne sont pas des chiffres
+    const formattedValue = Number(inputValue).toLocaleString(); // ajouter un séparateur de milliers
+    setInputs(prevState => ({ ...prevState, [fieldName]: formattedValue }));
+};
+
+export const deleteSeparator = (input) => { return input.replace(/\D/g, '') }
+
