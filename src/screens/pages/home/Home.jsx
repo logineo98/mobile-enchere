@@ -79,7 +79,7 @@ const Home = () => {
                     <View style={[css.creer.screen_title_line, { marginTop: 0, marginBottom: 15, width: "20%" }]} />
 
                     <View style={css.home.categories_lists}>
-                        {CategoriesArticleHome.slice(0, 6).map((category, i) => <CardHome key={i} h_img={135} theme={themes} container_width={"47%"} mb={10} category={category} />)}
+                        {CategoriesArticleHome.map((category, i) => <CardHome key={i} h_img={135} theme={themes} container_width={"47%"} mb={10} category={category} />)}
                     </View>
                 </View>
             </Reloader>

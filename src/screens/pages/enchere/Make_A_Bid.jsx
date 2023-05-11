@@ -2,7 +2,7 @@ import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View 
 import React, { useCallback, useEffect, useState } from 'react'
 import Fontisto from 'react-native-vector-icons/Fontisto'
 import { Bid_Counter, CountdownTimer, Encherisseur, Loading, Reloader, Separateur } from '../../../components'
-import { Colors, ExpirationVerify, Vitepay, api_public, convertDateToMillis, css, formatNumberWithSpaces, genRandomNums, isEmpty, updateUser } from '../../../libs'
+import { Colors, ExpirationVerify, Vitepay, api_public, convertDateToMillis, css, formatNumberWithSpaces, genRandomNums, images, isEmpty, updateUser } from '../../../libs'
 import { Overlay } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
 import { add_bid_data, get_enchere } from '../../../libs/redux/actions/enchere.action'
@@ -19,9 +19,11 @@ const Make_A_Bid = ({ navigation, route }) => {
     const [visible, setVisible] = useState(false)
     const [refreshing, setRefreshing] = useState(false)
     const [montant, setMontant] = useState(0)
+    const [lastAmount, setLastAmount] = useState(0)
 
     useEffect(() => {
         setMontant(data?.increase_price)
+        setLastAmount(data?.history[data?.history?.length - 1]?.montant || data?.started_price)
     }, [data])
 
     useEffect(() => {
@@ -31,9 +33,6 @@ const Make_A_Bid = ({ navigation, route }) => {
     useEffect(() => {
         setData(enchere)
     }, [enchere])
-
-
-    let lastAmount = data?.history[data?.history?.length - 1]?.montant || data?.started_price
 
     const toggleOverlay = () => setVisible(!visible)
 
@@ -86,7 +85,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                             </View>
                         }
 
-                        <Separateur text={lastAmount < data?.reserve_price ? "MISER" : "OU  MISER"} />
+                        <Separateur text={lastAmount < data?.reserve_price ? "OU MISER" : "MISER"} />
 
                         <View style={{ marginVertical: 4 }}>
                             <Bid_Counter toggleOverlay={toggleOverlay} montant={montant} setMontant={setMontant} lastAmount={lastAmount} data={data} handleOpenVitepay={handleOpenVitepay} />
@@ -101,7 +100,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                         </View>
                         <View style={styles.infos}>
                             <Text style={[styles.name, { color: themes === "sombre" ? Colors.white : Colors.black }]}>{(data?.title && data?.title?.length <= 14) ? data?.title.slice(0, 14) : data?.title.slice(0, 14) + "..."}</Text>
-                            <Text style={styles.price}>{formatNumberWithSpaces(data?.history[data?.history?.length - 1]?.montant || data?.started_price)} FCFA</Text>
+                            <Text style={styles.price}>{formatNumberWithSpaces(data?.started_price)} FCFA</Text>
                         </View>
                     </TouchableOpacity>
 
@@ -112,29 +111,37 @@ const Make_A_Bid = ({ navigation, route }) => {
                 </View>
                 <View style={{ width: "100%", alignItems: "center" }}><View style={[css.creer.screen_title_line, { marginTop: 0 }]} /></View>
 
-
-
-                <Reloader refreshing={refreshing} onRefresh={onRefresh} theme={themes} >
+                <Reloader refreshing={refreshing} onRefresh={onRefresh} theme={themes}>
                     {data?.history?.length > 0 ?
                         data?.history?.map((buyer, i) => <Encherisseur buyer={buyer} own={host?._id === buyer?.buyerID ? true : false} key={i} />) :
                         <View style={{ height: "100%", alignItems: "center", justifyContent: "center", }}>
                             <Text style={{ fontSize: 16, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Aucune participation pour l'instant</Text>
-                            {((!own && !ExpirationVerify(data?.expiration_time) || data?.enchere_status !== "closed")) && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>}
+                            {data?.sellerID !== host?._id && (data?.enchere_status !== "closed" || !ExpirationVerify(data?.expiration_time)) && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>}
                         </View>
                     }
                 </Reloader>
 
+                {data?.history[data?.history?.length - 1]?.buyerID === host?._id && (data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) &&
+                    <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", height: 80, backgroundColor: Colors.white }}>
+                        <View style={{ height: "100%", width: 80 }}>
+                            <Image source={images.winner} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
+                        </View>
+                    </View>
+                }
 
-                {!own &&
+                {data?.sellerID !== host?._id && (data?.enchere_status !== "closed" || !ExpirationVerify(data?.expiration_time)) &&
                     <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
-                        {!ExpirationVerify(data?.expiration_time) && data?.enchere_status !== "closed" ?
-                            <TouchableOpacity onPress={toggleOverlay} style={styles.make}>
-                                <Text style={styles.btn_text}>Placer une offre</Text>
-                            </TouchableOpacity> :
-                            <TouchableOpacity activeOpacity={0.8} style={[styles.make, { backgroundColor: Colors.secondary }]}>
-                                <Text style={styles.btn_text}>Enchère terminée</Text>
-                            </TouchableOpacity>
-                        }
+                        <TouchableOpacity onPress={toggleOverlay} style={styles.make}>
+                            <Text style={styles.btn_text}>Placer une offre</Text>
+                        </TouchableOpacity>
+                    </View>
+                }
+
+                {data?.history[data?.history?.length - 1]?.buyerID === host?._id && (data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) &&
+                    <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
+                        <TouchableOpacity activeOpacity={0.8} style={[styles.make, { backgroundColor: Colors.secondary }]} onPress={() => navigation.navigate("my_auctions_win")}>
+                            <Text style={styles.btn_text}>Enchère terminée</Text>
+                        </TouchableOpacity>
                     </View>
                 }
             </View>

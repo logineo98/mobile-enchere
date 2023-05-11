@@ -12,4 +12,5 @@ export const images = {
     ok: require("../assets/ok.jpg"),
     tshirt: require("../assets/tshirt.png"),
     facebook: require("../assets/facebook.png"),
+    winner: require("../assets/winner.jpg"),
 }

@@ -41,6 +41,7 @@ const ProfileStack = ({ route }) => {
             case "edit_profile":
             case "facebook_validation":
             case "my_auctions":
+            case "my_auctions_win":
             case "my_sales":
             case "my_purchases":
             case "my_favorites":
@@ -61,7 +62,7 @@ const ProfileStack = ({ route }) => {
 
     return (
         <profStack.Navigator screenOptions={{ header: ({ navigation }) => <Header navigation={navigation} stackHeader={true} /> }}>
-            <profStack.Screen name="profile" component={Profile} options={{ header: ({ navigation }) => <Header navigation={navigation} tabHeader={true} /> }} />
+            <profStack.Screen name="profile" listeners={({ navigation }) => ({ focus: () => { navigation.navigate("profile"); dispatch(get_all_encheres_without_loading(host?._id)) } })} component={Profile} options={{ header: ({ navigation }) => <Header navigation={navigation} tabHeader={true} /> }} />
             {/* concerne les enchères */}
             <profStack.Screen name="detail" component={Detail} />
             <profStack.Screen name="make_a_bid" component={Make_A_Bid} />

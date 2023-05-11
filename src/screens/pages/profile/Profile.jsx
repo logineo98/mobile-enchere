@@ -101,7 +101,7 @@ const Profile = ({ navigation, route }) => {
 
                     <TouchableOpacity onPress={() => navigation.navigate("my_auctions_win")} activeOpacity={0.6} style={css.profile.profile_item}>
                         <View style={css.profile.left}>
-                            <View style={[css.profile.profile_item_icon_box, { backgroundColor: Colors.main }]}>
+                            <View style={[css.profile.profile_item_icon_box, { backgroundColor: "#F7C224" }]}>
                                 <MaterialIcons name="gavel" size={22} color={Colors.white} />
                             </View>
                             <Text>Mes enchères remportées</Text>
@@ -153,8 +153,8 @@ const Profile = ({ navigation, route }) => {
 
                     <TouchableOpacity onPress={() => navigation.navigate("notifications")} activeOpacity={0.6} style={css.profile.profile_item}>
                         <View style={css.profile.left}>
-                            <View style={[css.profile.profile_item_icon_box, { backgroundColor: "tomato" }]}>
-                                <AntDesign name="heart" size={22} color={Colors.white} />
+                            <View style={[css.profile.profile_item_icon_box, { backgroundColor: "#F738F1" }]}>
+                                <MaterialIcons name="notifications" size={22} color={Colors.white} />
                             </View>
                             <Text>Notifications</Text>
                         </View>

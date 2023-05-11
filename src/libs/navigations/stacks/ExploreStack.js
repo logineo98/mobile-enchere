@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Detail, Explore, Make_A_Bid, My_Auctions, Vitepay_confirm } from '../../../screens'
+import { Detail, Explore, Make_A_Bid, My_Auctions, My_Auctions_Win, Vitepay_confirm } from '../../../screens'
 import { Header } from '../../../components'
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -29,7 +29,7 @@ const ExploreStack = ({ route }) => {
             case "my_auctions":
             case "detail":
             case "make_a_bid":
-            case "my_auctions":
+            case "my_auctions_win":
             case "vitepay_confirm":
                 navigation.setOptions({ tabBarStyle: { display: "none" } });
                 break;
@@ -47,7 +47,9 @@ const ExploreStack = ({ route }) => {
             <ExpStack.Screen name="detail" component={Detail} />
             <ExpStack.Screen name="make_a_bid" component={Make_A_Bid} />
             <ExpStack.Screen name="my_auctions" component={My_Auctions} />
+            <ExpStack.Screen name="my_auctions_win" component={My_Auctions_Win} listeners={() => ({ focus: () => dispatch(get_all_encheres_without_loading(host?._id)) })} />
             <ExpStack.Screen name="vitepay_confirm" component={Vitepay_confirm} />
+
         </ExpStack.Navigator>
     )
 }

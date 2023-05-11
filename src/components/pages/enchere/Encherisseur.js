@@ -2,8 +2,8 @@ import { StyleSheet, Text, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { Colors, formatNumberWithSpaces } from '../../../libs'
 import FontAwesome from 'react-native-vector-icons/FontAwesome'
-import moment from 'moment';
-import { useSelector } from 'react-redux';
+import moment from 'moment'
+import { useSelector } from 'react-redux'
 
 const Encherisseur = ({ own, buyer }) => {
 
@@ -41,30 +41,12 @@ const Encherisseur = ({ own, buyer }) => {
 export default Encherisseur
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    content: {
-        width: "100%", marginBottom: 2
-    },
-    user: {
-        backgroundColor: "gray", width: "70%", padding: 10, paddingBottom: 0
-
-    },
-    name_box: {
-        flexDirection: "row", alignItems: "center"
-    },
-    name: {
-        fontSize: 14, fontWeight: 400, letterSpacing: 1, marginRight: 2
-    },
-    bid_box: {
-        width: "100%",
-        paddingVertical: 10
-    },
-    bid: {
-        fontSize: 16, fontWeight: "bold", color: Colors.dark
-    },
-    date: {
-        fontSize: 10, fontStyle: "italic"
-    },
+    container: { flex: 1, },
+    content: { width: "100%", marginBottom: 2 },
+    user: { backgroundColor: "gray", width: "70%", padding: 10, paddingBottom: 0 },
+    name_box: { flexDirection: "row", alignItems: "center" },
+    name: { fontSize: 14, fontWeight: 400, letterSpacing: 1, marginRight: 2 },
+    bid_box: { width: "100%", paddingVertical: 10 },
+    bid: { fontSize: 16, fontWeight: "bold", color: Colors.dark },
+    date: { fontSize: 10, fontStyle: "italic" },
 })

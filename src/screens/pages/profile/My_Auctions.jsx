@@ -22,7 +22,7 @@ const My_Auctions = () => {
     const [enchere_en_rejetee, setEnchere_en_rejetee] = useState([])
     const [enchere_en_terminee, setEnchere_en_terminee] = useState([])
     const [enchere_en_attente_de_validation, setEnchere_en_attente_de_validation] = useState([])
-    console.log(host?._id)
+
     //recuperer les favoris du host selon qu'il soit vip ou pas
     useEffect(() => {
         switch (vip) {

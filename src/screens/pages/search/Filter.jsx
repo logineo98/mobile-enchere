@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { StatusBar, TouchableOpacity } from 'react-native'
 import { View, Text } from 'react-native'
-import { Colors, css, filtre_enchere, formatNumberWithSpaces, isEmpty, toastConfig } from '../../../libs'
+import { CategoriesArticle, Colors, css, filtre_enchere, formatNumberWithSpaces, isEmpty, toastConfig } from '../../../libs'
 import { Container, Separateur } from '../../../components'
 import { ScrollView } from 'react-native'
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
@@ -35,6 +35,8 @@ const Filter = ({ navigation }) => {
         { key: '6', value: 'Magnambougou' },
         { key: '7', value: 'Daoudabougou' },
     ]
+
+    const categories = CategoriesArticle
 
     const { host } = useSelector(state => state?.user)
     const dispatch = useDispatch()
@@ -88,7 +90,7 @@ const Filter = ({ navigation }) => {
                         <MultipleSelectList
                             setSelected={(val) => setCategorie(val)}
                             placeholder='Selectionner une ou plusieurs categorie(s)'
-                            data={data}
+                            data={categories}
                             save="value"
                             label="Categorie(s)"
                             search={true}

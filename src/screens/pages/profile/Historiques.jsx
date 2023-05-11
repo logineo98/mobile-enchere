@@ -1,6 +1,6 @@
-import { ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
-import { Colors, ExpirationVerify, css, } from '../../../libs'
+import { Colors, ExpirationVerify, css, images, } from '../../../libs'
 import { Container, Encherisseur, HistoriqueItem, Loading, Reloader } from '../../../components'
 import { Overlay, Switch } from 'react-native-elements'
 import Fontisto from "react-native-vector-icons/Fontisto"
@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { get_all_encheres } from '../../../libs/redux/actions/enchere.action'
 
 const Historiques = ({ navigation }) => {
-
     const { encheres, loading } = useSelector(state => state?.enchere)
     const { host } = useSelector(state => state?.user)
     const { themes } = useSelector(state => state?.setting)
@@ -71,14 +70,23 @@ const Historiques = ({ navigation }) => {
 
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[{ width: "100%", paddingHorizontal: 0 }]}>
                     <View style={{ flexDirection: "row", alignItems: "center", padding: 20 }}>
-                        <Text style={{ textDecorationLine: "underline" }}>Voir les details de l'article?</Text>
+                        <Text style={{ textDecorationLine: "underline" }}>Voir les details de l'enchère?</Text>
                         <TouchableOpacity onPress={() => navigation.navigate("detail", { data })}>
                             <Text style={{ color: Colors.main, marginLeft: 5 }}>Oui</Text>
                         </TouchableOpacity>
                     </View>
 
                     {data?.history?.length > 0 ?
-                        data?.history?.map((buyer, i) => <Encherisseur buyer={buyer} own={host?._id === buyer?.buyerID ? true : false} key={i} />) :
+                        <>
+                            {data?.history?.map((buyer, i) => <Encherisseur buyer={buyer} own={host?._id === buyer?.buyerID ? true : false} key={i} />)}
+                            {data?.history[data?.history?.length - 1]?.buyerID === host?._id && (data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) &&
+                                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", height: 80, backgroundColor: Colors.white }}>
+                                    <View style={{ height: "100%", width: 80 }}>
+                                        <Image source={images.winner} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
+                                    </View>
+                                </View>
+                            }
+                        </> :
                         <View style={{ height: "100%", alignItems: "center", justifyContent: "center", }}>
                             <Text style={{ fontSize: 16, letterSpacing: 1, fontWeight: 300 }}>Aucune participation pour l'instant</Text>
                             {data?.enchere_status !== "closed" && !ExpirationVerify(data?.expiration_time) && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300 }}>Voulez-vous bien être la première!</Text>}

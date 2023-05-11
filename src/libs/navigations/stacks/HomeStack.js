@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Detail, Filter, Home, Make_A_Bid, My_Auctions, Search, Vitepay_confirm } from '../../../screens'
+import { Detail, Filter, Home, Make_A_Bid, My_Auctions, My_Auctions_Win, Search, Vitepay_confirm } from '../../../screens'
 import { Header } from '../../../components'
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native'
 import { useLayoutEffect } from 'react'
@@ -32,9 +32,8 @@ const HomeStack = ({ route }) => {
             case "my_auctions":
             case "detail":
             case "make_a_bid":
-            case "my_auctions":
+            case "my_auctions_win":
             case "vitepay_confirm":
-            case "vitepay_cancel":
                 navigation.setOptions({ tabBarStyle: { display: "none" } })
                 break
 
@@ -46,12 +45,13 @@ const HomeStack = ({ route }) => {
 
     return (
         <homStack.Navigator screenOptions={{ header: ({ navigation }) => <Header navigation={navigation} stackHeader={true} />, }}>
-            <homStack.Screen name="home" listeners={({ navigation }) => ({ focus: () => { navigation.navigate("home"); dispatch(get_all_encheres_without_loading(host?._id)) } })} component={Home} options={{ header: ({ navigation }) => <Header navigation={navigation} tabHeader={true} /> }} />
+            <homStack.Screen name="home" listeners={({ }) => ({ focus: () => dispatch(get_all_encheres_without_loading(host?._id)) })} component={Home} options={{ header: ({ navigation }) => <Header navigation={navigation} tabHeader={true} /> }} />
             <homStack.Screen name="detail" component={Detail} />
             <homStack.Screen name="make_a_bid" component={Make_A_Bid} />
             <homStack.Screen name="my_auctions" component={My_Auctions} />
             <homStack.Screen name="search" component={Search} options={{ headerShown: false }} />
             <homStack.Screen name="filter" component={Filter} />
+            <homStack.Screen name="my_auctions_win" component={My_Auctions_Win} listeners={() => ({ focus: () => dispatch(get_all_encheres_without_loading(host?._id)) })} />
             <homStack.Screen name="vitepay_confirm" component={Vitepay_confirm} />
         </homStack.Navigator>
     )

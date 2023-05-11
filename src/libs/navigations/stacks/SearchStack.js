@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Detail, Filter, Make_A_Bid, Search, Vitepay_confirm } from '../../../screens'
+import { Detail, Filter, Make_A_Bid, My_Auctions_Win, Search, Vitepay_confirm } from '../../../screens'
 import { Header } from '../../../components'
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native'
 import { useLayoutEffect } from 'react'
@@ -24,7 +24,7 @@ const SearchStack = ({ route }) => {
         setScreen(getFocusedRouteNameFromRoute(route))
         switch (routeName) {
 
-            case "my_auctions":
+            case "my_auctions_win":
             case "filter":
             case "detail":
             case "make_a_bid":
@@ -44,6 +44,7 @@ const SearchStack = ({ route }) => {
             <searcStack.Screen name="filter" component={Filter} />
             <searcStack.Screen name="detail" component={Detail} />
             <searcStack.Screen name="make_a_bid" component={Make_A_Bid} />
+            <searcStack.Screen name="my_auctions_win" component={My_Auctions_Win} listeners={() => ({ focus: () => dispatch(get_all_encheres_without_loading(host?._id)) })} />
             <searcStack.Screen name="vitepay_confirm" component={Vitepay_confirm} />
         </searcStack.Navigator>
     )

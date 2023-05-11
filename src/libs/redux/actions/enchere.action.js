@@ -172,21 +172,25 @@ export const get_enchere = (enchere_id, hostID) => async (dispatch) => {
 export const edit_enchere = (enchere_id, hostID, files, data) => async (dispatch) => {
     try {
         dispatch(isLoading())
-        const { _parts } = files
 
         const token = await AsyncStorage.getItem('cookie')
 
-        if (_parts?.length !== 0) {
+        if (files !== null) {
+            console.log("edit enchere tz ", files)
 
-            const config_upload = { headers: { 'Content-Type': 'multipart/form-data' } }
+            const _parts = files?._parts
 
-            const response_upload = await axios.put(`${api}/api/enchere/upload_edit`, files, config_upload)
+            if (_parts?.length !== 0) {
+                const config_upload = { headers: { 'Content-Type': 'multipart/form-data' } }
 
-            const config = { headers: { token } }
+                const response_upload = await axios.put(`${api}/api/enchere/upload_edit`, files, config_upload)
 
-            const response = await axios.put(`${api}/api/enchere/${enchere_id}/${hostID}`, { ...data, new_img: response_upload?.data?.response }, config)
+                const config = { headers: { token } }
 
-            dispatch({ type: _edit_enchere, payload: { enchere_id, data: response?.data?.response } })
+                const response = await axios.put(`${api}/api/enchere/${enchere_id}/${hostID}`, { ...data, new_img: response_upload?.data?.response }, config)
+
+                dispatch({ type: _edit_enchere, payload: { enchere_id, data: response?.data?.response } })
+            }
         } else {
             const config = { headers: { token } }
 
@@ -217,7 +221,6 @@ export const vider_bid_data = () => async (dispatch) => {
 
 export const add_bid_data_enchere = (data) => async (dispatch) => {
     try {
-        console.log(data, "pour ajouter a l'enchere")
         dispatch({ type: _add_bid_data_enchere, payload: data })
     } catch (error) {
         dispatch(error_enchere(error))

@@ -21,10 +21,8 @@ const Vitepay_confirm = ({ route }) => {
 
     useEffect(() => {
         if (datas.link && datas.link === "Erreur de création du paiement: Une erreur est survenue lors de la création du paiement") {
-            console.log("tz error")
             dispatch(vider_bid_data())
         } else {
-            console.log("tz no probleme")
             if (urlSecond === `${vitepay_return}/success`) {
                 if (bid_data !== null) dispatch(add_bid_data_enchere(bid_data))
                 setStatus({ success: true, decline: false, cancel: false, vitepay: false })
@@ -54,9 +52,6 @@ const Vitepay_confirm = ({ route }) => {
             setStatus({ success: false, decline: false, cancel: false, vitepay: true })
         }
     }
-
-    console.log(bid_data, "bid data tz")
-    console.log(urlSecond, "url second tz")
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.white }}>
