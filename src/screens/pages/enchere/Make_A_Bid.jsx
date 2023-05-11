@@ -121,7 +121,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                     }
                 </Reloader>
 
-                {data?.history[data?.history?.length - 1]?.buyerID === host?._id && (data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) &&
+                {data?.history?.length > 0 && data?.history[data?.history?.length - 1]?.buyerID === host?._id && (data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) &&
                     <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", height: 80, backgroundColor: Colors.white }}>
                         <View style={{ height: "100%", width: 80 }}>
                             <Image source={images.winner} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
@@ -139,7 +139,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                     </View>
                 }
 
-                {data?.history[data?.history?.length - 1]?.buyerID === host?._id && (data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) &&
+                {data?.history?.length > 0 && data?.history[data?.history?.length - 1]?.buyerID === host?._id && (data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) &&
                     <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
                         <TouchableOpacity activeOpacity={0.8} style={[styles.make, { backgroundColor: Colors.secondary }]} onPress={() => navigation.navigate("my_auctions_win")}>
                             <Text style={styles.btn_text}>Enchère terminée</Text>

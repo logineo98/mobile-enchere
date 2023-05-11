@@ -16,7 +16,7 @@ const RootNavigation = () => {
     const Stack = createNativeStackNavigator()
 
     const dispatch = useDispatch()
-    const { isAuth, host } = useSelector(state => state?.user)
+    const { isAuth } = useSelector(state => state?.user)
     const [isOnline, setIsOnline] = useState()
 
     useEffect(() => {

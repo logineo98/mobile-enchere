@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { StatusBar, TouchableOpacity } from 'react-native'
 import { View, Text } from 'react-native'
-import { CategoriesArticle, Colors, css, filtre_enchere, formatNumberWithSpaces, isEmpty, toastConfig } from '../../../libs'
+import { CategoriesArticle, Colors, css, filtre_enchere, formatNumberWithSpaces, toastConfig } from '../../../libs'
 import { Container, Separateur } from '../../../components'
 import { ScrollView } from 'react-native'
 import { MultipleSelectList } from 'react-native-dropdown-select-list'
@@ -24,7 +24,6 @@ const Filter = ({ navigation }) => {
     const [categorie, setCategorie] = useState([])
 
     const { themes } = useSelector(state => state?.setting)
-
 
     const data = [
         { key: '1', value: 'Bamako' },

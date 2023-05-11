@@ -78,7 +78,6 @@ export const _vider_new_enchere = "_vider_new_enchere"
 export const _add_bid_data = "_add_bid_data"
 export const _vider_bid_data = "_vider_bid_data"
 export const _add_bid_data_enchere = "_add_bid_data_enchere"
-export const _receive_confirmation = "_receive_confirmation"
 
 // notification
 export const _loading_notification = "_loading_notification"

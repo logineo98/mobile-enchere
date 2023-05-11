@@ -1,5 +1,5 @@
 import axios from "axios"
-import { _add_bid_data, _add_bid_data_enchere, _create_enchere, _delete_enchere, _dislike_enchere, _edit_enchere, _error_enchere, _filtre_enchere, _filtre_enchere_by_category, _get_all_encheres, _get_all_encheres_without_loading, _get_enchere, _like_enchere, _loading_enchere, _participate_in_enchere, _upload_enchere_file, _vider_bid_data, _vider_filtre_enchere, _vider_filtre_enchere_by_category, _vider_new_enchere, api } from "../constants/constants"
+import { _add_bid_data, _add_bid_data_enchere, _create_enchere, _delete_enchere, _dislike_enchere, _edit_enchere, _error_enchere, _filtre_enchere, _filtre_enchere_by_category, _get_all_encheres, _get_all_encheres_without_loading, _get_enchere, _like_enchere, _loading_enchere, _participate_in_enchere, _send_notification, _upload_enchere_file, _vider_bid_data, _vider_filtre_enchere, _vider_filtre_enchere_by_category, _vider_new_enchere, api } from "../constants/constants"
 import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export const isLoading = () => {
@@ -222,6 +222,14 @@ export const vider_bid_data = () => async (dispatch) => {
 export const add_bid_data_enchere = (data) => async (dispatch) => {
     try {
         dispatch({ type: _add_bid_data_enchere, payload: data })
+    } catch (error) {
+        dispatch(error_enchere(error))
+    }
+}
+
+export const send_notification = (data) => async (dispatch) => {
+    try {
+        dispatch({ type: _send_notification, payload: data })
     } catch (error) {
         dispatch(error_enchere(error))
     }

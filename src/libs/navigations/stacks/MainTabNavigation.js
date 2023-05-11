@@ -19,8 +19,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useLayoutEffect } from 'react'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
 import { useState } from 'react'
-import { get_all_encheres } from '../../redux/actions/enchere.action'
+import { edit_enchere, get_all_encheres } from '../../redux/actions/enchere.action'
 import { get_all_user_fb_token } from '../../redux/actions/notification.action'
+import { ExpirationVerify } from '../../utils/functions'
 
 const MainTabNavigation = ({ navigation, route }) => {
     const tb = createBottomTabNavigator()
@@ -29,10 +30,26 @@ const MainTabNavigation = ({ navigation, route }) => {
     const dispatch = useDispatch();
     const [screen, setScreen] = useState("")
 
-    const { host } = useSelector(state => state?.user)
+    const { host, users } = useSelector(state => state?.user)
+    const { encheres } = useSelector(state => state?.enchere)
 
     useEffect(() => {
         dispatch(checking())
+
+        encheres?.forEach(enchere => {
+            if (ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_status !== "closed") {
+                if (enchere?.history?.length > 0) {
+                    users?.forEach(user => {
+                        if (user?._id === enchere?.history[data?.history?.length - 1]?.buyerID) {
+
+                        }
+                    })
+                }
+                // dispatch(edit_enchere(enchere?._id, host?._id, null, { enchere_status: "closed" }))
+            }
+        })
+
+        console.log("MainTabNavigation ", screen)
     }, [dispatch, screen]);
 
     useLayoutEffect(() => {
@@ -45,6 +62,7 @@ const MainTabNavigation = ({ navigation, route }) => {
             case "edit_profile":
             case "facebook_validation":
             case "my_auctions":
+            case "my_auctions_win":
             case "my_sales":
             case "my_purchases":
             case "my_favorites":
@@ -67,7 +85,6 @@ const MainTabNavigation = ({ navigation, route }) => {
         dispatch(get_all_users(host?._id))
         dispatch(get_all_user_fb_token(host?._id))
     }, [])
-
 
     return (
         <tb.Navigator initialRouteName='Acceuil' screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true, tabBarStyle: { height: 65, backgroundColor: Colors.white, borderTopLeftRadius: 25, borderTopRightRadius: 25, elevation: 10 } }}>
