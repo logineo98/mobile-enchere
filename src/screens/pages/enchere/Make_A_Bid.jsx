@@ -129,7 +129,9 @@ const Make_A_Bid = ({ navigation, route }) => {
                     </View>
                 }
 
-                {data?.sellerID !== host?._id && (data?.enchere_status !== "closed" || !ExpirationVerify(data?.expiration_time)) &&
+                {(data?.enchere_status !== "closed" && !ExpirationVerify(data?.expiration_time)) &&
+                    // data?.sellerID !== host?._id && (data?.enchere_status !== "closed" || !ExpirationVerify(data?.expiration_time)) &&
+
                     <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
                         <TouchableOpacity onPress={toggleOverlay} style={styles.make}>
                             <Text style={styles.btn_text}>Placer une offre</Text>
