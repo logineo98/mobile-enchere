@@ -9,18 +9,45 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useState } from 'react'
 import { useEffect } from 'react'
 import { checking } from '../../redux/actions/user.action'
-import { get_all_encheres_without_loading } from '../../redux/actions/enchere.action'
+import { edit_enchere, get_all_encheres_without_loading } from '../../redux/actions/enchere.action'
+import { ExpirationVerify } from '../../utils/functions'
+import { send_notification } from '../../redux/actions/notification.action'
 
 const HomeStack = ({ route }) => {
     const homStack = createNativeStackNavigator()
 
     const [screen, setScreen] = useState("")
 
-    const { host } = useSelector(state => state?.user)
+    const { encheres } = useSelector(state => state?.enchere)
     const dispatch = useDispatch()
+    const { host } = useSelector(state => state?.user)
 
     useEffect(() => {
         dispatch(checking())
+
+        encheres?.forEach(enchere => {
+            if (ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_status !== "closed") {
+                if (enchere?.history?.length > 0) {
+                    users?.forEach(user => {
+                        if (user?._id === enchere?.history[enchere?.history?.length - 1]?.buyerID) {
+                            console.log("Enchere title : ", enchere?.title)
+                            dispatch(send_notification({ title: "Alerte", body: "Vous avez remporté une enchère, veuillez aller dans profil, puis mes enchères remportées pour voir plus", to: user?.notification_token }))
+                        }
+
+                        if (enchere?.sellerID === user?._id) {
+                            dispatch(send_notification({ title: "Alerte", body: "Vous avez une enchère qui a expiré, veuillez consulter pour plus d'information ", to: user?.notification_token }))
+                        }
+                    })
+                    dispatch(edit_enchere(enchere?._id, host?._id, null, { enchere_status: "closed" }))
+                } else {
+                    users?.forEach(user => {
+                        if (enchere?.sellerID === user?._id) {
+                            dispatch(send_notification({ title: "Alerte", body: "Vous avez une enchère qui a expiré, veuillez consulter pour plus d'information ", to: user?.notification_token }))
+                        }
+                    })
+                }
+            }
+        })
     }, [dispatch, screen])
 
     const navigation = useNavigation()

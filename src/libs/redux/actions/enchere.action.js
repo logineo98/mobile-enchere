@@ -226,11 +226,3 @@ export const add_bid_data_enchere = (data) => async (dispatch) => {
         dispatch(error_enchere(error))
     }
 }
-
-export const send_notification = (data) => async (dispatch) => {
-    try {
-        dispatch({ type: _send_notification, payload: data })
-    } catch (error) {
-        dispatch(error_enchere(error))
-    }
-}

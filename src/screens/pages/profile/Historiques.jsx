@@ -71,7 +71,7 @@ const Historiques = ({ navigation }) => {
                 <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={[{ width: "100%", paddingHorizontal: 0 }]}>
                     <View style={{ flexDirection: "row", alignItems: "center", padding: 20 }}>
                         <Text style={{ textDecorationLine: "underline" }}>Voir les details de l'enchère?</Text>
-                        <TouchableOpacity onPress={() => navigation.navigate("detail", { data })}>
+                        <TouchableOpacity onPress={() => navigation.navigate("make_a_bid", { enchere_id: data?._id })}>
                             <Text style={{ color: Colors.main, marginLeft: 5 }}>Oui</Text>
                         </TouchableOpacity>
                     </View>

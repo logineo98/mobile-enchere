@@ -20,7 +20,7 @@ import { useLayoutEffect } from 'react'
 import { getFocusedRouteNameFromRoute } from '@react-navigation/native'
 import { useState } from 'react'
 import { edit_enchere, get_all_encheres } from '../../redux/actions/enchere.action'
-import { get_all_user_fb_token } from '../../redux/actions/notification.action'
+import { get_all_user_fb_token, send_notification } from '../../redux/actions/notification.action'
 import { ExpirationVerify } from '../../utils/functions'
 
 const MainTabNavigation = ({ navigation, route }) => {
@@ -40,16 +40,25 @@ const MainTabNavigation = ({ navigation, route }) => {
             if (ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_status !== "closed") {
                 if (enchere?.history?.length > 0) {
                     users?.forEach(user => {
-                        if (user?._id === enchere?.history[data?.history?.length - 1]?.buyerID) {
+                        if (user?._id === enchere?.history[enchere?.history?.length - 1]?.buyerID) {
+                            console.log("Enchere title : ", enchere?.title)
+                            dispatch(send_notification({ title: "Alerte", body: "Vous avez remporté une enchère, veuillez aller dans profil, puis mes enchères remportées pour voir plus", to: user?.notification_token }))
+                        }
 
+                        if (enchere?.sellerID === user?._id) {
+                            dispatch(send_notification({ title: "Alerte", body: "Vous avez une enchère qui a expiré, veuillez consulter pour plus d'information ", to: user?.notification_token }))
+                        }
+                    })
+                    dispatch(edit_enchere(enchere?._id, host?._id, null, { enchere_status: "closed" }))
+                } else {
+                    users?.forEach(user => {
+                        if (enchere?.sellerID === user?._id) {
+                            dispatch(send_notification({ title: "Alerte", body: "Vous avez une enchère qui a expiré, veuillez consulter pour plus d'information ", to: user?.notification_token }))
                         }
                     })
                 }
-                // dispatch(edit_enchere(enchere?._id, host?._id, null, { enchere_status: "closed" }))
             }
         })
-
-        console.log("MainTabNavigation ", screen)
     }, [dispatch, screen]);
 
     useLayoutEffect(() => {
@@ -88,7 +97,7 @@ const MainTabNavigation = ({ navigation, route }) => {
 
     return (
         <tb.Navigator initialRouteName='Acceuil' screenOptions={{ headerShown: false, tabBarHideOnKeyboard: true, tabBarStyle: { height: 65, backgroundColor: Colors.white, borderTopLeftRadius: 25, borderTopRightRadius: 25, elevation: 10 } }}>
-            <tb.Screen name="Acceuil" listeners={({ navigation, route }) => ({ tabPress: () => navigation.navigate(route.name) })} component={HomeStack} options={{ title: "Accueil", tabBarIcon: (({ color, focused, size }) => { size = size + 3; color = focused ? Colors.main : Colors.black; return <Entypo name='home' size={size} color={color} /> }), tabBarLabel: (({ color, focused }) => { color = focused ? Colors.main : Colors.black; return <Text style={{ color, fontSize: 12 }}>Accueil</Text> }), headerShown: false }} />
+            <tb.Screen name="Acceuil" component={HomeStack} listeners={({ navigation, route }) => ({ tabPress: () => navigation.navigate(route.name) })} options={{ title: "Accueil", tabBarIcon: (({ color, focused, size }) => { size = size + 3; color = focused ? Colors.main : Colors.black; return <Entypo name='home' size={size} color={color} /> }), tabBarLabel: (({ color, focused }) => { color = focused ? Colors.main : Colors.black; return <Text style={{ color, fontSize: 12 }}>Accueil</Text> }), headerShown: false }} />
             <tb.Screen name="Explorer" component={ExploreStack} options={{ title: "Explorer", tabBarIcon: (({ color, focused, size }) => { size = size + 3; color = focused ? Colors.main : Colors.black; return <MaterialIcons name='dashboard' size={size} color={color} /> }), tabBarLabel: (({ color, focused }) => { color = focused ? Colors.main : Colors.black; return <Text style={{ color, fontSize: 12 }}>Explorer</Text> }), headerShown: false }} />
             <tb.Screen name="Nouvelle" component={NewAuctionStack} options={({ navigation }) => ({ title: "Création d'une nouvelle enchère", tabBarIcon: () => !isKeyboardShown && <TabCustomPlus navigation={navigation} />, tabBarLabel: (({ color, focused }) => { color = focused ? Colors.main : Colors.black; return <Text style={{ color, fontSize: 12 }}>Créer</Text> }), tabBarHideOnKeyboard: true, tabBarVisible: !isKeyboardShown, headerShown: false })} />
             <tb.Screen name="Recherche" component={SearchStack} options={{ title: "Recherche", tabBarIcon: (({ color, focused, size }) => { size = size + 3; color = focused ? Colors.main : Colors.black; return <Fontisto name='search' size={size} color={color} /> }), tabBarLabel: (({ color, focused }) => { color = focused ? Colors.main : Colors.black; return <Text style={{ color, fontSize: 12 }}>Recherche</Text> }), headerShown: false }} />

@@ -30,14 +30,10 @@ export const get_all_user_fb_token = (hostID) => async (dispatch) => {
 
 export const send_notification = (data) => async (dispatch) => {
     try {
-        dispatch(isLoading())
-
-        const token = await AsyncStorage.getItem('cookie')
-
         const response = await axios.post(`${api}/api/notification/send-notification`, data)
 
-        dispatch({ type: _send_notification, payload: response?.data?.response })
+        console.log(response?.data?.response)
     } catch (error) {
-        dispatch(error_notification(error))
+        dispatch(error_enchere(error))
     }
 }

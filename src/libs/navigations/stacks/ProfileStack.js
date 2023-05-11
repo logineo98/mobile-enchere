@@ -6,7 +6,9 @@ import { Header } from '../../../components'
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
 import { checking } from '../../redux/actions/user.action'
-import { get_all_encheres_without_loading } from '../../redux/actions/enchere.action'
+import { edit_enchere, get_all_encheres_without_loading } from '../../redux/actions/enchere.action'
+import { send_notification } from '../../redux/actions/notification.action'
+import { ExpirationVerify } from '../../utils/functions'
 
 const SettingStack = () => {
     const accStack = createNativeStackNavigator()
@@ -25,10 +27,35 @@ const ProfileStack = ({ route }) => {
     const [screen, setScreen] = useState("")
 
     const { host } = useSelector(state => state?.user)
+    const { encheres } = useSelector(state => state?.enchere)
     const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(checking())
+
+        encheres?.forEach(enchere => {
+            if (ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_status !== "closed") {
+                if (enchere?.history?.length > 0) {
+                    users?.forEach(user => {
+                        if (user?._id === enchere?.history[enchere?.history?.length - 1]?.buyerID) {
+                            console.log("Enchere title : ", enchere?.title)
+                            dispatch(send_notification({ title: "Alerte", body: "Vous avez remporté une enchère, veuillez aller dans profil, puis mes enchères remportées pour voir plus", to: user?.notification_token }))
+                        }
+
+                        if (enchere?.sellerID === user?._id) {
+                            dispatch(send_notification({ title: "Alerte", body: "Vous avez une enchère qui a expiré, veuillez consulter pour plus d'information ", to: user?.notification_token }))
+                        }
+                    })
+                    dispatch(edit_enchere(enchere?._id, host?._id, null, { enchere_status: "closed" }))
+                } else {
+                    users?.forEach(user => {
+                        if (enchere?.sellerID === user?._id) {
+                            dispatch(send_notification({ title: "Alerte", body: "Vous avez une enchère qui a expiré, veuillez consulter pour plus d'information ", to: user?.notification_token }))
+                        }
+                    })
+                }
+            }
+        })
     }, [dispatch, screen])
 
     useLayoutEffect(() => {
@@ -62,7 +89,7 @@ const ProfileStack = ({ route }) => {
 
     return (
         <profStack.Navigator screenOptions={{ header: ({ navigation }) => <Header navigation={navigation} stackHeader={true} /> }}>
-            <profStack.Screen name="profile" listeners={({ navigation }) => ({ focus: () => { navigation.navigate("profile"); dispatch(get_all_encheres_without_loading(host?._id)) } })} component={Profile} options={{ header: ({ navigation }) => <Header navigation={navigation} tabHeader={true} /> }} />
+            <profStack.Screen name="profile" component={Profile} listeners={({ navigation }) => ({ focus: () => { navigation.navigate("profile"); dispatch(get_all_encheres_without_loading(host?._id)) } })} options={{ header: ({ navigation }) => <Header navigation={navigation} tabHeader={true} /> }} />
             {/* concerne les enchères */}
             <profStack.Screen name="detail" component={Detail} />
             <profStack.Screen name="make_a_bid" component={Make_A_Bid} />

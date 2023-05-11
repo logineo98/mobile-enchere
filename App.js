@@ -14,20 +14,21 @@ const App = () => {
     const unsubscribe = messaging().onMessage(remoteMessage => {
       const notif = remoteMessage.notification
       const data = remoteMessage.data
-      Toast.show({ type: data.type === "success" ? "success" : 'info', text1: "Notifications", text2: notif?.body, visibilityTime: 8000, });
+      Toast.show({ type: data.type === "success" ? "success" : 'info', text1: "Notifications", text2: notif?.body, visibilityTime: 8000, })
+      // Alert.alert("test", "corps", [{ text: "pok" }])
     })
 
-    return unsubscribe;
-  }, []);
+    return unsubscribe
+  }, [])
 
 
   useEffect(() => {
-    messaging().setBackgroundMessageHandler(async remoteMessage => { });
+    messaging().setBackgroundMessageHandler(async remoteMessage => { })
   }, [])
 
   useEffect(() => {
-    SplashScreen.hide();
-  }, []);
+    SplashScreen.hide()
+  }, [])
 
   return (
     <>

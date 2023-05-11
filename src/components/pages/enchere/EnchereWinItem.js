@@ -6,7 +6,7 @@ import { edit_enchere } from '../../../libs/redux/actions/enchere.action'
 
 const EnchereWinItem = ({ data, toggleOverlay, setData }) => {
 
-  const { host } = useSelector(state => state?.user)
+  const { host, users } = useSelector(state => state?.user)
   const { themes } = useSelector(state => state?.setting)
   const dispatch = useDispatch()
 
@@ -22,7 +22,7 @@ const EnchereWinItem = ({ data, toggleOverlay, setData }) => {
     container: { backgroundColor: themes === "sombre" ? Colors.black : Colors.white, width: "100%", borderRadius: 5, marginVertical: 5, borderWidth: 1, borderColor: data?.enchere_type === "private" ? "tomato" : "rgba(0,0,0,0.2)" },
 
     content: { width: '100%', flexDirection: 'row' },
-    image_box: { width: '30%', height: 125, borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
+    image_box: { width: '30%', height: 142, borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
     image: { width: '100%', height: "100%", resizeMode: 'cover', borderTopLeftRadius: 5, borderBottomLeftRadius: 5 },
     restaurant_infos: { paddingHorizontal: 5, paddingTop: 7, width: '70%', },
 
@@ -55,24 +55,33 @@ const EnchereWinItem = ({ data, toggleOverlay, setData }) => {
             </TouchableOpacity>
           </View>
 
-          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-            <Text style={{ fontSize: 12, color: themes === "sombre" ? Colors.white : Colors.black }}>Prix initial :</Text>
-            <Text style={{ fontSize: 12, color: Colors.main }}> {formatNumberWithSpaces(data?.started_price)} FCFA </Text>
-          </View>
-
           <View style={styles.center}>
             {data?.categories?.slice(0, 3)?.map((categorie, i) =>
               <View key={i} style={{ flexDirection: 'row' }}>
-                <Text style={{ color: Colors.brown, fontSize: 12 }}>
-                  {categorie}
-                </Text>
+                <Text style={{ color: Colors.brown, fontSize: 12 }}> {categorie} </Text>
               </View>
             )}
           </View>
 
           <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <Text style={{ fontSize: 12, color: themes === "sombre" ? Colors.white : Colors.black }}>Prix initial :</Text>
+            <Text style={{ fontSize: 12, color: Colors.main }}> {formatNumberWithSpaces(data?.started_price)} FCFA </Text>
+          </View>
+
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
             <Text style={{ fontSize: 12, color: themes === "sombre" ? Colors.white : Colors.black }}>Prix gagnant :</Text>
             <Text style={{ fontSize: 12, color: Colors.success }}> {formatNumberWithSpaces(prix_gagnant)} FCFA </Text>
+          </View>
+
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <Text style={{ fontSize: 12, color: themes === "sombre" ? Colors.white : Colors.black }}>Propriétaire :</Text>
+            <Text style={{ fontSize: 12, color: Colors.primary }}>
+              {users?.map((user, i) => {
+                if (data?.sellerID === user?._id) {
+                  return user?.phone
+                }
+              })}
+            </Text>
           </View>
 
           <View style={styles.bottom}>
