@@ -46,10 +46,10 @@ const Profile = ({ navigation, route }) => {
                         <Image source={!isEmpty(host?.facebook) ? { uri: host?.facebook?.picture_url } : images.user_avatar} style={css.profile.profile_image} />
                     </View>
                     <View style={css.profile.profile_details}>
-                        {(host?.facebook?.first_name || host?.facebook?.last_name) && <Text style={[css.profile.profile_details_text, { fontSize: 20, fontWeight: 300, color: themes === "sombre" ? Colors.white : Colors.dark }]}>{(host?.facebook?.first_name + " " + host?.facebook?.last_name).length < 14 ? (host?.facebook?.first_name + " " + host?.facebook?.last_name) : (host?.facebook?.first_name + " " + host?.facebook?.last_name).slice(0, 14) + "..."}</Text>}
+                        {(host?.facebook?.first_name || host?.facebook?.last_name) && <Text style={[css.profile.profile_details_text, { fontSize: 20, fontWeight: 300, color: Colors.white }]}>{(host?.facebook?.first_name + " " + host?.facebook?.last_name).length < 14 ? (host?.facebook?.first_name + " " + host?.facebook?.last_name) : (host?.facebook?.first_name + " " + host?.facebook?.last_name).slice(0, 14) + "..."}</Text>}
                         <Text style={css.profile.profile_details_text}>{host?.phone}</Text>
-                        {(host?.facebook?.email || host?.email) && <Text style={[css.profile.profile_details_text, { fontSize: 13, color: themes === "sombre" ? Colors.white : Colors.dark }]}>{host?.email?.slice(0, 25)}{host?.email?.length > 25 && "..."}</Text>}
-                        {(host?.facebook?.town || host?.town) && <Text style={[css.profile.profile_details_text, { fontSize: 10, color: themes === "sombre" ? Colors.white : Colors.dark }]}>{host?.town?.slice(0, 25)}{host?.town?.length > 25 && "..."}</Text>}
+                        {(host?.facebook?.email || host?.email) && <Text style={[css.profile.profile_details_text, { fontSize: 13, color: Colors.white }]}>{host?.email?.slice(0, 16)}{host?.email?.length > 16 && "..."}</Text>}
+                        {(host?.facebook?.town || host?.town) && <Text style={[css.profile.profile_details_text, { fontSize: 10, color: Colors.white }]}>{host?.town?.slice(0, 16)}{host?.town?.length > 16 && "..."}</Text>}
                     </View>
                 </View>
 
@@ -144,6 +144,19 @@ const Profile = ({ navigation, route }) => {
                                 <AntDesign name="heart" size={22} color={Colors.white} />
                             </View>
                             <Text>Mes favoris</Text>
+                        </View>
+
+                        <FontAwesome name="angle-right" size={20} />
+
+                    </TouchableOpacity>
+                    <View style={css.profile.separator} />
+
+                    <TouchableOpacity onPress={() => navigation.navigate("notifications")} activeOpacity={0.6} style={css.profile.profile_item}>
+                        <View style={css.profile.left}>
+                            <View style={[css.profile.profile_item_icon_box, { backgroundColor: "tomato" }]}>
+                                <AntDesign name="heart" size={22} color={Colors.white} />
+                            </View>
+                            <Text>Notifications</Text>
                         </View>
 
                         <FontAwesome name="angle-right" size={20} />

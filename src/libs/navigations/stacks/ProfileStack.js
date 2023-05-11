@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Support, My_Auctions, Detail, Edit_Profile, Make_A_Bid, Profile, Settings, FacebookValidation, MySales, MyPurchases, MyFavorites, Evaluations, Historiques, Invitations, Vitepay_confirm, My_Auctions_Win } from '../../../screens'
+import { Support, My_Auctions, Detail, Edit_Profile, Make_A_Bid, Profile, Settings, FacebookValidation, MySales, MyPurchases, MyFavorites, Evaluations, Historiques, Invitations, Vitepay_confirm, My_Auctions_Win, Notifications } from '../../../screens'
 import { Header } from '../../../components'
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -49,6 +49,7 @@ const ProfileStack = ({ route }) => {
             case "historiques":
             case "parametre":
             case "vitepay_confirm":
+            case "notifications":
                 navigation.setOptions({ tabBarStyle: { display: "none" } })
                 break
 
@@ -72,6 +73,7 @@ const ProfileStack = ({ route }) => {
             <profStack.Screen name="my_purchases" component={MyPurchases} />
             <profStack.Screen name="my_favorites" component={MyFavorites} listeners={() => ({ focus: () => dispatch(get_all_encheres_without_loading(host?._id)) })} />
             <profStack.Screen name="evaluations" component={Evaluations} />
+            <profStack.Screen name="notifications" component={Notifications} />
             <profStack.Screen name="historiques" component={Historiques} listeners={() => ({ focus: () => dispatch(get_all_encheres_without_loading(host?._id)) })} />
             <profStack.Screen name="my_auctions_win" component={My_Auctions_Win} listeners={() => ({ focus: () => dispatch(get_all_encheres_without_loading(host?._id)) })} />
             <profStack.Screen name="invitations" component={Invitations} />

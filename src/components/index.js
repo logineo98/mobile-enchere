@@ -25,6 +25,7 @@ import Loading from "./commons/Loading"
 import EditRejectedBid from "./pages/enchere/EditRejectedBid"
 import Edit_Delete from "./commons/Edit_Delete"
 import EnchereWinItem from "./pages/enchere/EnchereWinItem"
+import NotifCard from "./cards/NotifCard"
 
 
 //toutes les importations de routes dans components
@@ -32,5 +33,6 @@ export {
     Container, InputHandleError, Separateur, CardHome, CustSwiper, CardEnchere,
     Encherisseur, Header, Favorite, Commentaires, SearchedItem, EnchereCard, NoEnchere,
     Small_Enchere_Card, Related, TabCustomPlus, CountdownTimer, DateTimeDisplay, Invited, HistoriqueItem, Bid_Counter,
-    Reloader, Loading, Vitepay_cards, EditRejectedBid, Edit_Delete, EnchereWinItem
+    Reloader, Loading, Vitepay_cards, EditRejectedBid, Edit_Delete, EnchereWinItem,
+    NotifCard
 }

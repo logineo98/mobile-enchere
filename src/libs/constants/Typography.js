@@ -1,4 +1,5 @@
 import { BaseToast } from "react-native-toast-message";
+import Ionicons from "react-native-vector-icons/Ionicons"
 
 export const Colors = {
     main: '#FC6210',
@@ -90,6 +91,73 @@ export const toastConfig = {
             text2Style={{
                 fontSize: 12, color: Colors.white, fontWeight: 200
             }}
+        />
+    ),
+
+};
+
+
+export const toastConfig2 = {
+    /*
+      Overwrite 'success' type,
+      by modifying the existing `BaseToast` component
+    */
+    success: (props) => (
+        <BaseToast
+            {...props}
+            style={{ borderLeftColor: Colors.success }}
+            contentContainerStyle={{ paddingHorizontal: 15, backgroundColor: Colors.black, opacity: 1, zIndex: 999 }}
+            text1Style={{
+                fontSize: 17, color: Colors.white
+            }}
+            text2Style={{
+                fontSize: 12, color: Colors.white, fontWeight: 200
+            }}
+        />
+    ),
+
+    danger: (props) => (
+        <BaseToast
+            {...props}
+            style={{ borderLeftColor: Colors.danger }}
+            contentContainerStyle={{ paddingHorizontal: 15, backgroundColor: Colors.black, opacity: 1, zIndex: 999 }}
+            text1Style={{
+                fontSize: 17, color: Colors.white
+            }}
+            text2Style={{
+                fontSize: 12, color: Colors.white, fontWeight: 200
+            }}
+        />
+    ),
+
+    warning: (props) => (
+        <BaseToast
+            {...props}
+            style={{ borderLeftColor: Colors.warning }}
+            contentContainerStyle={{ paddingHorizontal: 15, backgroundColor: Colors.black, opacity: 1, zIndex: 999 }}
+            text1Style={{
+                fontSize: 17, color: Colors.white
+            }}
+            text2Style={{
+                fontSize: 12, color: Colors.white, fontWeight: 200
+            }}
+        />
+    ),
+
+    info: (props) => (
+        <BaseToast
+            {...props}
+            style={{ borderRadius: 15, height: 100, }}
+            contentContainerStyle={{ borderRadius: 15, height: 100, paddingHorizontal: 15, backgroundColor: Colors.white, opacity: 1, zIndex: 999 }}
+            text1Style={{
+                fontSize: 17, color: Colors.info, marginBottom: 15
+            }}
+            text2Style={{
+                fontSize: 12, color: Colors.black, fontWeight: 200, textAlign: 'center', fontStyle: "italic"
+            }}
+            text2NumberOfLines={4}
+            renderLeadingIcon={() => <Ionicons name="notifications" size={18} />}
+            onPress={() => props.navigation.navigate("profile")}
         />
     ),
 

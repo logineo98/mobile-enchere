@@ -80,7 +80,7 @@ const Header = ({ navigation, stackHeader, tabHeader, searchHeader, text, setTex
     const StackRight = () => (
         <>
             <View style={[styles.s_right]}>
-                {notifs && <TouchableOpacity activeOpacity={0.7}  ><Fontisto name='bell-alt' size={24} color={"white"} /><View style={styles.s_badge} /></TouchableOpacity>}
+                {notifs && <TouchableOpacity activeOpacity={0.7} onPress={() => navigation.navigate("notifications")}  ><Fontisto name='bell-alt' size={24} color={"white"} />{host?.notifications?.length > 0 && <View style={styles.s_badge} />}</TouchableOpacity>}
 
                 {host?.vip &&
                     <Animatable.View style={{ alignItems: "center" }} animation={isCrownOn ? 'pulse' : null} iterationCount={isCrownOn ? 'infinite' : 1} >
@@ -101,7 +101,7 @@ const Header = ({ navigation, stackHeader, tabHeader, searchHeader, text, setTex
 
     const TabHeaderRight = () => (
         <View style={styles.t_right}>
-            {notifs && <TouchableOpacity activeOpacity={0.7} style={styles.t_right_item} ><Fontisto name='bell-alt' size={24} color={"white"} /><View style={styles.t_badge} /></TouchableOpacity>}
+            {notifs && <TouchableOpacity activeOpacity={0.7} style={styles.t_right_item} onPress={() => navigation.navigate("notifications")}><Fontisto name='bell-alt' size={24} color={"white"} />{host?.notifications?.length > 0 && <View style={styles.t_badge} />}</TouchableOpacity>}
             {msgs && <TouchableOpacity activeOpacity={0.7} style={styles.t_right_item} ><MaterialIcons name='message' size={26} color={"white"} /><View style={styles.t_badge} /></TouchableOpacity>}
             <TouchableOpacity onPress={() => handleNavigate("my_auctions")} activeOpacity={0.5} style={[styles.t_right_item, styles.t_mes_enchere]}><MaterialCommunityIcons name='gavel' size={26} color={Colors.black} /></TouchableOpacity>
 

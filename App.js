@@ -6,6 +6,7 @@ import { Provider } from 'react-redux'
 import { Store, toastConfig } from './src/libs'
 import messaging from '@react-native-firebase/messaging'
 import Toast from 'react-native-toast-message'
+import { toastConfig2 } from './src/libs/constants/Typography'
 
 const App = () => {
 
@@ -13,7 +14,7 @@ const App = () => {
     const unsubscribe = messaging().onMessage(remoteMessage => {
       const notif = remoteMessage.notification
       const data = remoteMessage.data
-      Toast.show({ type: data.type === "success" ? "success" : 'info', text1: notif?.title, text2: notif?.body, visibilityTime: 8000 });
+      Toast.show({ type: data.type === "success" ? "success" : 'info', text1: "Notifications", text2: notif?.body, visibilityTime: 8000, });
     })
 
     return unsubscribe;
@@ -31,7 +32,7 @@ const App = () => {
   return (
     <>
       <View style={{ position: "absolute", zIndex: 100, top: 0, left: "50%" }}>
-        <Toast config={toastConfig} />
+        <Toast config={toastConfig2} />
       </View>
       <Provider store={Store}><RootNavigation /></Provider>
     </>

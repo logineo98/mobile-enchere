@@ -28,6 +28,7 @@ import { _clear_errors } from "../libs/redux/constants/constants";
 import Screen404 from "./pages/404/Screen404";
 import Active_compte from "./pages/auth/Active_compte";
 import My_Auctions_Win from "./pages/profile/My_Auctions_Win";
+import Notifications from "./pages/profile/Notifications";
 
 
 
@@ -36,5 +37,5 @@ export {
     Login, Register, Forgot_Password, Verification_Code_De_Confirmation, Reset_Password,
     Detail, Explore, Home, Make_A_Bid, My_Auctions, Profile, Settings, Edit_Profile, FacebookValidation,
     Confidentiality, Evaluations, Historiques, MyFavorites, MyPurchases, MySales, Support, New_Auction, Search, Filter,
-    Invitations, Vitepay_confirm, Screen404, Active_compte, My_Auctions_Win
+    Invitations, Vitepay_confirm, Screen404, Active_compte, My_Auctions_Win, Notifications
 }
