@@ -5,9 +5,14 @@ import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { Colors } from '../../libs'
 import { colors } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
 
 const Vitepay_cards = ({ text, type, setStatus }) => {
     const navigation = useNavigation()
+    const { enchere } = useSelector(state => state?.enchere)
+
+    console.log("vitepay_card ", enchere)
+
 
     const styles = StyleSheet.create({
         info_card: {
