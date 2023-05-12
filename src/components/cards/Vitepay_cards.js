@@ -5,11 +5,15 @@ import FontAwesome from "react-native-vector-icons/FontAwesome"
 import { Colors } from '../../libs'
 import { colors } from 'react-native-elements'
 import { useNavigation } from '@react-navigation/native'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { get_enchere } from '../../libs/redux/actions/enchere.action'
 
 const Vitepay_cards = ({ text, type, setStatus }) => {
     const navigation = useNavigation()
+
     const { enchere } = useSelector(state => state?.enchere)
+    const { host } = useSelector(state => state?.user)
+    const dispatch = useDispatch()
 
     console.log("vitepay_card ", enchere)
 
@@ -33,6 +37,12 @@ const Vitepay_cards = ({ text, type, setStatus }) => {
         return_text: { color: Colors.white }
     })
 
+    const handleGoBack = () => {
+        setStatus({ success: false, decline: false, cancel: false, vitepay: true })
+        navigation.goBack()
+        dispatch(get_enchere(enchere?._id, host?._id))
+    }
+
     return (
         <View style={styles.info_card}>
             {type === "cancel" ?
@@ -41,7 +51,7 @@ const Vitepay_cards = ({ text, type, setStatus }) => {
             }
             <Text style={[styles.text, { color: type === "success" ? colors.success : type === "cancel" ? Colors.warning : Colors.danger, textAlign: "center" }]}>{text}</Text>
 
-            <TouchableOpacity onPress={() => { setStatus({ success: false, decline: false, cancel: false, vitepay: true }); navigation.goBack() }} style={styles.return_btn} activeOpacity={0.7}>
+            <TouchableOpacity onPress={handleGoBack} style={styles.return_btn} activeOpacity={0.7}>
                 <Text style={styles.return_text}>Retourner à l'enchère</Text>
             </TouchableOpacity>
         </View>

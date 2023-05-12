@@ -6,9 +6,10 @@ import { Colors, ExpirationVerify, Vitepay, api_public, convertDateToMillis, css
 import { Overlay } from 'react-native-elements'
 import { useDispatch, useSelector } from 'react-redux'
 import { add_bid_data, get_enchere } from '../../../libs/redux/actions/enchere.action'
+import { get_all_users } from '../../../libs/redux/actions/user.action'
 
 const Make_A_Bid = ({ navigation, route }) => {
-    const { enchere_id, own } = route?.params
+    const { enchere_id } = route?.params
 
     const { loading, enchere } = useSelector(state => state?.enchere)
     const { host } = useSelector(state => state?.user)
@@ -28,6 +29,7 @@ const Make_A_Bid = ({ navigation, route }) => {
 
     useEffect(() => {
         dispatch(get_enchere(enchere_id, host?._id))
+        dispatch(get_all_users(host?._id))
     }, [enchere_id, host])
 
     useEffect(() => {
@@ -55,6 +57,7 @@ const Make_A_Bid = ({ navigation, route }) => {
 
     const onRefresh = useCallback(() => {
         dispatch(get_enchere(enchere_id, host?._id))
+        dispatch(get_all_users(host?._id))
         setRefreshing(true)
     }, [])
 
