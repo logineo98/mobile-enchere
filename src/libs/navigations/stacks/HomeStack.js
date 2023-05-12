@@ -20,7 +20,7 @@ const HomeStack = ({ route }) => {
 
     const { encheres } = useSelector(state => state?.enchere)
     const dispatch = useDispatch()
-    const { host } = useSelector(state => state?.user)
+    const { host, users } = useSelector(state => state?.user)
 
     useEffect(() => {
         dispatch(checking())

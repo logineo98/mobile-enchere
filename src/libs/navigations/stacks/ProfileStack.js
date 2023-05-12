@@ -26,7 +26,7 @@ const ProfileStack = ({ route }) => {
     const navigation = useNavigation()
     const [screen, setScreen] = useState("")
 
-    const { host } = useSelector(state => state?.user)
+    const { host, users } = useSelector(state => state?.user)
     const { encheres } = useSelector(state => state?.enchere)
     const dispatch = useDispatch()
 

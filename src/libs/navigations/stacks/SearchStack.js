@@ -18,6 +18,7 @@ const SearchStack = ({ route }) => {
     const [screen, setScreen] = useState("")
 
     const { encheres } = useSelector(state => state?.enchere)
+    const { host, users } = useSelector(state => state?.user)
     const dispatch = useDispatch();
 
     useEffect(() => {

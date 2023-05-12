@@ -3,8 +3,6 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { Active_compte, Forgot_Password, Login, Register, Reset_Password, Verification_Code_De_Confirmation } from '../../../screens'
 import { Colors } from '../../constants/Typography'
 
-
-
 const AuthStack = () => {
     const autStack = createNativeStackNavigator()
 

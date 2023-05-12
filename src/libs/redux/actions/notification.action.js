@@ -34,6 +34,6 @@ export const send_notification = (data) => async (dispatch) => {
 
         console.log(response?.data?.response)
     } catch (error) {
-        dispatch(error_enchere(error))
+        dispatch(error_notification(error))
     }
 }
