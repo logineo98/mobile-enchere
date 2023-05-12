@@ -19,9 +19,9 @@ const Search = ({ navigation }) => {
         if (!isEmpty(search_result)) {
             search_result.forEach(result => {
                 if (host?.vip === true) {
-                    if (result.enchere_status === "published" && (result?.enchere_type === "public" || result?.enchere_type === "private")) tab.push(result)
+                    if (result?.enchere_status === "published" && (result?.enchere_type === "public" || result?.enchere_type === "private")) tab.push(result)
                 } else {
-                    if (result.enchere_status === "published" && result?.enchere_type === "public") tab.push(result)
+                    if (result?.enchere_status === "published" && result?.enchere_type === "public") tab.push(result)
                 }
             })
 
@@ -37,9 +37,9 @@ const Search = ({ navigation }) => {
 
     !isEmpty(encheres) && encheres.forEach(enchere => {
         if (host?.vip === true) {
-            if (!ExpirationVerify(enchere?.expiration_time) && (enchere?.enchere_type === "public" || enchere?.enchere_type === "private")) encheres_encours.push(enchere)
+            if (!ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_status !== "closed" && (enchere?.enchere_type === "public" || enchere?.enchere_type === "private")) encheres_encours.push(enchere)
         } else {
-            if (!ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public") encheres_encours.push(enchere)
+            if (!ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_status !== "closed" && enchere?.enchere_type === "public") encheres_encours.push(enchere)
         }
     })
 
