@@ -90,8 +90,8 @@ export const genRandomNums = (size) => {
     return token.toString();
 }
 
-export const inputSeparatorMille = (e, fieldName, setInputs) => {
-    const inputValue = e.target.value.replace(/[^0-9]/g, ''); // supprimer tous les caractères qui ne sont pas des chiffres
+export const inputSeparatorMille = (v, fieldName, setInputs) => {
+    const inputValue = v.replace(/[^0-9]/g, ''); // supprimer tous les caractères qui ne sont pas des chiffres
     const formattedValue = Number(inputValue).toLocaleString(); // ajouter un séparateur de milliers
     setInputs(prevState => ({ ...prevState, [fieldName]: formattedValue }));
 };

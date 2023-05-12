@@ -15,6 +15,7 @@ import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-lis
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigation } from '@react-navigation/native'
 import { edit_enchere } from '../../../libs/redux/actions/enchere.action'
+import { deleteSeparator, inputSeparatorMille } from '../../../libs/utils/functions'
 
 const EditRejectedBid = ({ data }) => {
     const navigation = useNavigation()
@@ -148,6 +149,9 @@ const EditRejectedBid = ({ data }) => {
     const handleSubmit = () => {
         inputs.sellerID = host?._id
         inputs.categories = categories
+        inputs.started_price = deleteSeparator(inputs.started_price)
+        inputs.reserve_price = deleteSeparator(inputs.reserve_price)
+        inputs.increase_price = deleteSeparator(inputs.increase_price)
         inputs.expiration_time = new Date(date).toISOString()
         inputs.enchere_type = host?.vip === true ? selectedValue === "publique" ? "public" : "private" : "public"
         inputs.enchere_status = host?.vip === true ? "published" : "pending"
@@ -268,7 +272,8 @@ const EditRejectedBid = ({ data }) => {
                                     keyboardType="number-pad"
                                     placeholder='Prix de depart*' style={css.creer.input}
                                     value={inputs.started_price}
-                                    onChangeText={text => handleChange('started_price', text, setInputs)}
+                                    // onChangeText={text => handleChange('started_price', text, setInputs)}
+                                    onChangeText={text => inputSeparatorMille(text, 'started_price', setInputs)}
                                 />
                                 {!isEmpty(err) && !isEmpty(err.started_price) && <InputHandleError message={err.started_price} />}
                             </View>
@@ -278,7 +283,8 @@ const EditRejectedBid = ({ data }) => {
                                     keyboardType="number-pad"
                                     placeholder="Prix de reserve" style={css.creer.input}
                                     value={inputs.reserve_price}
-                                    onChangeText={text => handleChange('reserve_price', text, setInputs)}
+                                    // onChangeText={text => handleChange('reserve_price', text, setInputs)}
+                                    onChangeText={text => inputSeparatorMille(text, 'reserve_price', setInputs)}
                                 />
                                 {!isEmpty(err) && !isEmpty(err.reserve_price) && <InputHandleError message={err.reserve_price} />}
                             </View>
@@ -288,7 +294,8 @@ const EditRejectedBid = ({ data }) => {
                                     keyboardType="number-pad"
                                     placeholder="Prix d'incrementation*" style={css.creer.input}
                                     value={inputs.increase_price}
-                                    onChangeText={text => handleChange('increase_price', text, setInputs)}
+                                    // onChangeText={text => handleChange('increase_price', text, setInputs)}
+                                    onChangeText={text => inputSeparatorMille(text, 'increase_price', setInputs)}
                                 />
                                 {!isEmpty(err) && !isEmpty(err.increase_price) && <InputHandleError message={err.increase_price} />}
                             </View>
