@@ -15,9 +15,6 @@ const Vitepay_cards = ({ text, type, setStatus }) => {
     const { host } = useSelector(state => state?.user)
     const dispatch = useDispatch()
 
-    console.log("vitepay_card ", enchere)
-
-
     const styles = StyleSheet.create({
         info_card: {
             width: "80%", height: "50%", alignItems: "center", justifyContent: "center",

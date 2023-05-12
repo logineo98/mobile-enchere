@@ -11,20 +11,16 @@ import { format } from 'date-fns'
 import DocumentPicker from 'react-native-document-picker'
 import { CategoriesArticle, Colors, api_public, css, handleChange, images, isEmpty, isImage, isVideo, validation_create_enchere } from '../../../libs'
 import { Container, InputHandleError, Loading, Separateur } from '../../../components'
-import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-list'
+import { SelectList } from 'react-native-dropdown-select-list'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigation } from '@react-navigation/native'
 import { edit_enchere } from '../../../libs/redux/actions/enchere.action'
 import { deleteSeparator, inputSeparatorMille } from '../../../libs/utils/functions'
 
 const EditRejectedBid = ({ data }) => {
-    const navigation = useNavigation()
 
     const init = { files: "", sellerID: "", title: "", description: "", categories: [], delivery_options: { teliman: true, own: false, cost: false }, started_price: "", increase_price: "", reserve_price: "", expiration_time: "", enchere_status: "", enchere_type: "", hostID: "" }
     const [inputs, setInputs] = useState(init)
     const [categories, setCategories] = useState([])
-    const [incomingcategories, setIncomingCategories] = useState([])
-
     const [date, setDate] = useState(new Date(new Date(data?.expiration_time).getTime()))
     const [selectedFiles, setSelectedFiles] = useState([])
     const [selectedValue, setSelectedValue] = useState(data?.enchere_type)
@@ -56,22 +52,14 @@ const EditRejectedBid = ({ data }) => {
         setDeliveryType(data?.delivery_options)
         setDelivery({ deliveryPrice: data?.delivery_options?.deliveryPrice?.toString() })
 
-        setIncomingCategories(data?.categories?.map(categorie => categorie))
+        setCategories(data?.categories?.map(categorie => categorie))
 
     }, [data])
-
-    useEffect(() => {
-        setCategories([...incomingcategories])
-    }, [incomingcategories])
-
 
     const handleCheckboxChange = (categorie) => {
         if (categories?.includes(categorie)) {
             setCategories(categories.filter((item) => item !== categorie))
-        } if (incomingcategories?.includes(categorie)) {
-            setIncomingCategories(incomingcategories.filter((item) => item !== categorie))
-        }
-        else {
+        } else {
             setCategories([...categories, categorie])
         }
     }
@@ -177,7 +165,7 @@ const EditRejectedBid = ({ data }) => {
                     else old_img.push(file)
                 }
 
-                dispatch(edit_enchere(data?._id, host?._id, list_new_img, { ...rest, old_img }))
+                dispatch(edit_enchere(data?._id, host?._id, list_new_img?._parts?.length > 0 ? list_new_img : null, { ...rest, old_img }))
             }
         }
     }
@@ -239,7 +227,7 @@ const EditRejectedBid = ({ data }) => {
                                     renderItem={({ item, index }) => (
                                         <CheckBox
                                             title={item.value}
-                                            checked={categories.includes(item.value) || incomingcategories.includes(item.value)}
+                                            checked={categories?.includes(item.value)}
                                             onPress={() => handleCheckboxChange(item.value)}
 
                                             containerStyle={css.creer.checkboxContainer}

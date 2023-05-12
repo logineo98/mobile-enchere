@@ -168,7 +168,7 @@ const My_Auctions = () => {
     })
 
     const handlePress = (type) => {
-        dispatch(get_all_encheres_without_loading(host?._id))
+        dispatch(get_all_encheres(host?._id))
 
         if (type === "encours") setHeaderItem({ encours: true, termine: false, rejete: false, attente: false })
         else if (type === "termine") setHeaderItem({ encours: false, termine: true, rejete: false, attente: false })

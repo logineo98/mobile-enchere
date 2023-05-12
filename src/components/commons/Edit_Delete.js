@@ -6,13 +6,13 @@ import { Colors } from '../../libs'
 import { useDispatch, useSelector } from 'react-redux'
 import { delete_enchere } from '../../libs/redux/actions/enchere.action'
 
-const Edit_Delete = ({ edit, handleEdit, data }) => {
+const Edit_Delete = ({ edit, remove, handleEdit, data }) => {
 
     const { host } = useSelector(state => state?.user)
     const dispatch = useDispatch()
 
     const styles = StyleSheet.create({
-        container: { width: "30%", flexDirection: "row", alignItems: "center", justifyContent: edit ? "space-between" : "flex-end" }
+        container: { width: "30%", flexDirection: "row", alignItems: "center", justifyContent: remove ? "space-between" : "flex-end" }
     })
 
     const handleDelete = () => {
@@ -37,12 +37,14 @@ const Edit_Delete = ({ edit, handleEdit, data }) => {
             {/* <Toast config={toastConfig} /> */}
             {edit &&
                 <TouchableOpacity onPress={edit && handleEdit}>
-                    <FontAwesome name='edit' size={22} style={{ color: Colors.info }} />
+                    <FontAwesome name='edit' size={!remove ? 25 : 22} style={{ color: Colors.info }} />
                 </TouchableOpacity>
             }
-            <TouchableOpacity onPress={handleDelete}>
-                <MaterialIcons name='delete' size={22} style={{ color: Colors.danger }} />
-            </TouchableOpacity>
+            {remove &&
+                <TouchableOpacity onPress={handleDelete}>
+                    <MaterialIcons name='delete' size={!edit ? 25 : 22} style={{ color: Colors.danger }} />
+                </TouchableOpacity>
+            }
         </View>
     )
 }

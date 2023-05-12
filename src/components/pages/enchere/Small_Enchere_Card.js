@@ -76,7 +76,7 @@ const Small_Enchere_Card = ({ data, type, theme }) => {
                 <View style={styles.infos}>
                     <View style={styles.title}>
                         <Text style={[styles.name, { color: theme === "sombre" ? Colors.white : Colors.black }]}>{data?.title?.length <= 10 ? data?.title?.slice(0, 10) : data?.title?.slice(0, 10) + "..."}</Text>
-                        {type === "reject" && <Edit_Delete edit={true} handleEdit={handleEdit} data={data} />}
+                        {type === "reject" && <Edit_Delete remove={false} edit={true} handleEdit={handleEdit} data={data} />}
                     </View>
                     <View>
                         <Text style={styles.price}>{formatNumberWithSpaces(data?.history[data?.history?.length - 1]?.montant || data?.started_price)} FCFA</Text>
