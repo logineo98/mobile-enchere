@@ -25,7 +25,6 @@ const Home = () => {
 
     }, [encheres])
 
-
     const onRefresh = useCallback(() => {
         dispatch(get_all_encheres(host._id))
         setRefreshing(true)
@@ -39,10 +38,10 @@ const Home = () => {
         requestUserPermission()
         notificationListener()
 
-        if (!host.notification_token || host?.notification_token === "") {
-            messaging().getToken()
-                .then(res => setFirebase_token(res))
-        }
+        // if (!host.notification_token || host?.notification_token === "") {
+        messaging().getToken()
+            .then(res => setFirebase_token(res))
+        // }
     }, [])
 
     useEffect(() => {

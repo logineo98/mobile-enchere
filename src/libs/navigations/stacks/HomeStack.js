@@ -45,6 +45,8 @@ const HomeStack = ({ route }) => {
                             dispatch(send_notification({ title: "Alerte", body: "Vous avez une enchère qui a expiré, veuillez consulter pour plus d'information ", to: user?.notification_token }))
                         }
                     })
+
+                    dispatch(edit_enchere(enchere?._id, host?._id, null, { enchere_status: "closed" }))
                 }
             }
         })

@@ -6,6 +6,7 @@ import { Colors, css } from '../../../libs'
 import { vitepay_prod, vitepay_return, vitepay_sandbox } from '../../../libs/redux/constants/constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { add_bid_data_enchere, vider_bid_data } from '../../../libs/redux/actions/enchere.action'
+import { send_notification } from '../../../libs/redux/actions/notification.action'
 
 const Vitepay_confirm = ({ route }) => {
     const datas = route?.params
@@ -14,7 +15,8 @@ const Vitepay_confirm = ({ route }) => {
     let [status, setStatus] = useState({ success: false, decline: false, cancel: false, vitepay: true })
     const webViewRef = useRef(null)
 
-    const { bid_data } = useSelector(state => state?.enchere)
+    const { bid_data, enchere } = useSelector(state => state?.enchere)
+    const { users } = useSelector(state => state?.user)
     const dispatch = useDispatch()
 
     console.log(datas?.link)
@@ -24,7 +26,19 @@ const Vitepay_confirm = ({ route }) => {
             dispatch(vider_bid_data())
         } else {
             if (urlSecond === `${vitepay_return}/success`) {
-                if (bid_data !== null) dispatch(add_bid_data_enchere(bid_data))
+                if (bid_data !== null) {
+                    if (bid_data?.reserve_price === true) {
+                        dispatch(add_bid_data_enchere(bid_data))
+
+                        users?.forEach(user => {
+                            if (user?._id === enchere?.sellerID) {
+                                dispatch(send_notification({ title: "Alerte", body: `Une de vos enchères vient d'être remportée par un acheteur. Veuillez consulter vos listes d'enchères terminées`, to: user?.notification_token }))
+                            }
+                        })
+                    } else {
+                        dispatch(add_bid_data_enchere(bid_data))
+                    }
+                }
                 setStatus({ success: true, decline: false, cancel: false, vitepay: false })
             } else if (urlSecond === `${vitepay_return}/decline`) {
                 dispatch(vider_bid_data())

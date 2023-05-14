@@ -151,7 +151,7 @@ const Profile = ({ navigation, route }) => {
                     </TouchableOpacity>
                     <View style={css.profile.separator} />
 
-                    <TouchableOpacity onPress={() => navigation.navigate("notifications")} activeOpacity={0.6} style={css.profile.profile_item}>
+                    {/* <TouchableOpacity onPress={() => navigation.navigate("notifications")} activeOpacity={0.6} style={css.profile.profile_item}>
                         <View style={css.profile.left}>
                             <View style={[css.profile.profile_item_icon_box, { backgroundColor: "#F738F1" }]}>
                                 <MaterialIcons name="notifications" size={22} color={Colors.white} />
@@ -162,7 +162,7 @@ const Profile = ({ navigation, route }) => {
                         <FontAwesome name="angle-right" size={20} />
 
                     </TouchableOpacity>
-                    <View style={css.profile.separator} />
+                    <View style={css.profile.separator} /> */}
 
 
                     {/* section paramètre */}

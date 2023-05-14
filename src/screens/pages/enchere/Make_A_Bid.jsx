@@ -81,7 +81,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                     <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={css.details.desc_container}>
                         {(((data?.history?.length > 0 && data?.history[data?.history?.length - 1]?.montant) < data?.reserve_price) || isEmpty(data?.history)) && (montant + lastAmount < data?.reserve_price) &&
                             <View style={{ marginVertical: 4, marginBottom: 20 }}>
-                                <TouchableOpacity onPress={(e) => handleOpenVitepay(e, `${host?._id}_${genRandomNums(6)}`, data?.reserve_price, true)} style={[styles.make, { backgroundColor: Colors.black }]}>
+                                <TouchableOpacity onPress={(e) => { handleOpenVitepay(e, `${host?._id}_${genRandomNums(6)}`, data?.reserve_price, true); toggleOverlay() }} style={[styles.make, { backgroundColor: Colors.black }]}>
                                     <Text style={styles.btn_text}>Reserver le produit</Text>
                                 </TouchableOpacity>
                                 <View style={styles.reserver}><Text style={styles.reserve_txt}>prix de reservation: </Text><Text style={styles.reserce_prix}>{formatNumberWithSpaces(data?.reserve_price)} FCFA</Text></View>
@@ -119,20 +119,12 @@ const Make_A_Bid = ({ navigation, route }) => {
                         data?.history?.map((buyer, i) => <Encherisseur buyer={buyer} own={host?._id === buyer?.buyerID ? true : false} key={i} />) :
                         <View style={{ height: "100%", alignItems: "center", justifyContent: "center", }}>
                             <Text style={{ fontSize: 16, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Aucune participation pour l'instant</Text>
-                            {data?.sellerID !== host?._id && (data?.enchere_status !== "closed" || !ExpirationVerify(data?.expiration_time)) && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>}
+                            {data?.sellerID !== host?._id && (data?.enchere_status === "published" || !ExpirationVerify(data?.expiration_time)) && <Text style={{ fontSize: 13, letterSpacing: 1, fontWeight: 300, color: themes === "sombre" ? "wheat" : Colors.black }}>Voulez-vous bien être la première!</Text>}
                         </View>
                     }
                 </Reloader>
 
-                {data?.history?.length > 0 && data?.history[data?.history?.length - 1]?.buyerID === host?._id && (data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) &&
-                    <View style={{ alignItems: "center", justifyContent: "center", height: 100, backgroundColor: Colors.white }}>
-                        <View style={{ height: 80, width: 80 }}>
-                            <Image source={images.winner} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
-                        </View>
-                        <Text>Enchère terminée</Text>
-                    </View>
-                }
-
+                {/* quand une enchère n'a pas encore expiré et c'est pas le proprietaire */}
                 {data?.sellerID !== host?._id && data?.enchere_status !== "closed" && !ExpirationVerify(data?.expiration_time) &&
                     <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
                         <TouchableOpacity onPress={toggleOverlay} style={styles.make}>
@@ -141,11 +133,39 @@ const Make_A_Bid = ({ navigation, route }) => {
                     </View>
                 }
 
+                {/* quand une enchère a expiré et que c'est le gagnant */}
                 {data?.history?.length > 0 && data?.history[data?.history?.length - 1]?.buyerID === host?._id && (data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) &&
+                    <>
+                        <View style={{ alignItems: "center", justifyContent: "center", height: 100, backgroundColor: Colors.white }}>
+                            <View style={{ height: 80, width: 80 }}>
+                                <Image source={images.winner} style={{ width: "100%", height: "100%", resizeMode: "cover" }} />
+                            </View>
+                            <Text>Enchère terminée</Text>
+                        </View>
+
+                        <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
+                            <TouchableOpacity activeOpacity={0.8} style={[styles.make, { backgroundColor: Colors.success }]} onPress={() => navigation.navigate("my_auctions_win")}>
+                                <Text style={[styles.btn_text, { fontSize: 14 }]}>Cliquer pour prendre contact avec le propriétaire</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </>
+                }
+
+                {/* quand une enchère a expiré et que c'est le proprietaire */}
+                {(data?.sellerID === host?._id && (data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time))) &&
                     <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
-                        <TouchableOpacity activeOpacity={0.8} style={[styles.make, { backgroundColor: Colors.success }]} onPress={() => navigation.navigate("my_auctions_win")}>
-                            <Text style={[styles.btn_text, { fontSize: 14 }]}>Cliquer pour prendre contact avec le propriétaire</Text>
-                        </TouchableOpacity>
+                        <View style={{ backgroundColor: "rgba(0,0,0,0.1)", padding: 10, borderRadius: 5 }}>
+                            <Text style={{ textAlign: "center" }}>Enchère terminée</Text>
+                        </View>
+                    </View>
+                }
+
+                {/* quand une enchère a expiré et que c'est pas le proprietaire et c'est pas le gagnant non plus */}
+                {(data?.sellerID !== host?._id && data?.history[data?.history?.length - 1]?.buyerID !== host?._id && (data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time))) &&
+                    <View style={[styles.bottom, { backgroundColor: themes === "sombre" ? Colors.home_card : Colors.white }]}>
+                        <View style={{ backgroundColor: "rgba(0,0,0,0.1)", padding: 10, borderRadius: 5 }}>
+                            <Text style={{ textAlign: "center" }}>Enchère terminée</Text>
+                        </View>
                     </View>
                 }
             </View>

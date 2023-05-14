@@ -23,7 +23,7 @@ const Bid_Counter = ({ lastAmount, data, handleOpenVitepay, toggleOverlay, monta
         dispatch(updateUser({ id: host?._id, hostID: host?._id, tmp: tmp_data }))
         dispatch(add_bid_data(tmp_bid_data))
 
-        handleOpenVitepay(e, `${host?._id}_${genRandomNums(6)}`, montant + actual_price, false)
+        handleOpenVitepay(e, `${host?._id}_${genRandomNums(6)}`, montant, false)
         toggleOverlay()
     }
 
@@ -50,7 +50,7 @@ const Bid_Counter = ({ lastAmount, data, handleOpenVitepay, toggleOverlay, monta
                 {/* <TouchableOpacity style={styles.confirm_btn} onPress={participate}>
                     <FontAwesome name="gavel" size={24} color={Colors.white} />
                 </TouchableOpacity> */}
-                <View style={styles.info_container}><Text style={styles.info}>Confirmer la mise </Text></View>
+                <View style={styles.info_container}><Text style={styles.info}>Confirmer la mise</Text></View>
             </View>
 
         </View>

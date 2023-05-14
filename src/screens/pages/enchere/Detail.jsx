@@ -1,5 +1,5 @@
-import { Alert, Image, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
+import { Alert, Image, ScrollView, StatusBar, Text, TouchableOpacity, View } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import Fontisto from 'react-native-vector-icons/Fontisto'
@@ -47,7 +47,6 @@ const Detail = ({ route }) => {
                 if (host?.vip === true) {
                     if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time) && (enchere?.enchere_type === "private" || enchere?.enchere_type === "public") && enchere?.enchere_status === "published") tab.push(enchere)
                 } else if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public" && enchere?.enchere_status === "published") tab.push(enchere)
-
         })
         setRelatedData(tab)
 
@@ -191,7 +190,8 @@ const Detail = ({ route }) => {
                                     <Text style={{ color: themes === "sombre" ? Colors.white : Colors.black }}>Propriétaire :</Text>
                                     {users?.map((user, i) => {
                                         if (data?.sellerID === user?._id)
-                                            return <Text key={i} style={{ color: Colors.main }}> {user?.phone} </Text>
+                                            if (data?.sellerID === host?._id) return <Text key={i} style={{ color: Colors.main }}> moi </Text>
+                                            else return <Text key={i} style={{ color: Colors.main }}> {user?.phone} </Text>
                                     })}
                                 </View>
                             </View>

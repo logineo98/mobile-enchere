@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { Support, My_Auctions, Detail, Edit_Profile, Make_A_Bid, Profile, Settings, FacebookValidation, MySales, MyPurchases, MyFavorites, Evaluations, Historiques, Invitations, Vitepay_confirm, My_Auctions_Win, Notifications } from '../../../screens'
+import { Support, My_Auctions, Detail, Edit_Profile, Make_A_Bid, Profile, Settings, FacebookValidation, MySales, MyPurchases, MyFavorites, Evaluations, Historiques, Invitations, Vitepay_confirm, My_Auctions_Win, Notifications, Confidentiality } from '../../../screens'
 import { Header } from '../../../components'
 import { getFocusedRouteNameFromRoute, useNavigation } from '@react-navigation/native'
 import { useDispatch, useSelector } from 'react-redux'
@@ -17,6 +17,7 @@ const SettingStack = () => {
         <accStack.Navigator screenOptions={{ header: ({ navigation }) => <Header navigation={navigation} stackHeader={true} /> }}>
             <accStack.Screen name="setting" component={Settings} />
             <accStack.Screen name="support" component={Support} />
+            <accStack.Screen name="politique_confidentialite" component={Confidentiality} />
         </accStack.Navigator>
     )
 }

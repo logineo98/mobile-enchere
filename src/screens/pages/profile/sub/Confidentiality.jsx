@@ -1,9 +1,8 @@
 import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { Colors } from '../../../libs';
+import { Colors } from '../../../../libs';
 
-const Confidentiality = ({ navigation }) => {
-
+const Confidentiality = () => {
 
     return (
         <View>

@@ -8,9 +8,10 @@
 
 // export const api = "http://192.168.1.103:5000"
 // export const api_public = "http://192.168.1.103:5000/api/public"
+// export const vitepay_api = "http://192.168.1.103:5000/api/vitepay/callback"
 
-export const api = "http://192.168.50.247:5000"
-export const api_public = "http://192.168.50.247:5000/api/public"
+// export const api = "http://192.168.50.247:5000"
+// export const api_public = "http://192.168.50.247:5000/api/public"
 
 
 // export const api = "https://meyere-api.adaptable.app"
@@ -18,9 +19,9 @@ export const api_public = "http://192.168.50.247:5000/api/public"
 // export const vitepay_api = "https://meyere-api.adaptable.app/api/vitepay/callback"
 
 // pour logineo
-// export const api = "https://api-enchere.adaptable.app"
-// export const api_public = "https://api-enchere.adaptable.app/api/public"
-// export const vitepay_api = "https://api-enchere.adaptable.app/api/vitepay/callback"
+export const api = "https://api-enchere.adaptable.app"
+export const api_public = "https://api-enchere.adaptable.app/api/public"
+export const vitepay_api = "https://api-enchere.adaptable.app/api/vitepay/callback"
 
 // pour tz
 // export const api = "https://api-meyere.adaptable.app"

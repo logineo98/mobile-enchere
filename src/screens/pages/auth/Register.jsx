@@ -2,27 +2,26 @@ import React, { useEffect, useState } from 'react'
 import { ImageBackground, StatusBar, Text, ScrollView, TouchableOpacity, View, TextInput } from 'react-native'
 import { Colors, _clear_errors, _clear_user_registered, checking_phone, css, handleChange, images, isEmpty, register, toastConfig } from '../../../libs'
 import { useDispatch, useSelector } from 'react-redux'
-import Toast from 'react-native-toast-message';
+import Toast from 'react-native-toast-message'
 import Entypo from 'react-native-vector-icons/Entypo'
 import { Container, Separateur } from '../../../components'
-import Spinner from 'react-native-loading-spinner-overlay';
-import authen from '@react-native-firebase/auth';
-import { LoginManager, AccessToken, } from 'react-native-fbsdk-next';
-import { Image } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import ReactNativeModal from 'react-native-modal';
-import messaging from '@react-native-firebase/messaging'
+import Spinner from 'react-native-loading-spinner-overlay'
+import authen from '@react-native-firebase/auth'
+import { LoginManager, AccessToken, } from 'react-native-fbsdk-next'
+import { Image } from 'react-native'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import ReactNativeModal from 'react-native-modal'
 
 const Register = ({ navigation }) => {
     const datas = { phone: "", password: "", password_confirm: "", facebook: null }
     const { account_activation_code, errors, message, loading } = useSelector(state => state?.user)
     const [inputs, setInputs] = useState(datas)
-    const dispatch = useDispatch();
+    const dispatch = useDispatch()
 
     //verify if errors
     useEffect(() => {
         if ((!isEmpty(errors) || errors !== null) && errors !== undefined) {
-            Toast.show({ type: 'danger', text1: 'Erreur', text2: errors });
+            Toast.show({ type: 'danger', text1: 'Erreur', text2: errors })
             dispatch({ type: "_clear_errors" })
         }
     }, [errors])
@@ -34,46 +33,43 @@ const Register = ({ navigation }) => {
     }, [account_activation_code])
 
 
-    const [isModalVisible, setModalVisible] = useState(false);
+    const [isModalVisible, setModalVisible] = useState(false)
 
     const toggleModal = () => {
-        setModalVisible(!isModalVisible);
-    };
+        setModalVisible(!isModalVisible)
+    }
 
     //login facebook
     const loginBtnFb = async () => {
         try {
             // Attempt login with permissions
-            const result = await LoginManager.logInWithPermissions(['public_profile', 'email']);
+            const result = await LoginManager.logInWithPermissions(['public_profile', 'email'])
 
-            if (result.isCancelled) throw 'User cancelled the login process';
+            if (result.isCancelled) throw 'User cancelled the login process'
 
             // Once signed in, get the users AccesToken
-            const data = await AccessToken.getCurrentAccessToken();
+            const data = await AccessToken.getCurrentAccessToken()
 
-            if (!data) throw 'Something went wrong obtaining access token';
+            if (!data) throw 'Something went wrong obtaining access token'
 
             // Create a Firebase credential with the AccessToken
-            const facebookCredential = authen.FacebookAuthProvider.credential(data.accessToken);
+            const facebookCredential = authen.FacebookAuthProvider.credential(data.accessToken)
 
             // Sign-in the user with the credential
-            const ans = await authen().signInWithCredential(facebookCredential);
+            const ans = await authen().signInWithCredential(facebookCredential)
             const toStore = { id: ans.additionalUserInfo.profile.id, first_name: ans.additionalUserInfo.profile.first_name, last_name: ans.additionalUserInfo?.profile?.last_name, picture_url: ans.additionalUserInfo.profile.picture.data.url }
 
             setInputs(old => { return { ...old, facebook: toStore } })
         } catch (error) {
             console.log(error)
         }
-
     }
 
     //soumission de la requette
     const handleSubmit = async (e) => {
         try {
-            e.preventDefault();
+            e.preventDefault()
 
-            let notification_token = await messaging().getToken()
-            inputs.notification_token = notification_token
             await AsyncStorage.setItem("inputs", JSON.stringify(inputs))
             dispatch(checking_phone(inputs))
         } catch (error) {
@@ -82,14 +78,7 @@ const Register = ({ navigation }) => {
     }
 
     if (loading)
-        return <Spinner
-            visible={loading}
-            textContent={'Patienter...'}
-            textStyle={{ color: Colors.white }}
-            animation={'fade'}
-            overlayColor={'rgba(0, 0, 0, 0.5)'}
-            color={Colors.white}
-        />
+        return <Spinner visible={loading} textContent={'Patienter...'} textStyle={{ color: Colors.white }} animation={'fade'} overlayColor={'rgba(0, 0, 0, 0.5)'} color={Colors.white} />
 
     return (
         <ImageBackground resizeMode="cover" source={images.background} style={css.auth.container}>
@@ -145,12 +134,6 @@ const Register = ({ navigation }) => {
                                 {/* <InputHandleError message={error?.password_confirm} /> */}
                             </View>
 
-
-
-
-
-
-
                             <TouchableOpacity onPress={handleSubmit} activeOpacity={0.7} style={[css.auth.auth_submit_btn]}>
                                 <Text style={css.auth.auth_submit_btn_text}>S'inscrire</Text>
                             </TouchableOpacity>
@@ -171,8 +154,6 @@ const Register = ({ navigation }) => {
                                     <Text>Annuler la synchronisation.</Text>
                                 </TouchableOpacity>}
 
-
-
                             <View style={css.auth.separator} />
                             <View style={css.auth.auth_bottom_container}>
                                 <Text style={css.auth.auth_bottom_label}>Je possède déjà un compte</Text>
@@ -183,7 +164,6 @@ const Register = ({ navigation }) => {
 
                         </View>
                     </Container>
-
                 </View>
             </ScrollView>
         </ImageBackground>

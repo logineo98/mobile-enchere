@@ -46,6 +46,7 @@ export const validation_create_enchere = (data) => {
 
     if (isEmpty(reserve_price)) error = { ...error, reserve_price: "Veuillez renseigner le prix de reserve" }
     else if (parseInt(reserve_price, 10) < 500) error = { ...error, reserve_price: "Le prix doit être superieur ou égale à 500 fcfa" }
+    else if (parseInt(reserve_price, 10) < parseInt(started_price, 10)) error = { ...error, reserve_price: "Le prix doit être superieur au prix initial" }
     else error = { ...error, reserve_price: "" }
 
     if (isEmpty(increase_price)) error = { ...error, increase_price: "Veuillez renseigner le prix d'incrementation" }

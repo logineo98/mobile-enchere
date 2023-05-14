@@ -190,7 +190,7 @@ export const edit_enchere = (enchere_id, hostID, files, data) => async (dispatch
             }
         } else {
             const config = { headers: { token } }
-            console.log("_parts", "_parts")
+
             const response = await axios.put(`${api}/api/enchere/${enchere_id}/${hostID}`, data, config)
 
             dispatch({ type: _edit_enchere, payload: { enchere_id, data: response?.data?.response } })

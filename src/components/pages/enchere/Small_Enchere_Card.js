@@ -91,7 +91,7 @@ const Small_Enchere_Card = ({ data, type, theme }) => {
                     {type === "finished" &&
                         <View style={styles.content}>
                             <Text style={[styles.delai, { color: theme === "sombre" ? Colors.white : Colors.black }]}>Expiration :</Text>
-                            <Text style={[styles.delai, { color: Colors.warning }]}>Expirée</Text>
+                            <Text style={[styles.delai, { color: Colors.warning }]}>Terminée</Text>
                         </View>
                     }
                     {type === "reject" &&

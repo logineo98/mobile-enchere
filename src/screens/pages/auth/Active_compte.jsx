@@ -9,7 +9,7 @@ import { useEffect } from 'react'
 import Spinner from 'react-native-loading-spinner-overlay'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-const Active_compte = ({ navigation, route }) => {
+const Active_compte = ({ navigation }) => {
     const [code, setCode] = useState()
     const { login_succeed, errors, message, loading } = useSelector(state => state?.user);
     const dispatch = useDispatch();

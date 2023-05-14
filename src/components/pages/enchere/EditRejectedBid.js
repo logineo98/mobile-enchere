@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, FlatList, TouchableWithoutFeedback, Modal, StatusBar } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, Image, ScrollView, FlatList, TouchableWithoutFeedback, Modal, StatusBar, Alert } from 'react-native'
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5"
 import Ionicons from "react-native-vector-icons/Ionicons"
 import MaterialIcons from "react-native-vector-icons/MaterialIcons"
@@ -9,7 +9,7 @@ import { CheckBox } from 'react-native-elements'
 import DatePicker from 'react-native-date-picker'
 import { format } from 'date-fns'
 import DocumentPicker from 'react-native-document-picker'
-import { CategoriesArticle, Colors, api_public, css, handleChange, images, isEmpty, isImage, isVideo, validation_create_enchere } from '../../../libs'
+import { CategoriesArticle, Colors, api_public, css, formatNumberWithSpaces, handleChange, images, isEmpty, isImage, isVideo, validation_create_enchere } from '../../../libs'
 import { Container, InputHandleError, Loading, Separateur } from '../../../components'
 import { SelectList } from 'react-native-dropdown-select-list'
 import { useDispatch, useSelector } from 'react-redux'
@@ -27,11 +27,9 @@ const EditRejectedBid = ({ data }) => {
     const [modalVisible, setModalVisible] = useState(false)
     const [modalUpdateVisible, setModalUpdateVisible] = useState(false)
     const [selectedImageIndex, setSelectedImageIndex] = useState(null)
-
     const [deliveryType, setDeliveryType] = useState({ teliman: true, own: false, cost: false })
     const [delivery, setDelivery] = useState({ deliveryPrice: "" })
     const [err, setErr] = useState(null)
-    const [clickSubmit, setClickSubmit] = useState(false)
 
     const enchere_types = [{ key: '1', value: 'publique' }, { key: '2', value: 'privée' }]
 
@@ -135,285 +133,289 @@ const EditRejectedBid = ({ data }) => {
 
     //------------submit -----------------
     const handleSubmit = () => {
-        inputs.sellerID = host?._id
-        inputs.categories = categories
-        inputs.started_price = deleteSeparator(inputs.started_price)
-        inputs.reserve_price = deleteSeparator(inputs.reserve_price)
-        inputs.increase_price = deleteSeparator(inputs.increase_price)
-        inputs.expiration_time = new Date(date).toISOString()
-        inputs.enchere_type = host?.vip === true ? selectedValue === "publique" ? "public" : "private" : "public"
-        inputs.enchere_status = host?.vip === true ? "published" : "pending"
-        inputs.files = selectedFiles
-        inputs.delivery_options = { teliman: deliveryType.teliman, own: deliveryType.own, deliveryPrice: deliveryType.cost ? (delivery.deliveryPrice && delivery.deliveryPrice !== "") ? delivery.deliveryPrice : 0 : 0 }
-        inputs.hostID = host?._id
 
-        // recuperer les erreurs du control des champs
-        const { init_error, error } = validation_create_enchere(inputs)
-        setErr(init_error)
+        if (host?.facebook || host?.vip === true) {
+            inputs.sellerID = host?._id
+            inputs.categories = categories
+            inputs.started_price = deleteSeparator(inputs.started_price)
+            inputs.reserve_price = deleteSeparator(inputs.reserve_price)
+            inputs.increase_price = deleteSeparator(inputs.increase_price)
+            inputs.expiration_time = new Date(date).toISOString()
+            inputs.enchere_type = host?.vip === true ? selectedValue === "publique" ? "public" : "private" : "public"
+            inputs.enchere_status = host?.vip === true ? "published" : "pending"
+            inputs.files = selectedFiles
+            inputs.delivery_options = { teliman: deliveryType.teliman, own: deliveryType.own, deliveryPrice: deliveryType.cost ? (delivery.deliveryPrice && delivery.deliveryPrice !== "") ? delivery.deliveryPrice : 0 : 0 }
+            inputs.hostID = host?._id
 
-        if (init_error.hostID !== error.hostID || init_error.sellerID !== error.sellerID || init_error.files !== error.files || init_error.categories !== error.categories || init_error.title !== error.title || init_error.description !== error.description || init_error.started_price !== error.started_price || init_error.reserve_price !== error.reserve_price || init_error.increase_price !== error.increase_price) {
-            setErr(error)
-        } else {
-            const { files, ...rest } = inputs
+            // recuperer les erreurs du control des champs
+            const { init_error, error } = validation_create_enchere(inputs)
+            setErr(init_error)
 
-            if (files?.length > 0) {
-                let list_new_img = new FormData()
-                let old_img = []
+            if (init_error.hostID !== error.hostID || init_error.sellerID !== error.sellerID || init_error.files !== error.files || init_error.categories !== error.categories || init_error.title !== error.title || init_error.description !== error.description || init_error.started_price !== error.started_price || init_error.reserve_price !== error.reserve_price || init_error.increase_price !== error.increase_price) {
+                setErr(error)
+            } else {
+                const { files, ...rest } = inputs
 
-                for (const file of files) {
-                    if (typeof file !== "string") list_new_img.append('file', file)
-                    else old_img.push(file)
+                if (files?.length > 0) {
+                    let list_new_img = new FormData()
+                    let old_img = []
+
+                    for (const file of files) {
+                        if (typeof file !== "string") list_new_img.append('file', file)
+                        else old_img.push(file)
+                    }
+
+                    Alert.alert("Information", "Voulez-vous soumettre à nouveau votre enchère pour être approuvée ?",
+                        [
+                            { text: "Non" },
+                            { text: "Oui", onPress: () => { dispatch(edit_enchere(data?._id, host?._id, list_new_img?._parts?.length > 0 ? list_new_img : null, { ...rest, old_img })) } }
+                        ])
                 }
-
-                dispatch(edit_enchere(data?._id, host?._id, list_new_img?._parts?.length > 0 ? list_new_img : null, { ...rest, old_img }))
             }
+        } else {
+            Alert.alert("Avertissement", "Veuillez, vous connecter à facebook d'abord au niveau du profil.", [{ text: "OK" }])
         }
     }
 
     return (
-        clickSubmit ? <Loading text="veuillez patienter..." color="green" /> : (
-            <View style={css.creer.container}>
-                <StatusBar barStyle={"light-content"} backgroundColor={Colors.black} />
+        <View style={css.creer.container}>
+            <StatusBar barStyle={"light-content"} backgroundColor={Colors.black} />
 
-                <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={css.creer.scrollable_content}>
-                    <Container >
+            <ScrollView showsVerticalScrollIndicator={false} keyboardShouldPersistTaps={"handled"} contentContainerStyle={css.creer.scrollable_content}>
+                <Container >
 
-                        <Separateur style={css.creer.title} text={"Informations sur l'article"} />
-                        <View style={{ width: "100%", }}>
-                            <View style={css.creer.input_container}>
-                                <View style={[css.creer.article_img_container,]}>
-                                    <TouchableOpacity onPress={pickMultiple} style={[css.creer.input, css.creer.upload]}>
-                                        <FontAwesome5 name='upload' color={"black"} size={28} style={{ opacity: 0.5 }} />
-                                        <View><Text>Uploader des fichiers (max: 5 fichiers)</Text></View>
-                                    </TouchableOpacity>
-                                </View>
-                                {!isEmpty(err) && !isEmpty(err.files) && <InputHandleError message={err.files} />}
-                                <View >
-                                    <FlatList
-                                        data={selectedFiles}
-                                        renderItem={renderItem}
-                                        keyExtractor={(item, index) => index.toString()}
-                                        horizontal={true}
-                                        showsHorizontalScrollIndicator={false}
-                                    />
-                                </View>
+                    <Separateur style={css.creer.title} text={"Informations sur l'article"} />
+                    <View style={{ width: "100%", }}>
+                        <View style={css.creer.input_container}>
+                            <View style={[css.creer.article_img_container,]}>
+                                <TouchableOpacity onPress={pickMultiple} style={[css.creer.input, css.creer.upload]}>
+                                    <FontAwesome5 name='upload' color={"black"} size={28} style={{ opacity: 0.5 }} />
+                                    <View><Text>Uploader des fichiers (max: 5 fichiers)</Text></View>
+                                </TouchableOpacity>
                             </View>
-
-                            <View style={css.creer.input_container}>
-                                <TextInput placeholder='Titre article*' style={css.creer.input}
-                                    value={inputs.title}
-                                    onChangeText={text => handleChange('title', text, setInputs)}
-                                />
-                                {!isEmpty(err) && !isEmpty(err.title) && <InputHandleError message={err.title} />}
-                            </View>
-
-                            <View style={css.creer.input_container}>
-                                <TextInput placeholder='Description article*' style={[css.creer.input, { alignItems: "flex-start", justifyContent: "flex-start" }]}
-                                    multiline={true}
-                                    numberOfLines={4}
-                                    value={inputs.description}
-                                    onChangeText={text => handleChange('description', text, setInputs)}
-                                />
-                                {!isEmpty(err) && !isEmpty(err.description) && <InputHandleError message={err.description} />}
-                            </View>
-
-                            <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                                <Text>Categories <Text style={css.creer.require}>*</Text></Text>
-                                <MaterialIcons name="arrow-right-alt" size={18} />
-                            </View>
-                            <View style={[css.creer.input, css.creer.categorie]}>
-                                {<FlatList
-                                    data={CategoriesArticle}
-                                    renderItem={({ item, index }) => (
-                                        <CheckBox
-                                            title={item.value}
-                                            checked={categories?.includes(item.value)}
-                                            onPress={() => handleCheckboxChange(item.value)}
-
-                                            containerStyle={css.creer.checkboxContainer}
-                                            textStyle={css.creer.checkboxText}
-                                        />)}
-                                    showsHorizontalScrollIndicator={false}
-                                    keyExtractor={(item) => item.key}
+                            {!isEmpty(err) && !isEmpty(err.files) && <InputHandleError message={err.files} />}
+                            <View >
+                                <FlatList
+                                    data={selectedFiles}
+                                    renderItem={renderItem}
+                                    keyExtractor={(item, index) => index.toString()}
                                     horizontal={true}
-                                    contentContainerStyle={css.creer.contentContainer}
+                                    showsHorizontalScrollIndicator={false}
                                 />
-                                }
-                            </View>
-                            <Text style={{ fontSize: 12, color: Colors.warning }}>Nombre maximal de categorie: 3</Text>
-                            {!isEmpty(err) && !isEmpty(err.categories) && <InputHandleError message={err.categories} />}
-
-                            <View style={css.creer.selected_categorie_display_container}>
-                                {categories?.map((item, i) =>
-                                    <View key={i} style={css.creer.selected_categorie_display}>
-                                        <Entypo name="dot-single" size={18} color={Colors.info} />
-                                        <Text style={{ color: Colors.info }}>{item}</Text>
-                                    </View>
-                                )}
                             </View>
                         </View>
 
-                        <Separateur style={css.creer.title} text={"Informations sur l'enchère"} />
-                        <View style={{ width: "100%", }}>
-                            <View style={css.creer.input_container}>
-                                <TextInput
-                                    keyboardType="number-pad"
-                                    placeholder='Prix de depart*' style={css.creer.input}
-                                    value={inputs.started_price}
-                                    // onChangeText={text => handleChange('started_price', text, setInputs)}
-                                    onChangeText={text => inputSeparatorMille(text, 'started_price', setInputs)}
-                                />
-                                {!isEmpty(err) && !isEmpty(err.started_price) && <InputHandleError message={err.started_price} />}
-                            </View>
-
-                            <View style={css.creer.input_container}>
-                                <TextInput
-                                    keyboardType="number-pad"
-                                    placeholder="Prix de reserve" style={css.creer.input}
-                                    value={inputs.reserve_price}
-                                    // onChangeText={text => handleChange('reserve_price', text, setInputs)}
-                                    onChangeText={text => inputSeparatorMille(text, 'reserve_price', setInputs)}
-                                />
-                                {!isEmpty(err) && !isEmpty(err.reserve_price) && <InputHandleError message={err.reserve_price} />}
-                            </View>
-
-                            <View style={css.creer.input_container}>
-                                <TextInput
-                                    keyboardType="number-pad"
-                                    placeholder="Prix d'incrementation*" style={css.creer.input}
-                                    value={inputs.increase_price}
-                                    // onChangeText={text => handleChange('increase_price', text, setInputs)}
-                                    onChangeText={text => inputSeparatorMille(text, 'increase_price', setInputs)}
-                                />
-                                {!isEmpty(err) && !isEmpty(err.increase_price) && <InputHandleError message={err.increase_price} />}
-                            </View>
+                        <View style={css.creer.input_container}>
+                            <TextInput placeholder='Titre article*' style={css.creer.input}
+                                value={inputs.title}
+                                onChangeText={text => handleChange('title', text, setInputs)}
+                            />
+                            {!isEmpty(err) && !isEmpty(err.title) && <InputHandleError message={err.title} />}
                         </View>
 
-                        <Separateur style={css.creer.title} text={"Parametrage de l'enchère"} />
-                        <View style={{ width: "100%", }}>
-                            <View style={css.creer.input_container}>
-                                <Text style={{ marginTop: 5 }}>Delai de fin de l'enchère <Text style={css.creer.require}>*</Text></Text>
-                                <View style={[css.creer.input, { padding: 15 }]}>
-                                    <TouchableWithoutFeedback onPress={toggleModal} >
-                                        <Text><Text style={[css.creer.input]}>{format(date, 'dd/MM/yyyy')}</Text></Text>
-                                    </TouchableWithoutFeedback>
-                                </View>
-                                <Modal visible={modalVisible} animationType="slide" transparent={true} onRequestClose={toggleModal} style={{ alignItems: "center" }}>
-                                    <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
-                                        <View style={css.creer.modal}>
-                                            <DatePicker
-                                                date={date}
-                                                onDateChange={setDate}
-                                                mode="date"
-                                                style={{ backgroundColor: "white" }}
-                                            />
-                                            <TouchableOpacity onPress={toggleModal} style={[css.creer.button, { width: "75%", }]}>
-                                                <Text style={{ color: Colors.white, letterSpacing: 1, fontSize: 14 }}>Selectionner</Text>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </TouchableWithoutFeedback>
-                                </Modal>
+                        <View style={css.creer.input_container}>
+                            <TextInput placeholder='Description article*' style={[css.creer.input, { alignItems: "flex-start", justifyContent: "flex-start" }]}
+                                multiline={true}
+                                numberOfLines={4}
+                                value={inputs.description}
+                                onChangeText={text => handleChange('description', text, setInputs)}
+                            />
+                            {!isEmpty(err) && !isEmpty(err.description) && <InputHandleError message={err.description} />}
+                        </View>
 
-                                <InputHandleError message={""} />
-                            </View>
-
-                            <View>
-                                <Text style={css.creer.label}>Options de livraison <Text style={css.creer.require}>*</Text></Text>
-                                <View style={{ flexDirection: "row" }}>
+                        <View style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+                            <Text>Categories <Text style={css.creer.require}>*</Text></Text>
+                            <MaterialIcons name="arrow-right-alt" size={18} />
+                        </View>
+                        <View style={[css.creer.input, css.creer.categorie]}>
+                            {<FlatList
+                                data={CategoriesArticle}
+                                renderItem={({ item, index }) => (
                                     <CheckBox
-                                        title={"Teliman"}
-                                        checked={deliveryType.teliman ? "checked" : ""}
-                                        onPress={() => setDeliveryType({ teliman: true, own: false, cost: false })}
-                                        containerStyle={[css.creer.checkboxContainer]}
-                                        textStyle={[css.creer.checkboxText, { textDecorationLine: deliveryType.own ? "line-through" : "none", textDecorationColor: Colors.main }]}
+                                        title={item.value}
+                                        checked={categories?.includes(item.value)}
+                                        onPress={() => handleCheckboxChange(item.value)}
 
-                                    />
-
-                                    <CheckBox
-                                        title={"A main propre"}
-                                        checked={deliveryType.own ? "checked" : ""}
-                                        onPress={() => setDeliveryType(old => { return { ...old, teliman: false, own: true } })}
-                                        containerStyle={[css.creer.checkboxContainer]}
-                                        textStyle={[css.creer.checkboxText, { textDecorationLine: deliveryType.teliman ? "line-through" : "none", textDecorationColor: Colors.main }]}
-
-                                    />
-
-                                    {deliveryType.own &&
-                                        <CheckBox
-                                            title={"Avec frais"}
-                                            checked={deliveryType.cost ? "checked" : ""}
-                                            onPress={() => setDeliveryType(old => { return { ...old, teliman: false, cost: !deliveryType.cost } })}
-                                            containerStyle={css.creer.checkboxContainer}
-                                            textStyle={css.creer.checkboxText}
-
-                                        />
-                                    }
-                                </View>
-
-                                {(deliveryType.own && deliveryType.cost) &&
-                                    <View style={css.creer.input_container}>
-                                        <TextInput
-                                            keyboardType="number-pad"
-                                            placeholder='Prix de livraison' style={css.creer.input}
-                                            value={delivery.deliveryPrice}
-                                            onChangeText={text => handleChange('deliveryPrice', text, setDelivery)}
-                                        />
-                                    </View>
-                                }
-                                <InputHandleError message={""} />
-                            </View>
-
-                            {!isEmpty(host) && host?.vip === true &&
-                                <View style={css.creer.input_container}>
-                                    <Text style={css.creer.label}>Type d'enchère <Text style={css.creer.require}>*</Text></Text>
-
-                                    <SelectList
-                                        setSelected={(val) => setSelectedValue(val)}
-                                        data={enchere_types}
-                                        save="value"
-                                        search={false}
-                                        placeholder={selectedValue === "public" ? "publique" : "privée"}
-                                        dropdownStyles={{ borderWidth: 1, borderColor: Colors.input_border_color, borderRadius: 5 }}
-                                        boxStyles={{ borderWidth: 1, borderColor: Colors.input_border_color, borderRadius: 5 }}
-                                    />
-                                    <InputHandleError message={""} />
-                                </View>
+                                        containerStyle={css.creer.checkboxContainer}
+                                        textStyle={css.creer.checkboxText}
+                                    />)}
+                                showsHorizontalScrollIndicator={false}
+                                keyExtractor={(item) => item.key}
+                                horizontal={true}
+                                contentContainerStyle={css.creer.contentContainer}
+                            />
                             }
                         </View>
+                        <Text style={{ fontSize: 12, color: Colors.warning }}>Nombre maximal de categorie: 3</Text>
+                        {!isEmpty(err) && !isEmpty(err.categories) && <InputHandleError message={err.categories} />}
 
-                        <TouchableOpacity style={css.creer.button} onPress={handleSubmit} activeOpacity={0.7}>
-                            <Text style={css.creer.text}>Enregistrer les modifications</Text>
-                        </TouchableOpacity>
-
-                        {/* Modal pour la gestion de modification et de suppression de fichiers */}
-                        <Modal visible={modalUpdateVisible} animationType="slide" transparent={true} onRequestClose={toggleModal} style={{ alignItems: "center" }}>
-                            <TouchableWithoutFeedback onPress={() => setModalUpdateVisible(false)}>
-                                <View style={css.creer.modal}>
-                                    <Container style={{ backgroundColor: Colors.white, paddingBottom: 40, paddingTop: 0, borderRadius: 5 }}>
-                                        <TouchableOpacity onPress={() => setModalUpdateVisible(false)} style={css.creer.close_update_img_modal_container}>
-                                            <Ionicons name="ios-close-outline" size={32} color={Colors.danger} />
-                                        </TouchableOpacity>
-
-                                        <Separateur my={0} style={css.creer.title} text={"Choisissez une option"} />
-                                        <TouchableOpacity onPress={() => handleImagePress(selectedImageIndex)} style={[css.creer.button, css.creer.update_img_modal_btn, { backgroundColor: Colors.main }]}>
-                                            <MaterialCommunityIcons name="image-edit" size={32} color={Colors.white} />
-                                            <Text style={{ color: Colors.white, letterSpacing: 1, fontSize: 14 }}>Remplacer le fichier selectionné</Text>
-                                        </TouchableOpacity>
-                                        {selectedFiles?.length > 1 &&
-                                            <TouchableOpacity onPress={() => handleRemoveImage(selectedImageIndex)} style={[css.creer.button, css.creer.update_img_modal_btn, { backgroundColor: Colors.black }]}>
-                                                <MaterialCommunityIcons name="image-remove" size={32} color={Colors.white} />
-                                                <Text style={{ color: Colors.white, letterSpacing: 1, fontSize: 14 }}>Supprimer le fichier selectionné</Text>
-                                            </TouchableOpacity>}
-                                    </Container>
-
+                        <View style={css.creer.selected_categorie_display_container}>
+                            {categories?.map((item, i) =>
+                                <View key={i} style={css.creer.selected_categorie_display}>
+                                    <Entypo name="dot-single" size={18} color={Colors.info} />
+                                    <Text style={{ color: Colors.info }}>{item}</Text>
                                 </View>
-                            </TouchableWithoutFeedback>
-                        </Modal>
-                        <View style={css.space.spacer} />
-                    </Container>
-                </ScrollView >
-            </View >
-        )
+                            )}
+                        </View>
+                    </View>
+
+                    <Separateur style={css.creer.title} text={"Informations sur l'enchère"} />
+                    <View style={{ width: "100%", }}>
+                        <View style={css.creer.input_container}>
+                            <TextInput
+                                keyboardType="number-pad"
+                                placeholder='Prix de initial*' style={css.creer.input}
+                                value={formatNumberWithSpaces(inputs.started_price)}
+                                onChangeText={text => inputSeparatorMille(text, 'started_price', setInputs)}
+                            />
+                            {!isEmpty(err) && !isEmpty(err.started_price) && <InputHandleError message={err.started_price} />}
+                        </View>
+
+                        <View style={css.creer.input_container}>
+                            <TextInput
+                                keyboardType="number-pad"
+                                placeholder="Prix de reserve" style={css.creer.input}
+                                value={formatNumberWithSpaces(inputs.reserve_price)}
+                                onChangeText={text => inputSeparatorMille(text, 'reserve_price', setInputs)}
+                            />
+                            {!isEmpty(err) && !isEmpty(err.reserve_price) && <InputHandleError message={err.reserve_price} />}
+                        </View>
+
+                        <View style={css.creer.input_container}>
+                            <TextInput
+                                keyboardType="number-pad"
+                                placeholder="Prix d'incrementation*" style={css.creer.input}
+                                value={formatNumberWithSpaces(inputs.increase_price)}
+                                onChangeText={text => inputSeparatorMille(text, 'increase_price', setInputs)}
+                            />
+                            {!isEmpty(err) && !isEmpty(err.increase_price) && <InputHandleError message={err.increase_price} />}
+                        </View>
+                    </View>
+
+                    <Separateur style={css.creer.title} text={"Parametrage de l'enchère"} />
+                    <View style={{ width: "100%", }}>
+                        <View style={css.creer.input_container}>
+                            <Text style={{ marginTop: 5 }}>Delai de fin de l'enchère <Text style={css.creer.require}>*</Text></Text>
+                            <View style={[css.creer.input, { padding: 15 }]}>
+                                <TouchableWithoutFeedback onPress={toggleModal} >
+                                    <Text><Text style={[css.creer.input]}>{format(date, 'dd/MM/yyyy')}</Text></Text>
+                                </TouchableWithoutFeedback>
+                            </View>
+                            <Modal visible={modalVisible} animationType="slide" transparent={true} onRequestClose={toggleModal} style={{ alignItems: "center" }}>
+                                <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+                                    <View style={css.creer.modal}>
+                                        <DatePicker
+                                            date={date}
+                                            onDateChange={setDate}
+                                            mode="date"
+                                            style={{ backgroundColor: "white" }}
+                                        />
+                                        <TouchableOpacity onPress={toggleModal} style={[css.creer.button, { width: "75%", }]}>
+                                            <Text style={{ color: Colors.white, letterSpacing: 1, fontSize: 14 }}>Selectionner</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            </Modal>
+
+                            <InputHandleError message={""} />
+                        </View>
+
+                        <View>
+                            <Text style={css.creer.label}>Options de livraison <Text style={css.creer.require}>*</Text></Text>
+                            <View style={{ flexDirection: "row" }}>
+                                <CheckBox
+                                    title={"Teliman"}
+                                    checked={deliveryType.teliman ? "checked" : ""}
+                                    onPress={() => setDeliveryType({ teliman: true, own: false, cost: false })}
+                                    containerStyle={[css.creer.checkboxContainer]}
+                                    textStyle={[css.creer.checkboxText, { textDecorationLine: deliveryType.own ? "line-through" : "none", textDecorationColor: Colors.main }]}
+
+                                />
+
+                                <CheckBox
+                                    title={"A main propre"}
+                                    checked={deliveryType.own ? "checked" : ""}
+                                    onPress={() => setDeliveryType(old => { return { ...old, teliman: false, own: true } })}
+                                    containerStyle={[css.creer.checkboxContainer]}
+                                    textStyle={[css.creer.checkboxText, { textDecorationLine: deliveryType.teliman ? "line-through" : "none", textDecorationColor: Colors.main }]}
+
+                                />
+
+                                {deliveryType.own &&
+                                    <CheckBox
+                                        title={"Avec frais"}
+                                        checked={deliveryType.cost ? "checked" : ""}
+                                        onPress={() => setDeliveryType(old => { return { ...old, teliman: false, cost: !deliveryType.cost } })}
+                                        containerStyle={css.creer.checkboxContainer}
+                                        textStyle={css.creer.checkboxText}
+
+                                    />
+                                }
+                            </View>
+
+                            {(deliveryType.own && deliveryType.cost) &&
+                                <View style={css.creer.input_container}>
+                                    <TextInput
+                                        keyboardType="number-pad"
+                                        placeholder='Prix de livraison' style={css.creer.input}
+                                        value={delivery.deliveryPrice}
+                                        onChangeText={text => handleChange('deliveryPrice', text, setDelivery)}
+                                    />
+                                </View>
+                            }
+                            <InputHandleError message={""} />
+                        </View>
+
+                        {!isEmpty(host) && host?.vip === true &&
+                            <View style={css.creer.input_container}>
+                                <Text style={css.creer.label}>Type d'enchère <Text style={css.creer.require}>*</Text></Text>
+
+                                <SelectList
+                                    setSelected={(val) => setSelectedValue(val)}
+                                    data={enchere_types}
+                                    save="value"
+                                    search={false}
+                                    placeholder={selectedValue === "public" ? "publique" : "privée"}
+                                    dropdownStyles={{ borderWidth: 1, borderColor: Colors.input_border_color, borderRadius: 5 }}
+                                    boxStyles={{ borderWidth: 1, borderColor: Colors.input_border_color, borderRadius: 5 }}
+                                />
+                                <InputHandleError message={""} />
+                            </View>
+                        }
+                    </View>
+
+                    <TouchableOpacity style={css.creer.button} onPress={handleSubmit} activeOpacity={0.7}>
+                        <Text style={css.creer.text}>Enregistrer les modifications</Text>
+                    </TouchableOpacity>
+
+                    {/* Modal pour la gestion de modification et de suppression de fichiers */}
+                    <Modal visible={modalUpdateVisible} animationType="slide" transparent={true} onRequestClose={toggleModal} style={{ alignItems: "center" }}>
+                        <TouchableWithoutFeedback onPress={() => setModalUpdateVisible(false)}>
+                            <View style={css.creer.modal}>
+                                <Container style={{ backgroundColor: Colors.white, paddingBottom: 40, paddingTop: 0, borderRadius: 5 }}>
+                                    <TouchableOpacity onPress={() => setModalUpdateVisible(false)} style={css.creer.close_update_img_modal_container}>
+                                        <Ionicons name="ios-close-outline" size={32} color={Colors.danger} />
+                                    </TouchableOpacity>
+
+                                    <Separateur my={0} style={css.creer.title} text={"Choisissez une option"} />
+                                    <TouchableOpacity onPress={() => handleImagePress(selectedImageIndex)} style={[css.creer.button, css.creer.update_img_modal_btn, { backgroundColor: Colors.main }]}>
+                                        <MaterialCommunityIcons name="image-edit" size={32} color={Colors.white} />
+                                        <Text style={{ color: Colors.white, letterSpacing: 1, fontSize: 14 }}>Remplacer le fichier selectionné</Text>
+                                    </TouchableOpacity>
+                                    {selectedFiles?.length > 1 &&
+                                        <TouchableOpacity onPress={() => handleRemoveImage(selectedImageIndex)} style={[css.creer.button, css.creer.update_img_modal_btn, { backgroundColor: Colors.black }]}>
+                                            <MaterialCommunityIcons name="image-remove" size={32} color={Colors.white} />
+                                            <Text style={{ color: Colors.white, letterSpacing: 1, fontSize: 14 }}>Supprimer le fichier selectionné</Text>
+                                        </TouchableOpacity>}
+                                </Container>
+
+                            </View>
+                        </TouchableWithoutFeedback>
+                    </Modal>
+                    <View style={css.space.spacer} />
+                </Container>
+            </ScrollView >
+        </View >
     )
 }
 export default EditRejectedBid

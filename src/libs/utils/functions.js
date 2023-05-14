@@ -2,18 +2,17 @@ export const isEmpty = value =>
     value === undefined ||
     value === null ||
     (typeof value === 'object' && Object.keys(value).length === 0) ||
-    (typeof value === 'string' && value.trim().length === 0);
+    (typeof value === 'string' && value.trim().length === 0)
 
 export const handleChange = (key, value, setInputs) => {
     setInputs(prevState => ({
         ...prevState,
         [key]: value,
-    }));
-};
-
+    }))
+}
 
 export function isImage(file) {
-    let res;
+    let res
     if (typeof file === "string" && (file?.split(".").includes("jpg") || file?.split(".").includes("jpeg") || file?.split(".").includes("png") || file?.split(".").includes("gif")))
         res = true
     else
@@ -31,39 +30,37 @@ export function isVideo(file) {
             file?.name.endsWith(".wmv") ||
             file?.name.endsWith(".flv") ||
             file?.name.endsWith(".mov"))
-    );
+    )
 }
 
-
 export function removePhoneIndicatif(numero) {
-    var indicatif1 = "+223";
-    var indicatif2 = "00223";
+    var indicatif1 = "+223"
+    var indicatif2 = "00223"
     if (numero.startsWith(indicatif1)) {
-        return numero.slice(indicatif1.length);
+        return numero.slice(indicatif1.length)
     } else if (numero.startsWith(indicatif2))
-        return numero.slice(indicatif2.length);
+        return numero.slice(indicatif2.length)
     else {
-        return numero;
+        return numero
     }
 }
 
-
 export function addPhoneIndicatif(numero) {
-    var indicatif1 = "+223";
-    var indicatif2 = "00223";
+    var indicatif1 = "+223"
+    var indicatif2 = "00223"
     if (!numero.startsWith(indicatif1) || !numero.startsWith(indicatif2))
-        return indicatif1 + numero;
+        return indicatif1 + numero
     else
-        return numero;
+        return numero
 }
 
 export function convertDateToMillis(date) {
-    return new Date(date).getTime();
+    return new Date(date).getTime()
 }
 
 export function getMongoDateDay(date) {
-    const dateObj = new Date(date);
-    return dateObj.getDate();
+    const dateObj = new Date(date)
+    return dateObj.getDate()
 }
 
 export function ExpirationVerify(date) {
@@ -72,29 +69,29 @@ export function ExpirationVerify(date) {
 }
 
 export const areIn = (arr1, arr2) => {
-    return arr1?.some((arr) => arr2?.includes(arr));
-};
+    return arr1?.some((arr) => arr2?.includes(arr))
+}
 
 export const convertOctetsToMo = (octets) => {
     const megaoctets = octets / (1024 * 1024)
     return megaoctets.toFixed(0)
 }
 
-export const formatNumberWithSpaces = (data) => data?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+export const formatNumberWithSpaces = (data) => data?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ")
 
 
 export const genRandomNums = (size) => {
-    let min = Math.pow(10, size - 1);
-    let max = Math.pow(10, size) - 1;
-    let token = Math.floor(min + Math.random() * (max - min + 1));
-    return token.toString();
+    let min = Math.pow(10, size - 1)
+    let max = Math.pow(10, size) - 1
+    let token = Math.floor(min + Math.random() * (max - min + 1))
+    return token.toString()
 }
 
 export const inputSeparatorMille = (v, fieldName, setInputs) => {
-    const inputValue = v.replace(/[^0-9]/g, ''); // supprimer tous les caractères qui ne sont pas des chiffres
-    const formattedValue = Number(inputValue).toLocaleString(); // ajouter un séparateur de milliers
-    setInputs(prevState => ({ ...prevState, [fieldName]: formattedValue }));
-};
+    const inputValue = v.replace(/[^0-9]/g, '') // supprimer tous les caractères qui ne sont pas des chiffres
+    const formattedValue = Number(inputValue).toLocaleString() // ajouter un séparateur de milliers
+    setInputs(prevState => ({ ...prevState, [fieldName]: formattedValue }))
+}
 
 export const deleteSeparator = (input) => { return input.replace(/\D/g, '') }
 

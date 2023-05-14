@@ -11,9 +11,5 @@ const InputHandleError = ({ message, style }) => {
 export default InputHandleError
 
 const styles = StyleSheet.create({
-    message: {
-        color: Colors.danger,
-        textAlign: 'right',
-        fontSize: 12, fontStyle: "italic",
-    }
+    message: { color: Colors.danger, textAlign: 'right', fontSize: 12 }
 })

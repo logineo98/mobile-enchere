@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Colors, ExpirationVerify, css, isEmpty } from '../../../libs'
 import { Container, Loading, NoEnchere, Reloader, Small_Enchere_Card } from '../../../components'
-import { get_all_encheres, get_all_encheres_without_loading } from '../../../libs/redux/actions/enchere.action'
+import { get_all_encheres } from '../../../libs/redux/actions/enchere.action'
 import { Switch } from 'react-native-elements'
 
 const My_Auctions = () => {
@@ -27,20 +27,20 @@ const My_Auctions = () => {
     useEffect(() => {
         switch (vip) {
             case true:
-                setEnchere_en_cours(encheres?.filter(enchere => enchere?.sellerID === host?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "private"))
-                setEnchere_en_terminee(encheres?.filter(enchere => (enchere?.sellerID === host?._id && ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "private") || (enchere?.sellerID === host?._id && enchere?.enchere_type === "private" && enchere?.enchere_status === "closed")))
+                setEnchere_en_cours(encheres?.filter(enchere => enchere?.sellerID === host?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "private" && enchere?.enchere_status === "published"))
+                setEnchere_en_terminee(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_type === "private" && (ExpirationVerify(enchere?.expiration_time) || enchere?.enchere_status === "closed")))
                 break
 
             case false:
                 setEnchere_en_cours(encheres?.filter(enchere => enchere?.sellerID === host?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public" && enchere?.enchere_status === "published"))
-                setEnchere_en_terminee(encheres?.filter(enchere => (enchere?.sellerID === host?._id && ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public") || (enchere?.sellerID === host?._id && enchere?.enchere_type === "public" && enchere?.enchere_status === "closed")))
+                setEnchere_en_terminee(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_type === "public" && (ExpirationVerify(enchere?.expiration_time) || enchere?.enchere_status === "closed")))
                 host?.vip === false && setEnchere_en_rejetee(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "rejected" && enchere?.enchere_type === "public"))
                 host?.vip === false && setEnchere_en_attente_de_validation(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "pending" && enchere?.enchere_type === "public"))
                 break
 
             default:
                 setEnchere_en_cours(encheres?.filter(enchere => enchere?.sellerID === host?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public" && enchere?.enchere_status === "published"))
-                setEnchere_en_terminee(encheres?.filter(enchere => (enchere?.sellerID === host?._id && ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public") || (enchere?.sellerID === host?._id && enchere?.enchere_type === "public" && enchere?.enchere_status === "closed")))
+                setEnchere_en_terminee(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_type === "public" && (ExpirationVerify(enchere?.expiration_time) || enchere?.enchere_status === "closed")))
                 host?.vip === false && setEnchere_en_rejetee(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "rejected" && enchere?.enchere_type === "public"))
                 host?.vip === false && setEnchere_en_attente_de_validation(encheres?.filter(enchere => enchere?.sellerID === host?._id && enchere?.enchere_status === "pending" && enchere?.enchere_type === "public"))
                 break
