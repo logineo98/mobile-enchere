@@ -16,8 +16,4 @@ module.exports = {
       },
     }),
   },
-  // watchFolders: [
-  //   path.resolve(__dirname, 'app'),
-  //   path.resolve(__dirname, 'src')
-  // ]
 }

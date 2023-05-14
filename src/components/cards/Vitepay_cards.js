@@ -20,7 +20,7 @@ const Vitepay_cards = ({ text, type, setStatus }) => {
             width: "80%", height: "50%", alignItems: "center", justifyContent: "center",
             gap: 10,
             padding: 20, borderWidth: 1, borderColor: type === "success" ? colors.success : type === "cancel" ? Colors.warning : Colors.danger,
-            paddingVertical: 40, borderRadius: 5,
+            paddingVertical: 40,
             backgroundColor: Colors.white,
             shadowColor: type === "success" ? colors.success : type === "cancel" ? Colors.warning : Colors.danger,
             shadowOpacity: 0.2,

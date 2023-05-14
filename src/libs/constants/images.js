@@ -4,7 +4,6 @@ export const images = {
     logo_white_content: require("../assets/logo_white_content.jpeg"),
 
     background: require("../assets/background.jpg"),
-    video_icon_image: require("../assets/video_icon_image.png"),
     plus: require("../assets/plus.png"),
 
     video_icon_image: require("../assets/video_icon_image.png"),

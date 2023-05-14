@@ -1,20 +1,15 @@
 import { Image, ScrollView, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useEffect, useState } from 'react'
-import Fontisto from 'react-native-vector-icons/Fontisto'
-import { Bid_Counter, CountdownTimer, Encherisseur, Loading, Reloader, Separateur } from '../../../components'
-import { Colors, ExpirationVerify, Vitepay, api_public, convertDateToMillis, css, formatNumberWithSpaces, genRandomNums, images, isEmpty, updateUser } from '../../../libs'
-import { Overlay } from 'react-native-elements'
+import { Colors, ExpirationVerify, Vitepay, api_public, convertDateToMillis, css, formatNumberWithSpaces, genRandomNums, images, isEmpty } from '../../../libs'
 import { useDispatch, useSelector } from 'react-redux'
 import { add_bid_data, get_enchere } from '../../../libs/redux/actions/enchere.action'
-import { get_all_users } from '../../../libs/redux/actions/user.action'
+import { get_all_users, updateUser } from '../../../libs/redux/actions/user.action'
+import { Bid_Counter, CountdownTimer, Encherisseur, Loading, Reloader, Separateur } from '../../../components'
+import { Overlay } from 'react-native-elements'
+import Fontisto from 'react-native-vector-icons/Fontisto'
 
 const Make_A_Bid = ({ navigation, route }) => {
-    const { enchere_id } = route?.params
-
-    const { loading, enchere } = useSelector(state => state?.enchere)
-    const { host } = useSelector(state => state?.user)
-    const { themes } = useSelector(state => state?.setting)
-    const dispatch = useDispatch()
+    const enchere_id = route?.params?.enchere_id
 
     const [data, setData] = useState(null)
     const [visible, setVisible] = useState(false)
@@ -22,10 +17,10 @@ const Make_A_Bid = ({ navigation, route }) => {
     const [montant, setMontant] = useState(0)
     const [lastAmount, setLastAmount] = useState(0)
 
-    useEffect(() => {
-        setMontant(data?.increase_price)
-        setLastAmount(data?.history[data?.history?.length - 1]?.montant || data?.started_price)
-    }, [data])
+    const { loading, enchere } = useSelector(state => state?.enchere)
+    const { host } = useSelector(state => state?.user)
+    const { themes } = useSelector(state => state?.setting)
+    const dispatch = useDispatch()
 
     useEffect(() => {
         dispatch(get_enchere(enchere_id, host?._id))
@@ -36,7 +31,22 @@ const Make_A_Bid = ({ navigation, route }) => {
         setData(enchere)
     }, [enchere])
 
+    useEffect(() => {
+        setMontant(data?.increase_price)
+        setLastAmount(data?.history[data?.history?.length - 1]?.montant || data?.started_price)
+    }, [data])
+
     const toggleOverlay = () => setVisible(!visible)
+
+    const onRefresh = useCallback(() => {
+        dispatch(get_enchere(enchere_id, host?._id))
+        dispatch(get_all_users(host?._id))
+        setRefreshing(true)
+    }, [])
+
+    useEffect(() => {
+        if (loading === false) setRefreshing(false)
+    }, [refreshing, loading])
 
     const handleOpenVitepay = (e, orderId, amount, reserve) => {
         e.preventDefault()
@@ -55,25 +65,18 @@ const Make_A_Bid = ({ navigation, route }) => {
             .catch(error => console.error(error))
     }
 
-    const onRefresh = useCallback(() => {
-        dispatch(get_enchere(enchere_id, host?._id))
-        dispatch(get_all_users(host?._id))
-        setRefreshing(true)
-    }, [])
-
-    useEffect(() => {
-        if (loading === false) setRefreshing(false)
-    }, [refreshing, loading])
-
     return (
         loading ? <Loading text="veuillez patienter ..." color="green" /> :
+
             <View style={styles.container}>
                 <StatusBar barStyle={"light-content"} backgroundColor={Colors.black} />
 
                 <Overlay isVisible={visible} onBackdropPress={toggleOverlay} overlayStyle={css.details.bottomSheet} animationType="slide" animationDuration={1000}>
                     <View style={css.details.sheet_header}>
                         <Text style={css.details.sheet_title}>Les mises disponibles</Text>
-                        <TouchableOpacity activeOpacity={0.7} onPress={toggleOverlay}><Fontisto name="close-a" size={18} style={css.details.sheet_close} /></TouchableOpacity>
+                        <TouchableOpacity activeOpacity={0.7} onPress={toggleOverlay}>
+                            <Fontisto name="close-a" size={18} style={css.details.sheet_close} />
+                        </TouchableOpacity>
                     </View>
 
                     <View style={css.creer.screen_title_line} />
@@ -112,6 +115,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                         {(data?.enchere_status === "closed" || ExpirationVerify(data?.expiration_time)) ? <Text style={{ color: Colors.danger }}>Terminée</Text> : <CountdownTimer targetDate={convertDateToMillis(data?.expiration_time)} size={13} txtSize={5} hideLabel={false} />}
                     </View>
                 </View>
+
                 <View style={{ width: "100%", alignItems: "center" }}><View style={[css.creer.screen_title_line, { marginTop: 0 }]} /></View>
 
                 <Reloader refreshing={refreshing} onRefresh={onRefresh} theme={themes}>
@@ -168,6 +172,7 @@ const Make_A_Bid = ({ navigation, route }) => {
                         </View>
                     </View>
                 }
+
             </View>
     )
 }
@@ -185,9 +190,9 @@ const styles = StyleSheet.create({
     infos: { paddingLeft: 5 },
     name: { fontSize: 15, color: Colors.dark },
     price: { color: Colors.main, paddingLeft: 5, paddingTop: 5, fontSize: 14 },
-    btn_text: { textAlign: "center", alignItems: "center", justifyContent: "center", fontWeight: "bold", color: Colors.white, fontSize: 16 }, reserver: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
+    btn_text: { textAlign: "center", alignItems: "center", justifyContent: "center", fontWeight: "bold", color: Colors.white, fontSize: 16 },
+    reserver: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
     reserve_txt: { color: Colors.dark },
     reserce_prix: { color: Colors.main, fontWeight: "bold" },
     expiration: { paddingRight: 10 }
 })
-

@@ -13,7 +13,7 @@ import { MultipleSelectList, SelectList } from 'react-native-dropdown-select-lis
 import { useDispatch, useSelector } from 'react-redux'
 import { create_enchere } from '../../../libs/redux/actions/enchere.action'
 import { useNavigation } from '@react-navigation/native'
-import { send_notification } from '../../../libs/redux/actions/notification.action'
+// import { send_notification } from '../../../libs/redux/actions/notification.action'
 import { deleteSeparator, formatNumberWithSpaces, inputSeparatorMille } from '../../../libs/utils/functions'
 
 const New_Auction = () => {

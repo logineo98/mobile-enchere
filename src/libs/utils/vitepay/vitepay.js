@@ -1,5 +1,6 @@
 import { SHA1 } from "crypto-js";
 import { Config } from "./config"
+import axios from "axios";
 
 class Vitepay {
     website_url = Config.WEBSITE_URL;
@@ -67,17 +68,21 @@ class Vitepay {
 
         const environmentUrl = this.env === 'sandbox' ? 'https://api.vitepay.com/v1/sandbox/payments' : 'https://api.vitepay.com/v1/prod/payments';
 
+        // const options = {
+        //     method: 'POST', mode: 'no-cors',
+        //     headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Access-Control-Allow-Origin': '*' },
+        //     body: payload
+        // };
+
         const options = {
-            method: 'POST', mode: 'no-cors',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'Access-Control-Allow-Origin': '*' },
-            body: payload
         };
 
-        return fetch(environmentUrl, options)
-            .then(response => response.text())
-            .then(link => { return link; })
-            .catch(error => console.log(error));
 
+        return axios.post(environmentUrl, payload, options)
+            // .then(response => response.text())
+            .then(link => { return link?.data })
+            .catch(error => console.log(error));
     }
 }
 
