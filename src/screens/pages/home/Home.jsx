@@ -67,7 +67,7 @@ const Home = () => {
                         <View style={{ height: 180, justifyContent: "center" }}>
                             <NoEnchere size={15} style={{ textAlign: "center" }} theme={themes} message="Aucune enchère en vedette n'existe pour le moment." />
                         </View> :
-                        <FlatList data={data.slice(0, 4)} horizontal showsHorizontalScrollIndicator={false} keyExtractor={(item) => item?._id.toString()}
+                        <FlatList data={data.slice(0, 5)} horizontal showsHorizontalScrollIndicator={false} keyExtractor={(item) => item?._id.toString()}
                             renderItem={({ item }) => <Favorite data={item} theme={themes} width={data.length <= 1 ? 340 : 290} height={180} />}
                         />
                     }

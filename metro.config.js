@@ -5,6 +5,8 @@
  * @format
  */
 
+const path = require("path")
+
 module.exports = {
   transformer: {
     getTransformOptions: async () => ({
@@ -14,4 +16,8 @@ module.exports = {
       },
     }),
   },
-};
+  watchForlders: [
+    path.resolve(__dirname, 'app'),
+    path.resolve(__dirname, 'src')
+  ]
+}

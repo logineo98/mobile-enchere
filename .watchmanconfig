@@ -1,1 +1,9 @@
-{}
+{
+    "ignore_dirs": [
+        "node_modules",
+        "build"
+    ],
+    "ignore_files": [
+        "*.log"
+    ]
+}

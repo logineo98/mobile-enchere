@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { create_enchere } from '../../../libs/redux/actions/enchere.action'
 import { useNavigation } from '@react-navigation/native'
 import { send_notification } from '../../../libs/redux/actions/notification.action'
-import { deleteSeparator, inputSeparatorMille } from '../../../libs/utils/functions'
+import { deleteSeparator, formatNumberWithSpaces, inputSeparatorMille } from '../../../libs/utils/functions'
 
 const New_Auction = () => {
     const navigation = useNavigation()
@@ -244,7 +244,7 @@ const New_Auction = () => {
                                 <TextInput
                                     keyboardType="number-pad"
                                     placeholder='Prix initial*' style={css.creer.input}
-                                    value={inputs.started_price}
+                                    value={formatNumberWithSpaces(inputs.started_price)}
 
                                     // onChangeText={text => handleChange('started_price', text, setInputs)}
                                     onChangeText={text => inputSeparatorMille(text, 'started_price', setInputs)}
@@ -256,7 +256,7 @@ const New_Auction = () => {
                                 <TextInput
                                     keyboardType="number-pad"
                                     placeholder="Prix de reserve" style={css.creer.input}
-                                    value={inputs.reserve_price}
+                                    value={formatNumberWithSpaces(inputs.reserve_price)}
                                     // onChangeText={text => handleChange('reserve_price', text, setInputs)}
                                     onChangeText={text => inputSeparatorMille(text, 'reserve_price', setInputs)}
                                 />
@@ -267,7 +267,7 @@ const New_Auction = () => {
                                 <TextInput
                                     keyboardType="number-pad"
                                     placeholder="Prix d'incrementation*" style={css.creer.input}
-                                    value={inputs.increase_price}
+                                    value={formatNumberWithSpaces(inputs.increase_price)}
                                     // onChangeText={text => handleChange('increase_price', text, setInputs)}
                                     onChangeText={text => inputSeparatorMille(text, 'increase_price', setInputs)}
                                 />

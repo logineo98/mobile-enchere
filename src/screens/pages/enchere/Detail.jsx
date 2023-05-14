@@ -45,8 +45,8 @@ const Detail = ({ route }) => {
         encheres?.forEach(enchere => {
             if (areIn(enchere?.categories, data?.categories))
                 if (host?.vip === true) {
-                    if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time) && (enchere?.enchere_type === "private" || enchere?.enchere_type === "public") && enchere?.enchere_status === "published") tab.push(enchere)
-                } else if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_type === "public" && enchere?.enchere_status === "published") tab.push(enchere)
+                    if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_status === "published" && (enchere?.enchere_type === "private" || enchere?.enchere_type === "public")) tab.push(enchere)
+                } else if (enchere?._id !== data?._id && !ExpirationVerify(enchere?.expiration_time) && enchere?.enchere_status === "published" && enchere?.enchere_type === "public") tab.push(enchere)
         })
         setRelatedData(tab)
 

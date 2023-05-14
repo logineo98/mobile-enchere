@@ -61,7 +61,7 @@ const Favorite = ({ data, width, height, theme }) => {
       <Image source={{ uri: `${api_public}/images/${data?.medias[0]}` }} style={[styles.image, { height: height ? height : 150 }]} />
       <View style={{ padding: 10, borderTopWidth: 1, borderTopColor: data?.enchere_type === "private" ? "tomato" : "rgba(0,0,0,0.1)" }}>
         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-          <Text style={styles.name}>{data?.title?.length <= 22 ? data?.title?.slice(0, 22) : data?.title?.slice(0, 22) + "..."}
+          <Text style={styles.name}>{data?.title?.length <= 17 ? data?.title?.slice(0, 17) : data?.title?.slice(0, 17) + "..."}
             {data?.enchere_type === "private" &&
               <Animatable.View style={{ alignItems: "center" }} animation={isCrownOn ? 'pulse' : null} iterationCount={isCrownOn ? 'infinite' : 1} >
                 <FontAwesome5Icon name="crown" size={10} color={isCrownOn ? Colors.main : Colors.home_card} style={{ paddingLeft: 5 }} />
