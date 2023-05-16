@@ -159,6 +159,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     //----------------------------
 
+    implementation project(':react-native-splash-screen')
     
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.0.0")
 
