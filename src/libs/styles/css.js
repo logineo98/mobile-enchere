@@ -106,7 +106,7 @@ const profile = StyleSheet.create({
     profile_details_text: { fontSize: 16, letterSpacing: 1, color: Colors.white, fontWeight: 200 },
     profile_main_content: { marginTop: 5, marginBottom: 40 },
     profile_item: {
-        flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 10, paddingRight: 25, backgroundColor: Colors.w,
+        flexDirection: "row", alignItems: "center", justifyContent: "space-between", padding: 10, paddingRight: 25, backgroundColor: Colors.white,
 
     },
     left: { flexDirection: "row", alignItems: "center", gap: 10, padding: 5 },
