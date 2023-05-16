@@ -23,7 +23,7 @@ const CardHome = ({ h_img, container_width, mb, category, theme }) => {
         item_img: { height: "100%", width: "100%", resizeMode: "cover", borderTopLeftRadius: 10, borderTopRightRadius: 10 },
 
         // pour les informations en dessous de l'image dans le item container
-        item_info_container: { paddingHorizontal: 10, justifyContent: "center", backgroundColor: theme === "sombre" ? Colors.home_card : Colors.white },
+        item_info_container: { paddingHorizontal: 10, justifyContent: "center", backgroundColor: theme === "sombre" ? Colors.home_card : Colors.white, borderTopWidth: 1, borderTopColor: "rgba(0,0,0,0.2)" },
         item_title: { color: theme === "sombre" ? Colors.white : Colors.black, textAlign: "right", fontWeight: "bold", marginTop: 7 },
         item_description: { color: Colors.black, textAlign: "left", marginTop: 5 },
         item_participate_enchere_container: { alignItems: "flex-end", marginTop: 10 },
